@@ -8507,6 +8507,16 @@
         }
       }
     },
+    "Går direkt till sammanfattningen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Straight to the summary."
+          }
+        }
+      }
+    },
     "Går inte medan ett möte spelas in.": {
       "localizations": {
         "en": {
@@ -14648,6 +14658,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Låt Claude, ChatGPT och andra AI-appar läsa dina möten och tankar, så kan du fråga dem om allt ni sagt. Dina dikteringar delas inte."
+          }
+        }
+      }
+    },
+    "Låt modellen tänka först": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let the model think first"
           }
         }
       }
@@ -24928,6 +24948,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Två talare som är samma person slås ihop"
+          }
+        }
+      }
+    },
+    "Tänker före svaret — tar längre tid.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It thinks before answering — takes longer."
           }
         }
       }

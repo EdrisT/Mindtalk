@@ -1063,7 +1063,18 @@ struct LocalServerWriter: SummaryWriter {
         await MainActor.run { LocalServers.shared.setPhase(phase, job: job.id, model: model) }
     }
 
+    /// Whether thinking is asked for. The model has to be able to at all (`thinking`, from
+    /// its own list), and the setting under Inställningar → Möten has to say so. Only ever
+    /// said in the request: what the server has as its default stays as it is.
+    private var asksForThinking: Bool {
+        get async {
+            guard thinking else { return false }
+            return await MainActor.run { SummaryWriting.shared.thinking }
+        }
+    }
+
     private func ollama(system: String, user: String, context: Int, maxTokens: Int) async throws -> Collected {
+        let wantsThinking = await asksForThinking
         var body: [String: Any] = [
             "model": model,
             "messages": [["role": "system", "content": system], ["role": "user", "content": user]].filter { !($0["content"]!.isEmpty) },
@@ -1073,7 +1084,7 @@ struct LocalServerWriter: SummaryWriter {
             "truncate": false,
             "options": ["num_ctx": context, "temperature": 0.2, "num_predict": maxTokens],
         ]
-        if thinking { body["think"] = false }
+        if thinking { body["think"] = wantsThinking }
         let out = Collected()
         let job = job, model = model
         try await LocalServerClient.shared.stream(.ollama, "/api/chat", json: body) { line in
@@ -1095,9 +1106,10 @@ struct LocalServerWriter: SummaryWriter {
     }
 
     /// oMLX's OpenAI-style chat, streamed. Its reasoning arrives in its own channel
-    /// (`reasoning_content`), so it is never read as the answer, and thinking is
-    /// switched off for models that can, as with the other backends.
+    /// (`reasoning_content`), so it is never read as the answer, and thinking is said per
+    /// request, the way the card under Inställningar → Möten has it.
     private func omlx(system: String, user: String, context: Int, maxTokens: Int) async throws -> Collected {
+        let wantsThinking = await asksForThinking
         var messages: [[String: String]] = []
         if !system.isEmpty { messages.append(["role": "system", "content": system]) }
         messages.append(["role": "user", "content": user])
@@ -1113,7 +1125,7 @@ struct LocalServerWriter: SummaryWriter {
         ]
         // The model's own window, not a number Mindtalk sends: it is read from the list
         // and only used to size the prompt.
-        if thinking { body["enable_thinking"] = false }
+        if thinking { body["enable_thinking"] = wantsThinking }
         let out = Collected()
         let job = job, model = model
         try await LocalServerClient.shared.stream(.omlx, "/v1/chat/completions", json: body) { line in
@@ -1137,9 +1149,11 @@ struct LocalServerWriter: SummaryWriter {
         return out
     }
 
-    /// LM Studio's own chat, streamed: reasoning off for models that can, the context
-    /// said in the request. An older LM Studio without it: the OpenAI-style chat.
+    /// LM Studio's own chat, streamed: thinking said the way the card under
+    /// Inställningar → Möten has it, the context said in the request. An older LM Studio
+    /// without it: the OpenAI-style chat.
     private func lmStudio(system: String, user: String, context: Int, maxTokens: Int) async throws -> Collected {
+        let wantsThinking = await asksForThinking
         var body: [String: Any] = [
             "model": job.instance ?? model,
             "input": user,
@@ -1152,7 +1166,9 @@ struct LocalServerWriter: SummaryWriter {
         // load another copy. Only an older LM Studio, loading with the chat, is told.
         if job.instance == nil { body["context_length"] = context }
         if !system.isEmpty { body["system_prompt"] = system }
-        if thinking { body["reasoning"] = "off" }
+        // Nothing said when thinking is asked for: LM Studio reasons by default for the
+        // models that can, and its own word for "think" isn't the one this call knows.
+        if thinking, !wantsThinking { body["reasoning"] = "off" }
         let out = Collected()
         let job = job, model = model
         do {

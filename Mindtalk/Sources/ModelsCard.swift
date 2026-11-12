@@ -635,6 +635,19 @@ struct ServerWriterRows: View {
                         }
                     }
                 }
+                // A model that can think before writing: asked to, or not, in the request
+                // itself. What the server has as its own default is left alone.
+                if let model, let m = models.first(where: { $0.id == model }), m.thinking {
+                    HStack(spacing: 8) {
+                        InkToggle(label: String(localized: "Låt modellen tänka först"), isOn: $notes.thinking)
+                        Text("Låt modellen tänka först").font(.system(size: 12.5))
+                        Text(notes.thinking ? String(localized: "Tänker före svaret — tar längre tid.")
+                                            : String(localized: "Går direkt till sammanfattningen."))
+                            .font(.system(size: 12)).foregroundStyle(DS.Colors.muted)
+                        Spacer()
+                    }
+                    .padding(.top, 2)
+                }
                 if let note = servers.notes[backend] {
                     Text(verbatim: note).font(.system(size: 12)).foregroundStyle(DS.Colors.muted)
                         .fixedSize(horizontal: false, vertical: true)

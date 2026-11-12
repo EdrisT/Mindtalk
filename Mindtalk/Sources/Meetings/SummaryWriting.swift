@@ -35,6 +35,16 @@ final class SummaryWriting: ObservableObject {
         if case .server(let b, let m) = choice { return (b, m) }
         return nil
     }
+    /// Whether a model of your own is asked to think before it writes. Off: the thinking
+    /// isn't the summary, and a meeting's text shouldn't wait for it. Said in each
+    /// request — what the server itself has as its default is never changed.
+    @Published var thinking: Bool = false {
+        didSet {
+            // A render or a self-test: this run only, never written down.
+            guard !Settings.previewing else { return }
+            UserDefaults.standard.set(thinking, forKey: "serverThinking")
+        }
+    }
     /// Who writes the next notes, unless it's Apple Intelligence (nil). The one chosen,
     /// whether it can write right now or not: a server that isn't running says so when
     /// asked to write. Never another writer instead.
@@ -64,6 +74,7 @@ final class SummaryWriting: ObservableObject {
 
     private init() {
         let defaults = UserDefaults.standard
+        thinking = defaults.bool(forKey: "serverThinking")
         if let saved = defaults.string(forKey: "summaryWriter") {
             if let c = SummaryWriterChoice(stored: saved) {
                 choice = c
