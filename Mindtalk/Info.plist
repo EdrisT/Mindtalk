@@ -77,16 +77,6 @@
 	<string>Mindtalk använder mikrofonen när du dikterar och när du spelar in möten. Allt tolkas på din Mac, och inget ljud lämnar datorn.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SUEnableAutomaticChecks</key>
-	<true/>
-	<key>SUFeedURL</key>
-	<string>https://github.com/dragon6sic6/Mindtalk/releases/latest/download/appcast.xml</string>
-	<key>SUPublicEDKey</key>
-	<string>FrkJNGYBpCm6THhdPrqRSuypbMKROa27oKJR/hhCgUY=</string>
-	<key>SURequireSignedFeed</key>
-	<true/>
-	<key>SUVerifyUpdateBeforeExtraction</key>
-	<true/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

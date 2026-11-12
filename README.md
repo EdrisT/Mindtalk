@@ -12,9 +12,6 @@
   Superb Swedish, 25 languages in all.
 </p>
 
-<p align="center">
-  <a href="https://github.com/dragon6sic6/Mindtalk/releases/latest/download/Mindtalk.dmg"><img src="https://img.shields.io/badge/Download_for_Mac-111111?style=for-the-badge&logo=apple&logoColor=white" alt="Download for Mac"></a>
-</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-26%2B-111111?logo=apple" alt="macOS 26+">
@@ -91,7 +88,6 @@ Mindtalk 2.0 is more than dictation. Record meetings, keep your thoughts and ask
 | **Music pauses while you talk** | Spotify, Music and browser video pause while you dictate and resume afterwards. Other sound fades down; a call is turned down but never muted. |
 | **Microphone picker** | Built-in mic by default, also with AirPods, because Bluetooth headsets lose quality when their mic opens. Or pick any input, with a live level meter to check it hears you. |
 | **Statistics** | Words per day, time saved versus typing, your streak, on Home and the Dictation page. Numbers only; never the text. |
-| **Stays up to date** | Checks for new versions once a day and offers them. Every update is signed with Mindtalk's own key and notarized by Apple, and it waits until a meeting being recorded is over. |
 
 ## A tour
 
@@ -218,7 +214,7 @@ Without Gemma, summaries and answers are written by Apple Intelligence, or by yo
 
 ## Privacy
 
-- **No network**, except downloading the models you use and checking for updates. Ollama and LM Studio, if you choose them, are reached only on 127.0.0.1. Nothing you say, no text and no voiceprint is sent anywhere by Mindtalk.
+- **No network**, except downloading the models you use. Ollama and LM Studio, if you choose them, are reached only on 127.0.0.1. Nothing you say, no text and no voiceprint is sent anywhere by Mindtalk.
 - **Text leaves your Mac only through MCP**, if you turn it on and ask your AI assistant yourself. That app's provider then receives the text it read. MCP is off by default and read-only, your dictations are not shared, audio and voiceprints are never shared, a meeting can't be read while it's being recorded or in the two minutes after, and every read is logged under Settings → AI apps.
 - **Dictation audio is never written to disk.** It's transcribed from memory and discarded.
 - **Meetings** are stored in `~/Library/Application Support/Mindtalk/Meetings` (audio, text, your notes, the summary), readable only by your user account. You choose how long the audio is kept (always, or 90, 30 or 7 days); the text stays until you delete the meeting. Deleted meetings go to the Trash.
@@ -233,13 +229,11 @@ Without Gemma, summaries and answers are written by Apple Intelligence, or by yo
 
 ## Install
 
-1. [Download Mindtalk](https://github.com/dragon6sic6/Mindtalk/releases/latest/download/Mindtalk.dmg), signed with Developer ID and notarized by Apple.
-2. Open the DMG and drag **Mindtalk** to **Applications**.
-3. Open Mindtalk. The introduction walks you through the rest. (Opened it straight from the DMG or Downloads? Mindtalk offers to move itself into Applications.)
+1. Build it: `make install` puts a Release build in **Applications**, signed with your own signing identity.
+2. Open Mindtalk. The introduction walks you through the rest. (Copied it to Downloads or ran it from a disk image? Mindtalk offers to move itself into Applications.)
 
-From then on Mindtalk checks for updates and offers them. See what's new under [Releases](https://github.com/dragon6sic6/Mindtalk/releases).
+See what's new under [Releases](https://github.com/dragon6sic6/Mindtalk/releases).
 
-<p align="center"><img src="docs/images/dmg.png" width="560" alt="The Mindtalk disk image: drag Mindtalk to Applications"></p>
 
 **Requirements:** a Mac with Apple Silicon (M1 or later) and macOS 26 Tahoe or later. Disk: about 700 MB per speech model, plus 400 MB for the meetings voice model, and 6.9 GB or 15.6 GB if you choose Gemma. *Polish with AI* needs Apple Intelligence, and so do summaries and Ask unless you use Gemma, Ollama or LM Studio.
 
@@ -275,7 +269,7 @@ git clone https://github.com/dragon6sic6/Mindtalk.git && cd Mindtalk
 make run        # Debug build, then launch
 ```
 
-More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): self-tests and live microphone checks, the release pipeline, regenerating these screenshots, and a map of the source.
+More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): self-tests and live microphone checks, regenerating these screenshots, and a map of the source.
 
 ## Built with
 
@@ -291,7 +285,7 @@ More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): self-tests and live micropho
 - **ServiceManagement**: open at login
 - **String Catalogs**: Swedish and English interface
 - **Icon Composer**: a layered Liquid Glass app icon
-- **XcodeGen** and **dmgbuild**: reproducible project and a laid-out DMG
+- **XcodeGen**: reproducible project
 
 ## Credits
 

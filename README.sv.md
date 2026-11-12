@@ -12,9 +12,6 @@
   Riktigt bra svenska, 25 språk totalt.
 </p>
 
-<p align="center">
-  <a href="https://github.com/dragon6sic6/Mindtalk/releases/latest/download/Mindtalk.dmg"><img src="https://img.shields.io/badge/Ladda_ned_för_Mac-111111?style=for-the-badge&logo=apple&logoColor=white" alt="Ladda ned för Mac"></a>
-</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-26%2B-111111?logo=apple" alt="macOS 26+">
@@ -90,7 +87,6 @@ Mindtalk 2.0 är mer än diktering. Spela in möten, spara dina tankar och fråg
 | **Musiken pausas medan du pratar** | Spotify, Musik och video i webbläsaren pausas under dikteringen och fortsätter efteråt. Annat ljud tonas ner. Ett samtal sänks men tystas aldrig. |
 | **Mikrofonval** | Inbyggd mikrofon som standard, även med AirPods, eftersom Bluetooth-headset tappar kvalitet när deras mikrofon öppnas. Du kan också välja valfri enhet, med en nivåmätare som visar att den hör dig. |
 | **Statistik** | Ord per dag, sparad tid jämfört med att skriva och dagar i rad, på Hem och på sidan Diktering. Bara siffror, aldrig texten. |
-| **Håller sig uppdaterad** | Söker efter nya versioner en gång om dagen och erbjuder dem. Varje uppdatering är signerad med Mindtalks egen nyckel och notariserad av Apple, och den väntar tills ett möte som spelas in är klart. |
 
 ## En rundtur
 
@@ -217,7 +213,7 @@ Utan Gemma skrivs sammanfattningar och svar av Apple Intelligence, eller av din 
 
 ## Integritet
 
-- **Inget nätverk**, förutom nedladdningen av modellerna du använder och sökningen efter uppdateringar. Ollama och LM Studio nås bara på 127.0.0.1, om du väljer dem. Inget du säger, ingen text och inget röstavtryck skickas iväg av Mindtalk.
+- **Inget nätverk**, förutom nedladdningen av modellerna du använder. Ollama och LM Studio nås bara på 127.0.0.1, om du väljer dem. Inget du säger, ingen text och inget röstavtryck skickas iväg av Mindtalk.
 - **Text lämnar din Mac bara genom MCP**, om du själv slår på det och frågar din AI-assistent. Då får den appens leverantör texten den läste. MCP är avstängt från början och kan bara läsa. Dina dikteringar delas inte, ljud och röstavtryck delas aldrig, ett möte går inte att läsa medan det spelas in eller de två första minuterna efteråt, och varje läsning syns i en logg under Inställningar → AI-appar.
 - **Ljudet från en diktering sparas aldrig.** Det tolkas från minnet och kastas.
 - **Möten** sparas i `~/Library/Application Support/Mindtalk/Meetings` (ljud, text, dina anteckningar, sammanfattningen), läsbara bara för ditt användarkonto. Du väljer hur länge ljudet sparas (alltid, eller 90, 30 eller 7 dagar). Texten finns kvar tills du tar bort mötet, och borttagna möten hamnar i papperskorgen.
@@ -232,13 +228,11 @@ Utan Gemma skrivs sammanfattningar och svar av Apple Intelligence, eller av din 
 
 ## Installera
 
-1. [Ladda ned Mindtalk](https://github.com/dragon6sic6/Mindtalk/releases/latest/download/Mindtalk.dmg). Den är signerad med Developer ID och notariserad av Apple.
-2. Öppna DMG-filen och dra **Mindtalk** till **Program**.
-3. Öppna Mindtalk. Introduktionen tar dig igenom resten. (Startade du den direkt från DMG-filen eller Hämtade filer? Mindtalk erbjuder sig att flytta till Program.)
+1. Bygg den: `make install` lägger en Release-bygg i **Program**, signerad med din egen signeringsidentitet.
+2. Öppna Mindtalk. Introduktionen tar dig igenom resten. (Kopierade du den till Hämtade filer eller startade från en skivavbild? Mindtalk erbjuder sig att flytta till Program.)
 
-Sedan söker Mindtalk själv efter uppdateringar och erbjuder dem. Nyheterna finns under [Releases](https://github.com/dragon6sic6/Mindtalk/releases).
+Nyheterna finns under [Releases](https://github.com/dragon6sic6/Mindtalk/releases).
 
-<p align="center"><img src="docs/images/dmg.png" width="560" alt="Mindtalks skivavbild: dra Mindtalk till Program"></p>
 
 **Krav:** en Mac med Apple Silicon (M1 eller senare) och macOS 26 Tahoe eller senare. Ledigt utrymme: ungefär 700 MB per talmodell, 400 MB till röstmodellen för möten, och 6,9 GB eller 15,6 GB om du väljer Gemma. *Putsa med AI* kräver Apple Intelligence, och det gör också sammanfattningar och frågor om du inte använder Gemma, Ollama eller LM Studio.
 
@@ -274,7 +268,7 @@ git clone https://github.com/dragon6sic6/Mindtalk.git && cd Mindtalk
 make run        # Debug-bygge och start
 ```
 
-Mer i [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (på engelska): självtester och mikrofonkontroller, release-flödet, hur skärmbilderna tas och en karta över koden.
+Mer i [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (på engelska): självtester och mikrofonkontroller, hur skärmbilderna tas och en karta över koden.
 
 ## Byggd med
 
@@ -290,7 +284,7 @@ Mer i [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (på engelska): självtester oc
 - **ServiceManagement**: starta vid inloggning
 - **String Catalogs**: svenskt och engelskt gränssnitt
 - **Icon Composer**: appikon i lager med Liquid Glass
-- **XcodeGen** och **dmgbuild**: reproducerbart projekt och en snygg DMG
+- **XcodeGen**: reproducerbart projekt
 
 ## Tack
 
@@ -301,7 +295,6 @@ Mindtalk görs av [Mindact Solutions AB](https://mindact.ai) i Sverige.
 - Röster känns igen av **ReDimNet2+** (LAB260, byggd på ReDimNet2 av Palabra.ai). Apache 2.0.
 - Sammanfattningar och svar, om du väljer den, av **Gemma 4** (Google). Apache 2.0.
 - Modellerna körs med **FluidAudio** (FluidInference). Apache 2.0.
-- Uppdateringar med **Sparkle**. MIT.
 
 Alla krediter och länkar finns i appen under *Om Mindtalk → Tack till och licenser…*.
 
