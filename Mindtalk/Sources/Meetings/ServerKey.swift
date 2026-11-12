@@ -12,7 +12,7 @@ import os
 // every token. Typing it in (or clearing it) updates that copy straight away.
 
 enum ServerKey {
-    nonisolated(unsafe) private static let lock = NSLock()
+    private static let lock = NSLock()
     nonisolated(unsafe) private static var cache: [String: String?] = [:]
     private static let service = "ai.mindact.mindtalk.server"
     private static let log = Logger(subsystem: "ai.mindact.mindtalk", category: "ServerKey")
