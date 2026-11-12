@@ -297,7 +297,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         if let i = args.firstIndex(of: "--server-test"), i + 1 < args.count {
             Task { @MainActor in
                 let parts = args[i + 1].split(separator: ":", maxSplits: 1).map(String.init)
-                guard parts.count == 2, let backend = ServerBackend(rawValue: parts[0]) else { print("ollama:modell eller lmStudio:modell"); exit(1) }
+                guard parts.count == 2, let backend = ServerBackend(rawValue: parts[0]) else { print("ollama:modell, lmStudio:modell eller omlx:modell"); exit(1) }
                 let servers = LocalServers.shared
                 await servers.probe(backend)
                 print("\(backend.name): \(servers.state(backend)) · \((servers.models[backend] ?? []).map(\.title).joined(separator: ", "))")
