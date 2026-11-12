@@ -34,6 +34,10 @@ targets:
         CODE_SIGN_IDENTITY: "edrta913-local-dev"
         PROVISIONING_PROFILE_SPECIFIER: ""
         ENABLE_HARDENED_RUNTIME: YES
+        # A Debug build would otherwise move the code into Mindtalk.debug.dylib and
+        # __preview.dylib; the hardened runtime's library validation rejects that pair
+        # under a self-signed identity and dyld dies with "different Team IDs".
+        ENABLE_DEBUG_DYLIB: NO
         SWIFT_VERSION: "5.0"
         SWIFT_STRICT_CONCURRENCY: minimal
         DEAD_CODE_STRIPPING: YES
@@ -119,6 +123,8 @@ targets:
         CODE_SIGN_IDENTITY: "edrta913-local-dev"
         PROVISIONING_PROFILE_SPECIFIER: ""
         ENABLE_HARDENED_RUNTIME: YES
+        # Same reason as in the helper target: no .debug.dylib to validate.
+        ENABLE_DEBUG_DYLIB: NO
         SWIFT_VERSION: "5.0"
         SWIFT_STRICT_CONCURRENCY: minimal
         MARKETING_VERSION: "2.2"
