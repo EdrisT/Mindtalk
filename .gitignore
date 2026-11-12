@@ -15,3 +15,6 @@ Mindtalk.xcodeproj/
 *.provisionprofile
 *.dSYM/
 .claude/worktrees/
+
+# pi agent session state
+.pi/

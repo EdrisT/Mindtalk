@@ -38,8 +38,11 @@ targets:
       base:
         PRODUCT_NAME: mindtalk
         PRODUCT_BUNDLE_IDENTIFIER: ai.mindact.mindtalk.helper
-        DEVELOPMENT_TEAM: 679J7H9973
-        CODE_SIGN_STYLE: Automatic
+        # Local fork: sign with my own self-signed certificate, no Apple team.
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "edrta913-local-dev"
+        PROVISIONING_PROFILE_SPECIFIER: ""
         ENABLE_HARDENED_RUNTIME: YES
         SWIFT_VERSION: "5.0"
         SWIFT_STRICT_CONCURRENCY: minimal
@@ -93,7 +96,8 @@ targets:
         # Updates (Sparkle): the appcast published with each GitHub release, signed with Mindtalk's own key.
         SUFeedURL: https://github.com/dragon6sic6/Mindtalk/releases/latest/download/appcast.xml
         SUPublicEDKey: FrkJNGYBpCm6THhdPrqRSuypbMKROa27oKJR/hhCgUY=
-        SUEnableAutomaticChecks: true
+        # Local fork: don't pull upstream builds over mine.
+        SUEnableAutomaticChecks: false
         # Hardening: the feed itself must carry a valid signature, and an update is
         # verified before it's even unpacked.
         SURequireSignedFeed: true
@@ -134,8 +138,12 @@ targets:
       base:
         PRODUCT_NAME: Mindtalk
         PRODUCT_BUNDLE_IDENTIFIER: ai.mindact.mindtalk
-        DEVELOPMENT_TEAM: 679J7H9973
-        CODE_SIGN_STYLE: Automatic
+        # Local fork: sign with my own self-signed certificate, no Apple team.
+        # Same identity on app + helper: grants survive rebuilds.
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "edrta913-local-dev"
+        PROVISIONING_PROFILE_SPECIFIER: ""
         ENABLE_HARDENED_RUNTIME: YES
         SWIFT_VERSION: "5.0"
         SWIFT_STRICT_CONCURRENCY: minimal
