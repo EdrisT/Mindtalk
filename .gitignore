@@ -18,3 +18,8 @@ Mindtalk.xcodeproj/
 
 # pi agent session state
 .pi/
+
+# SourceKit-LSP build description (xcode-build-server): local, regenerated on
+# every full build, and it names this machine's paths.
+buildServer.json
+.compile
