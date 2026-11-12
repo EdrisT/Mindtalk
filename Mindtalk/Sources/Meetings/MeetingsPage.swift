@@ -2980,7 +2980,7 @@ private struct SummaryView: View {
         case .notEnabled: return String(localized: "Slå på Apple Intelligence för att få en sammanfattning. Texten finns under fliken Text.")
         case .notReady: return String(localized: "Apple Intelligence laddas ned. Sammanfatta när den är klar.")
         default:
-            return String(localized: "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama eller LM Studio på den egna datorn. Du kan läsa och söka i texten som vanligt.")
+            return String(localized: "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama, LM Studio eller oMLX på den egna datorn. Du kan läsa och söka i texten som vanligt.")
         }
     }
 

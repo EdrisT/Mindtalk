@@ -4,18 +4,18 @@ import os
 // MARK: - Who writes the notes
 //
 // Two write a meeting's summary and answer questions about it: Apple Intelligence
-// (built in) and your own model in Ollama or LM Studio on this Mac (SummaryWriter.swift).
-// The choice lives here: in the settings, and in the system log, so a summary by the
-// wrong writer can be traced. Nothing is downloaded for it — the models that used to
-// come here (Gemma 4 through MLX) are not part of this fork.
+// (built in) and your own model on this Mac, in Ollama, LM Studio or oMLX
+// (SummaryWriter.swift). The choice lives here: in the settings, and in the system log,
+// so a summary by the wrong writer can be traced. Nothing is downloaded for it — the
+// models that used to come here (Gemma 4 through MLX) are not part of this fork.
 
 @MainActor
 final class SummaryWriting: ObservableObject {
     static let shared = SummaryWriting()
     private static let log = Logger(subsystem: "ai.mindact.mindtalk", category: "SummaryWriting")
 
-    /// Which writes the summaries: Apple Intelligence or your own model in Ollama or
-    /// LM Studio (SummaryWriter.swift).
+    /// Which writes the summaries: Apple Intelligence or your own model in Ollama,
+    /// LM Studio or oMLX (SummaryWriter.swift).
     @Published var choice: SummaryWriterChoice = .apple {
         didSet {
             // In the system log, so a summary by the wrong writer can be traced.

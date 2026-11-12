@@ -2,15 +2,17 @@ import AppKit
 import Foundation
 import os
 
-// MARK: - Ollama and LM Studio
+// MARK: - Ollama, LM Studio and oMLX
 //
-// Your own model, on your Mac: if Ollama or LM Studio is installed, Mindtalk finds
-// it, lists its models, and can let one of them write the summaries and answer
+// Your own model, on your Mac: if Ollama, LM Studio or oMLX is installed, Mindtalk
+// finds it, lists its models, and can let one of them write the summaries and answer
 // questions about meetings. Everything still stays on the Mac:
 //
 //   • Every address is built in one place (LocalServerClient.url) from the literal
 //     host 127.0.0.1 and the backend's port. No other host can be reached, whatever
 //     the settings say. No redirects are followed, no proxy is used.
+//   • oMLX wants an API key for its model list and its load calls. It is typed in once
+//     and kept in the Keychain (ServerKey), never in the settings file.
 //   • Ollama's cloud models (passed on to ollama.com) are never listed, and a
 //     transcript is only sent to a model that a fresh list just confirmed is local.
 //     LM Studio's list has no mark for a model served from another computer (LM
@@ -21,6 +23,7 @@ import os
 enum ServerBackend: String, CaseIterable, Identifiable, Sendable {
     case ollama
     case lmStudio
+    case omlx
 
     nonisolated var id: String { rawValue }
 
@@ -28,6 +31,7 @@ enum ServerBackend: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .ollama: return "Ollama"
         case .lmStudio: return "LM Studio"
+        case .omlx: return "oMLX"
         }
     }
 
@@ -35,6 +39,7 @@ enum ServerBackend: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .ollama: return 11434
         case .lmStudio: return 1234
+        case .omlx: return 8000
         }
     }
 
@@ -42,6 +47,7 @@ enum ServerBackend: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .ollama: return "com.electron.ollama"
         case .lmStudio: return "ai.elementlabs.lmstudio"
+        case .omlx: return "app.omlx"
         }
     }
 
@@ -50,6 +56,7 @@ enum ServerBackend: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .ollama: return URL(string: "https://ollama.com")!
         case .lmStudio: return URL(string: "https://lmstudio.ai")!
+        case .omlx: return URL(string: "https://omlx.ai")!
         }
     }
 
@@ -77,8 +84,13 @@ enum ServerBackend: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .ollama: return String(localized: "Starta Ollama")
         case .lmStudio: return String(localized: "Öppna LM Studio")
+        case .omlx: return String(localized: "Starta oMLX")
         }
     }
+
+    /// Whether the server can be told to want a key: only oMLX can, so only for it does
+    /// the card offer a field. The others are never sent one.
+    var asksForKey: Bool { self == .omlx }
 }
 
 enum ServerState: Equatable, Sendable {
@@ -159,6 +171,8 @@ enum ServerError: Error, Equatable {
     case notRunning(ServerBackend)
     case notInstalled(ServerBackend)
     case noModels(ServerBackend)
+    /// It answers but wants an API key Mindtalk doesn't have (oMLX always does).
+    case keyRequired
     case modelGone
     case noMemory
     case timeout
@@ -179,6 +193,10 @@ enum ServerError: Error, Equatable {
         case .notInstalled(.lmStudio): return String(localized: "LM Studio finns inte på den här Macen.")
         case .noModels(.ollama): return String(localized: "Det finns inga modeller i Ollama än.")
         case .noModels(.lmStudio): return String(localized: "Det finns inga modeller i LM Studio än.")
+        case .notRunning(.omlx): return String(localized: "oMLX är installerat men inte igång.")
+        case .notInstalled(.omlx): return String(localized: "oMLX finns inte på den här Macen.")
+        case .noModels(.omlx): return String(localized: "Det finns inga modeller i oMLX än.")
+        case .keyRequired: return String(localized: "Servern vill ha en API-nyckel. Skriv in den under Inställningar → Möten.")
         case .modelGone: return String(localized: "Modellen finns inte längre. Välj en annan.")
         case .noMemory: return String(localized: "Modellen fick inte plats i minnet. Välj en mindre modell.")
         case .timeout: return String(localized: "Modellen svarade inte i tid.")
@@ -234,6 +252,9 @@ final class LocalServerClient: NSObject, URLSessionTaskDelegate, @unchecked Send
 
     private func request(_ backend: ServerBackend, _ path: String, json: [String: Any]?, timeout: TimeInterval) throws -> URLRequest {
         var request = URLRequest(url: Self.url(backend, path), cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: timeout)
+        if let key = ServerKey.key(backend) {
+            request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+        }
         if let json {
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -324,6 +345,8 @@ final class LocalServerClient: NSObject, URLSessionTaskDelegate, @unchecked Send
     nonisolated static func serverError(status: Int, body: [String: Any]) -> ServerError {
         let message = (body["error"] as? String) ?? ((body["error"] as? [String: Any])?["message"] as? String) ?? ""
         let lower = message.lowercased()
+        // Refusing because of a key is not a broken server, and not a missing model.
+        if status == 401 || lower.contains("api key") || lower.contains("unauthorized") { return .keyRequired }
         if lower.contains("context length") || lower.contains("longer than the context") || lower.contains("exceeds") {
             return .truncated
         }
@@ -373,16 +396,16 @@ final class LocalServers: ObservableObject {
     /// Why a port wasn't taken ("Ollama och LM Studio kan inte ha samma port.").
     @Published private(set) var portNote: String?
     /// The ports, published so Avancerat follows along. Kept within 1…65 535, and never
-    /// the same for both (then the old value stays, and `portNote` says why).
+    /// the same for two of them (then the old value stays, and `portNote` says why).
     @Published var ports: [ServerBackend: Int] = [:] {
         didSet {
             for b in ServerBackend.allCases {
                 guard let p = ports[b] else { continue }
                 let clamped = min(65_535, max(1, p))
-                let other = ServerBackend.allCases.first { $0 != b }.flatMap { ports[$0] }
-                if clamped == other {
+                let taken = ports.first { $0.key != b && $0.value == clamped } != nil
+                if taken {
                     ports[b] = oldValue[b] ?? b.defaultPort
-                    portNote = String(localized: "Ollama och LM Studio kan inte ha samma port.")
+                    portNote = String(localized: "Två servrar kan inte ha samma port.")
                 } else if clamped != p {
                     ports[b] = clamped
                 }
@@ -498,6 +521,13 @@ final class LocalServers: ObservableObject {
             case .notRunning, .notInstalled:
                 states[backend] = installed ? .installedNotRunning : .notInstalled
                 notes[backend] = nil
+            case .keyRequired:
+                // Up, but keeping its models behind a key: nothing can be chosen from a
+                // list it won't give, and a name from its public list isn't a name its
+                // own load call knows. The line under the row says what is missing.
+                states[backend] = .running
+                models[backend] = []
+                notes[backend] = error.plainWords
             case .timeout:
                 // Answering, but slowly (loading something): still running.
                 notes[backend] = error.plainWords
@@ -527,7 +557,7 @@ final class LocalServers: ObservableObject {
         }
     }
 
-    /// Both backends' models: the model list, as the writer and the picker need it.
+    /// The models of every backend, as the writer and the picker need them.
     nonisolated static func list(_ backend: ServerBackend) async throws -> [ServerModel] {
         try await listing(backend).models
     }
@@ -537,6 +567,7 @@ final class LocalServers: ObservableObject {
         switch backend {
         case .ollama: return try await ollamaModels()
         case .lmStudio: return (try await lmStudioModels(), 0)
+        case .omlx: return try await omlxModels()
         }
     }
 
@@ -611,6 +642,31 @@ final class LocalServers: ObservableObject {
             guard let id = m["id"] as? String, !isCloudName(id) else { return nil }
             return ServerModel(backend: .lmStudio, id: id, bytes: nil, contextLength: nil, thinking: false)
         }
+    }
+
+    /// oMLX's models that can write: not its embedding models, not the small draft
+    /// models a large one drives by itself, not the ones hidden in its own list. What
+    /// stands loaded comes from the same call — and that call wants the key, so without
+    /// one this throws `.keyRequired` and the names come from the public list instead.
+    nonisolated private static func omlxModels() async throws -> (models: [ServerModel], cloud: Int) {
+        let (status, body) = try await LocalServerClient.shared.call(.omlx, "/v1/models/status", timeout: 4)
+        guard status == 200, let list = body["models"] as? [[String: Any]] else {
+            throw LocalServerClient.serverError(status: status, body: body)
+        }
+        var models: [ServerModel] = []
+        for m in list {
+            guard let id = m["id"] as? String else { continue }
+            if (m["engine_type"] as? String) == "embedding" || (m["model_type"] as? String) == "embedding" { continue }
+            if m["is_helper"] as? Bool == true || m["is_hidden"] as? Bool == true { continue }
+            let context = (m["model_context_length"] as? NSNumber)?.intValue
+            let loaded = m["loaded"] as? Bool == true
+            models.append(ServerModel(backend: .omlx, id: id,
+                                      bytes: (m["estimated_size"] as? NSNumber)?.int64Value,
+                                      contextLength: context,
+                                      thinking: m["thinking_default"] as? Bool ?? false,
+                                      instances: loaded ? [ServerModel.Instance(id: id, context: context)] : []))
+        }
+        return (models.sorted { $0.id.localizedStandardCompare($1.id) == .orderedAscending }, 0)
     }
 
     // MARK: Using one
@@ -698,6 +754,19 @@ final class LocalServers: ObservableObject {
         portNote = nil
     }
 
+    /// A key typed in the card: kept in the Keychain (ServerKey), then the server is
+    /// looked for there again with it, so what it gives is seen right away.
+    func setKey(_ backend: ServerBackend, _ value: String) {
+        ServerKey.set(backend, value)
+        Task { await probe(backend) }
+    }
+
+    /// A key taken away: the server is looked for again without it.
+    func clearKey(_ backend: ServerBackend) {
+        ServerKey.clear(backend)
+        Task { await probe(backend) }
+    }
+
     #if DEBUG
     private func applyDemo(_ demo: String) {
         let ollama = [
@@ -707,12 +776,12 @@ final class LocalServers: ObservableObject {
         ]
         switch demo {
         case "running":
-            states = [.ollama: .running, .lmStudio: .installedNotRunning]
+            states = [.ollama: .running, .lmStudio: .installedNotRunning, .omlx: .installedNotRunning]
             models = [.ollama: ollama]
         case "stopped":
-            states = [.ollama: .installedNotRunning, .lmStudio: .installedNotRunning]
+            states = [.ollama: .installedNotRunning, .lmStudio: .installedNotRunning, .omlx: .installedNotRunning]
         default:
-            states = [.ollama: .notInstalled, .lmStudio: .notInstalled]
+            states = [.ollama: .notInstalled, .lmStudio: .notInstalled, .omlx: .notInstalled]
         }
     }
     #endif
@@ -873,6 +942,7 @@ struct LocalServerWriter: SummaryWriter {
         switch backend {
         case .ollama: out = try await ollama(system: system, user: user, context: context, maxTokens: maxTokens)
         case .lmStudio: out = try await lmStudio(system: system, user: user, context: context, maxTokens: maxTokens)
+        case .omlx: out = try await omlx(system: system, user: user, context: context, maxTokens: maxTokens)
         }
         let read = out.read
         Self.log.info("\(self.name, privacy: .public) wrote in \(Date().timeIntervalSince(t0), format: .fixed(precision: 1)) s, read \(read ?? -1) of about \(Self.estimateTokens(system + user)) tokens in \(context), stopped: \(out.finish ?? "?", privacy: .public)")
@@ -944,6 +1014,14 @@ struct LocalServerWriter: SummaryWriter {
             // An older LM Studio without the call loads the model with the chat itself
             // (the model is here: the fresh list just said so).
             guard status == 404 else { throw LocalServerClient.serverError(status: status, body: reply) }
+        case .omlx:
+            // oMLX loads one copy of a model by its name and keeps the context as a
+            // setting of the model itself: Mindtalk reads that number, it doesn't set it.
+            let listed = try? await LocalServers.list(.omlx).first { $0.id == model }
+            if listed?.instances.isEmpty == false { job.instance = model; return }
+            let (status, reply) = try await LocalServerClient.shared.call(.omlx, "/v1/models/\(model)/load", timeout: 180)
+            guard status == 200 else { throw LocalServerClient.serverError(status: status, body: reply) }
+            job.instance = model
         }
     }
 
@@ -975,6 +1053,9 @@ struct LocalServerWriter: SummaryWriter {
             for id in ids {
                 _ = try? await LocalServerClient.shared.call(.lmStudio, "/api/v1/models/unload", json: ["instance_id": id], timeout: 10)
             }
+        case .omlx:
+            // Asked for and done: the answer is 202 while requests in flight are let go.
+            _ = try? await LocalServerClient.shared.call(.omlx, "/v1/models/\(model)/unload", timeout: 10)
         }
     }
 
@@ -1008,6 +1089,49 @@ struct LocalServerWriter: SummaryWriter {
                 if let n = (json["prompt_eval_count"] as? NSNumber)?.intValue, let cached = (json["prompt_eval_cached_count"] as? NSNumber)?.intValue {
                     out.read = n + cached
                 }
+            }
+        }
+        return out
+    }
+
+    /// oMLX's OpenAI-style chat, streamed. Its reasoning arrives in its own channel
+    /// (`reasoning_content`), so it is never read as the answer, and thinking is
+    /// switched off for models that can, as with the other backends.
+    private func omlx(system: String, user: String, context: Int, maxTokens: Int) async throws -> Collected {
+        var messages: [[String: String]] = []
+        if !system.isEmpty { messages.append(["role": "system", "content": system]) }
+        messages.append(["role": "user", "content": user])
+        var body: [String: Any] = [
+            "model": model,
+            "messages": messages,
+            "stream": true,
+            // Asked for so the last line carries the token counts: what it read is
+            // checked the same way as with Ollama.
+            "stream_options": ["include_usage": true],
+            "temperature": 0.2,
+            "max_tokens": maxTokens,
+        ]
+        // The model's own window, not a number Mindtalk sends: it is read from the list
+        // and only used to size the prompt.
+        if thinking { body["enable_thinking"] = false }
+        let out = Collected()
+        let job = job, model = model
+        try await LocalServerClient.shared.stream(.omlx, "/v1/chat/completions", json: body) { line in
+            guard line.hasPrefix("data:") else { return }
+            let payload = line.dropFirst(5).trimmingCharacters(in: .whitespaces)
+            guard payload != "[DONE]", let data = payload.data(using: .utf8),
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+            if json["error"] != nil {
+                throw LocalServerClient.serverError(status: 500, body: ["error": json["error"] ?? "error"])
+            }
+            let choice = (json["choices"] as? [[String: Any]])?.first
+            if let content = (choice?["delta"] as? [String: Any])?["content"] as? String, !content.isEmpty {
+                if out.append(content) { Task { @MainActor in LocalServers.shared.setPhase(.writing, job: job.id, model: model) } }
+            }
+            if let finish = choice?["finish_reason"] as? String { out.finish = finish }
+            if let usage = json["usage"] as? [String: Any], let read = (usage["prompt_tokens"] as? NSNumber)?.intValue {
+                let cached = ((usage["prompt_tokens_details"] as? [String: Any])?["cached_tokens"] as? NSNumber)?.intValue ?? 0
+                out.read = read + cached
             }
         }
         return out

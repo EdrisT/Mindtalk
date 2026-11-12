@@ -246,7 +246,7 @@ struct SummaryWritersCard: View {
             }
             CardDivider()
             FoldRow(title: String(localized: "Fler alternativ"),
-                    detail: String(localized: "En modell du redan kör i Ollama eller LM Studio på den egna datorn."),
+                    detail: String(localized: "En modell du redan kör i Ollama, LM Studio eller oMLX på den egna datorn."),
                     open: $more)
             if more {
                 CardDivider()
@@ -448,8 +448,11 @@ struct ServerWriterRows: View {
     private let folded: Bool
     @State private var open: Bool
     @State private var ports = false
+    @State private var keys = false
     /// The ports as typed: taken on Return, not at every keystroke.
     @State private var portText: [ServerBackend: String] = [:]
+    /// The key as typed, for the same reason.
+    @State private var keyText: [ServerBackend: String] = [:]
 
     init(folded: Bool = true) {
         self.folded = folded
@@ -470,13 +473,13 @@ struct ServerWriterRows: View {
 
     var body: some View {
         if folded {
-            FoldRow(title: String(localized: "Använd Ollama eller LM Studio"),
-                    detail: String(localized: "Kör du redan Ollama eller LM Studio? De kan skriva sammanfattningarna."),
+            FoldRow(title: String(localized: "Använd Ollama, LM Studio eller oMLX"),
+                    detail: String(localized: "Kör du redan någon av dem? De kan skriva sammanfattningarna."),
                     open: $open)
                 // Chosen elsewhere meanwhile (the menu bar, a test): shown.
                 .onChange(of: notes.server?.backend) { _, now in if now != nil { open = true } }
         } else {
-            CardRow(title: "Använd Ollama eller LM Studio", detail: "Kör du redan Ollama eller LM Studio? De kan skriva sammanfattningarna.") { EmptyView() }
+            CardRow(title: "Använd Ollama, LM Studio eller oMLX", detail: "Kör du redan någon av dem? De kan skriva sammanfattningarna.") { EmptyView() }
         }
         if open {
             ForEach(ServerBackend.allCases) { backend in
@@ -485,7 +488,7 @@ struct ServerWriterRows: View {
             }
             RowInset {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Hämta modeller i Ollama eller LM Studio. Mindtalk skickar bara till program på den här Macen. Molnmodeller visas inte.")
+                    Text("Hämta modeller i Ollama, LM Studio eller oMLX. Mindtalk skickar bara till program på den här Macen. Molnmodeller visas inte.")
                         .font(.system(size: 12)).foregroundStyle(DS.Colors.muted)
                         .fixedSize(horizontal: false, vertical: true)
                     // A plain disclosure group only opens on its chevron: here the word opens it too.
@@ -503,7 +506,7 @@ struct ServerWriterRows: View {
                     .accessibilityAddTraits(ports ? [.isButton, .isSelected] : .isButton)
                     if ports {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Ändra bara om du har bytt port i Ollama eller LM Studio. Tryck på retur för att prova.")
+                            Text("Ändra bara om du har bytt port i programmet. Tryck på retur för att prova.")
                                 .font(.system(size: 12)).foregroundStyle(DS.Colors.muted)
                                 .fixedSize(horizontal: false, vertical: true)
                             HStack(spacing: 14) {
@@ -529,12 +532,65 @@ struct ServerWriterRows: View {
                         }
                         .padding(.top, 8)
                     }
+                    // A key is only asked for by servers that can be told to want one.
+                    if ServerBackend.allCases.contains(where: { $0.asksForKey }) {
+                        Button { withAnimation(.easeOut(duration: 0.2)) { keys.toggle() } } label: {
+                            HStack(spacing: 5) {
+                                Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                                    .rotationEffect(.degrees(keys ? 90 : 0))
+                                Text("API-nyckel").font(.system(size: 12, weight: .medium))
+                            }
+                            .foregroundStyle(DS.Colors.muted)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("API-nyckel"))
+                        .accessibilityAddTraits(keys ? [.isButton, .isSelected] : .isButton)
+                        if keys {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Skriv nyckeln om servern frågar efter en. Den sparas i Nyckelringen på den här Macen, inte bland inställningarna.")
+                                    .font(.system(size: 12)).foregroundStyle(DS.Colors.muted)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                ForEach(ServerBackend.allCases.filter { $0.asksForKey }) { backend in
+                                    HStack(spacing: 6) {
+                                        Text(verbatim: backend.name).font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
+                                        SecureField("", text: Binding(get: { keyText[backend] ?? "" },
+                                                                     set: { keyText[backend] = $0 }))
+                                            .textFieldStyle(.roundedBorder).frame(width: 220)
+                                            .font(.system(size: 12.5))
+                                            .accessibilityLabel(Text("API-nyckel för \(backend.name)"))
+                                            .onSubmit { saveKey(backend) }
+                                        Button("Spara") { saveKey(backend) }.buttonStyle(.soft)
+                                            .disabled((keyText[backend] ?? "").trimmingCharacters(in: .whitespaces).isEmpty)
+                                        Text(ServerKey.isSet(backend)
+                                            ? String(localized: "Sparad i Nyckelringen")
+                                            : String(localized: "Ingen nyckel sparad"))
+                                            .font(.system(size: 12)).foregroundStyle(DS.Colors.muted)
+                                        if ServerKey.isSet(backend) {
+                                            Button("Ta bort nyckeln") { servers.clearKey(backend); keyText = [:] }
+                                                .buttonStyle(.soft)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.top, 8)
+                        }
+                    }
                 }
             }
             .padding(.bottom, 16)
             // Another model or backend: the test answer was about the one before.
             .onChange(of: notes.choice) { servers.clearTest() }
         }
+    }
+
+    /// Return or Spara: the key goes to the Keychain, the field is emptied, and the
+    /// server is looked for there again with it.
+    private func saveKey(_ backend: ServerBackend) {
+        let typed = keyText[backend] ?? ""
+        guard !typed.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        servers.setKey(backend, typed)
+        keyText[backend] = ""
     }
 
     /// Return in a port field: the number taken (kept within range, never the other's),
