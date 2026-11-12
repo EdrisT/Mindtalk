@@ -6,6 +6,7 @@
     "Mindtalk.xcodeproj/",
     ".pi/",
     "docs/images/",
+    "scripts/",
     "Mindtalk/Resources/Localizable.xcstrings"
   ],
   "lsp": {
