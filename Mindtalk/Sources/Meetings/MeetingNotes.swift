@@ -108,7 +108,7 @@ struct MeetingSummary: Codable, Equatable {
 
     /// A short title for the meeting, used unless you named it yourself.
     var title: String? = nil
-    /// Which model wrote it ("Gemma 4"); nil for Apple Intelligence.
+    /// Which model wrote it ("Qwen3 14B"); nil for Apple Intelligence.
     var writer: String? = nil
     var overview: String
     var decisions: [Item] = []
@@ -142,7 +142,7 @@ struct MeetingAnswer: Codable, Equatable, Identifiable {
     var answer: String
     var sources: [Double] = []
     var date = Date()
-    /// Which model answered ("Gemma 4 E4B"); nil for Apple Intelligence, and in answers
+    /// Which model answered ("Qwen3 14B"); nil for Apple Intelligence, and in answers
     /// from before it was kept.
     var writer: String? = nil
 }
@@ -162,8 +162,8 @@ final class MeetingNotes: ObservableObject {
     /// try again. Never written by another model instead.
     @Published private(set) var failedServer: [UUID: ServerBackend] = [:]
 
-    /// Apple Intelligence — or Gemma 4, or your own model in Ollama or LM Studio, when chosen.
-    static var isAvailable: Bool { Polisher.status == .available || BetterNotes.shared.isActive }
+    /// Apple Intelligence — or your own model in Ollama or LM Studio, when chosen.
+    static var isAvailable: Bool { Polisher.status == .available || SummaryWriting.shared.isActive }
 
     /// Whether `choice` can be asked to write: Apple Intelligence only when it is on;
     /// the others are asked, and say so themselves when they can't.
@@ -178,7 +178,7 @@ final class MeetingNotes: ObservableObject {
 
     /// Who writes (or is writing) this meeting's notes, in a sentence: the one picked
     /// for it, else the one chosen for all.
-    func writerSentenceName(for id: UUID) -> String { (writers[id] ?? BetterNotes.shared.choice).sentenceName }
+    func writerSentenceName(for id: UUID) -> String { (writers[id] ?? SummaryWriting.shared.choice).sentenceName }
 
     #if DEBUG
     /// `--render-window … --tried`: the meeting just rewritten by `choice`, as if picked
@@ -194,10 +194,10 @@ final class MeetingNotes: ObservableObject {
     }
     #endif
 
-    /// "Använd Gemma 4 E4B i alla möten?" answered: Ja makes it the choice for all.
+    /// "Använd … i alla möten?" answered: Ja makes it the choice for all.
     func keepTried(_ id: UUID, _ keep: Bool) {
         guard let choice = tried.removeValue(forKey: id) else { return }
-        if keep { BetterNotes.shared.choice = choice }
+        if keep { SummaryWriting.shared.choice = choice }
     }
 
     /// Writes (or rewrites) the notes for a saved meeting. `pick`: a writer for this
@@ -215,7 +215,7 @@ final class MeetingNotes: ObservableObject {
         writers[id] = pick
         var lines = Lines(record)
         if let name = choice.name { lines.write(in: name) }
-        let picked = pick ?? BetterNotes.shared.choice
+        let picked = pick ?? SummaryWriting.shared.choice
         let writer = picked.writer
         Self.logStart("summary", writer: writer, reason: pick == nil ? "chosen" : "picked:\(picked.stored)")
         let written = (words: record.words.count, duration: record.duration)
@@ -261,7 +261,7 @@ final class MeetingNotes: ObservableObject {
                 if !latest.userTitled, let title = summary.title, !title.isEmpty { latest.title = title }
                 MeetingStore.shared.save(latest)
                 // Written by one picked for this meeting: offered for all, once it's done.
-                if let pick, pick != BetterNotes.shared.choice, again[id] == nil { tried[id] = pick }
+                if let pick, pick != SummaryWriting.shared.choice, again[id] == nil { tried[id] = pick }
                 Self.log.info("notes written in \(Date().timeIntervalSince(t0), format: .fixed(precision: 1)) s")
             } catch is CancellationError {
                 // Avbryt pressed: no notes, and nothing to explain.
@@ -303,7 +303,7 @@ final class MeetingNotes: ObservableObject {
         guard Self.isAvailable, !question.isEmpty, !answering.contains(id),
               let record = MeetingStore.shared.meetings.first(where: { $0.id == id }) else { return }
         let recording = MeetingSession.shared.isRecording
-        let writer = recording ? nil : BetterNotes.shared.writer   // not during a meeting
+        let writer = recording ? nil : SummaryWriting.shared.writer   // not during a meeting
         // During a meeting only Apple's model answers: without it, say so plainly.
         guard writer != nil || Polisher.status == .available else {
             failed[id] = Self.onlyAppleDuringMeeting
@@ -370,8 +370,8 @@ final class MeetingNotes: ObservableObject {
         print("Språk: \(lines.language), \(lines.lines.count) rader, \(lines.parts().count) del(ar)")
         do {
             let t0 = Date()
-            let writer = BetterNotes.shared.writer
-            print("Modell: \(BetterNotes.shared.writerName)")
+            let writer = SummaryWriting.shared.writer
+            print("Modell: \(SummaryWriting.shared.writerName)")
             let s = try await write(lines, writer: writer)
             print(String(format: "\n(%.1f s)\nTitel: %@\nÖversikt: %@", Date().timeIntervalSince(t0), s.title ?? "•", s.overview))
             let show = { (title: String, items: [MeetingSummary.Item]) in
@@ -410,7 +410,7 @@ final class MeetingNotes: ObservableObject {
     /// One line in the system log when a summary or an answer starts: who writes, what
     /// is chosen, and why they differ when they do. No meeting text.
     static func logStart(_ what: String, writer: (any SummaryWriter)?, reason: String) {
-        let chosen = BetterNotes.shared.choice.stored
+        let chosen = SummaryWriting.shared.choice.stored
         log.notice("\(what, privacy: .public): writer=\(writer?.name ?? "Apple Intelligence", privacy: .public) chosen=\(chosen, privacy: .public) reason=\(reason, privacy: .public)")
     }
 
@@ -427,7 +427,7 @@ final class MeetingNotes: ObservableObject {
 
     /// The writer itself was out of reach, rather than failing on the meeting.
     nonisolated private static func isUnavailable(_ error: Error) -> Bool {
-        if error is WriterError { return true }
+        if error is WriterUnavailable { return true }
         if let e = error as? ModelError, case .notInstalled = e { return true }
         switch error as? ServerError {
         case .notRunning?, .notInstalled?, .noModels?, .modelGone?, .noEndpoint?: return true
@@ -439,7 +439,9 @@ final class MeetingNotes: ObservableObject {
 
     private static func explain(_ error: Error) -> String {
         if let e = error as? ServerError { return e.plainWords }
-        if let e = error as? WriterError { return e.plainWords }
+        if error is WriterUnavailable {
+            return String(localized: "Den skrivare som var vald finns inte i den här versionen. Välj en annan under Inställningar → Möten.")
+        }
         if error is EmptyAnswer { return String(localized: "Modellen skrev inget svar. Försök igen.") }
         if error is CancellationError { return String(localized: "Avbrutet.") }
         if let e = error as? LanguageModelSession.GenerationError {
@@ -522,7 +524,7 @@ final class MeetingNotes: ObservableObject {
         /// Each part's points' subjects, in step with its overview's points (writers only).
         var topics: [[String?]] = []
         var lastError: Error?
-        // Gemma 4 or your own model: the whole meeting at once when it fits (a long one
+        // A model of your own: the whole meeting at once when it fits (a long one
         // in as few parts as it can read), in the same line format — and through the
         // same checks below.
         if let writer {
@@ -537,7 +539,7 @@ final class MeetingNotes: ObservableObject {
                 if CommandLine.arguments.contains("--raw") { print("RÅTT SVAR:\n\(reply)\n---") }
                 #endif
                 var p = parsePlain(reply)
-                // No summary line (Gemma skips it now and then, 22 October): asked for on its
+                // No summary line (a model skips it now and then, 22 October): asked for on its
                 // own, so the notes never open without what the meeting was about.
                 if p.summary.isEmpty, overviews.isEmpty {
                     let alone = try? await writer.complete(system: "", user: """
@@ -781,7 +783,7 @@ final class MeetingNotes: ObservableObject {
         let taken = Set((summary.decisions + summary.tasks).compactMap(\.at))
         // Worth remembering only if it can be shown where it was said — and few of
         // them for a short talk, where the model otherwise pads.
-        // Each point with its subject, when the writer gave one (Gemma and your own models).
+        // Each point with its subject, when the writer gave one (a model of your own does).
         let subjects = overviews.indices.flatMap { k in
             overviews[k].points.indices.map { j in topics.indices.contains(k) && topics[k].indices.contains(j) ? topics[k][j] : nil }
         }
@@ -880,7 +882,7 @@ final class MeetingNotes: ObservableObject {
                 reply = try await session.respond(to: prompt, generating: Reply.self, options: answerOptions).content
             }
         } catch {
-            // Your own model, Gemma 4, or Apple's model refusing structure: plain text, sources on a last line.
+            // Your own model, or Apple's model refusing structure: plain text, sources on a last line.
             if !(error is LocalAnswer) { log.error("answer: \(String(describing: error), privacy: .public)") }
             let ask = instructions(language, """
                 Answer the question about the meeting in \(broad ? "two to five" : "one to three") full sentences, in your own \
@@ -1233,7 +1235,7 @@ final class MeetingNotes: ObservableObject {
 
     nonisolated static func parsePlain(_ reply: String) -> Plain {
         var p = Plain()
-        // Lines without a label, before the first one: Gemma sometimes leaves out
+        // Lines without a label, before the first one: a model sometimes leaves out
         // "TITLE:" and "SUMMARY:" and writes just the title, then the summary
         // (22 October: both lost, the notes had no overview).
         var unlabelled: [String] = []
@@ -1516,7 +1518,7 @@ struct Lines: Sendable {
     }
 
     /// Words per part: room for instructions and the answer. Apple's model reads about
-    /// 3 000 words at a time; Gemma 4 a whole long meeting.
+    /// 3 000 words at a time; a model of your own a whole long meeting.
     static let appleBudget = 1_300
     static let localBudget = 60_000
 
@@ -1635,7 +1637,7 @@ struct Lines: Sendable {
         }
         let words = Self.keys(text)
         let named = line - 1
-        // No number given (Gemma leaves out "[n]" now and then): every line on equal terms,
+        // No number given (a model leaves out "[n]" now and then): every line on equal terms,
         // rather than all of them held far from a line that wasn't named.
         let unnamed = line <= 0
         var best: (index: Int, score: Double)?

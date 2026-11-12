@@ -65,12 +65,6 @@ struct OnboardingView: View {
     @State private var listener = OnboardingView.defaultListener
     /// The voice model for meetings (400 MB): ticked — small, and needed for meetings.
     @State private var voices = OnboardingView.defaultVoices
-    /// Gemma: not ticked — big, and Apple Intelligence writes summaries without it.
-    @State private var gemma = false
-    /// Which Gemma, when the Mac runs both: the recommended one if it fits next to the
-    /// rest, else the one that does.
-    @State private var gemmaPick: NotesModel? = LanguageStep.defaultGemma(
-        besides: LanguageStep.others(chosen: [Settings.engine], listener: OnboardingView.defaultListener, voices: OnboardingView.defaultVoices))
 
     /// Ticked from the start on the first run only: shown again, something you removed
     /// under Modeller stays removed unless you tick it yourself.
@@ -138,7 +132,7 @@ struct OnboardingView: View {
     @ViewBuilder private var stepView: some View {
         switch step {
         case .welcome: WelcomeStep(whatsNew: whatsNew)
-        case .language: LanguageStep(chosen: $chosen, listener: $listener, voices: $voices, gemma: $gemma, gemmaPick: $gemmaPick,
+        case .language: LanguageStep(chosen: $chosen, listener: $listener, voices: $voices,
                                      fetching: languageBytes > 0)
         case .permissions: PermissionsStep(dictation: dictation)
         case .tryIt: TryStep(dictation: dictation)
@@ -262,15 +256,14 @@ struct OnboardingView: View {
     /// here or on their way, and the extras. 0: nothing more to fetch.
     private var languageBytes: Int64 {
         let missing = SpeechModel.allCases.filter { chosen.contains($0) && !$0.isInstalled && dictation.downloads[$0] == nil }
-        return missing.reduce(Int64(0)) { $0 + $1.downloadBytes } + Self.extras(listener: listener, voices: voices, gemma: gemma ? gemmaPick : nil)
+        return missing.reduce(Int64(0)) { $0 + $1.downloadBytes } + Self.extras(listener: listener, voices: voices)
     }
 
     /// What the ticked extras still have to fetch, in bytes.
-    private static func extras(listener: Bool, voices: Bool, gemma: NotesModel?) -> Int64 {
+    private static func extras(listener: Bool, voices: Bool) -> Int64 {
         var bytes: Int64 = 0
         if listener, !VocabularyBoost.isInstalled, VocabularyBoostStatus.shared.state == .missing { bytes += 100_000_000 }
         if voices, VoiceModels.shared.state == .missing { bytes += 400_000_000 }
-        if let m = gemma, case .missing = BetterNotes.shared.state(m) { bytes += m.remainingBytes }
         return bytes
     }
 
@@ -288,14 +281,6 @@ struct OnboardingView: View {
             if voices, VoiceModels.shared.state == .missing { VoiceModels.shared.download() }
             // Remembered until they're here: quitting before then picks them up again.
             Self.rememberDownloads(order.filter { !$0.isInstalled }, voices: voices && !VoiceModels.isInstalled)
-            if !gemma { UserDefaults.standard.removeObject(forKey: Self.gemmaAfterSpeech) }
-            // Gemma only if it fits next to everything else on its way, with room to spare.
-            let others = LanguageStep.others(chosen: chosen, listener: listener, voices: voices)
-            if gemma, let m = gemmaPick, LanguageStep.fits(m, besides: others), case .missing = BetterNotes.shared.state(m) {
-                // After the speech model: gigabytes of Gemma alongside would make the wait
-                // to try dictation longer.
-                Self.downloadAfterSpeech(m, models: order)
-            }
             go(1)
         case .ready:
             done()
@@ -310,7 +295,6 @@ struct OnboardingView: View {
         let order = SpeechModel.allCases.filter(chosen.contains)
         if !chosen.contains(dictation.engine), let first = order.first { dictation.setEngine(first) }
         for m in SpeechModel.allCases where !chosen.contains(m) { dictation.cancelDownload(m) }
-        UserDefaults.standard.removeObject(forKey: Self.gemmaAfterSpeech)
         go(1)
     }
 
@@ -322,26 +306,6 @@ struct OnboardingView: View {
         finish()
     }
 
-    private static let gemmaAfterSpeech = "gemmaAfterSpeech"
-
-    /// The Gemma waiting for the speech model, chosen in the introduction.
-    static var pendingGemma: NotesModel? {
-        UserDefaults.standard.string(forKey: gemmaAfterSpeech).flatMap(NotesModel.init(rawValue:))
-    }
-
-    /// Gemma once the speech models chosen are here (or have stopped trying). Kept in
-    /// the defaults until it starts, so quitting before then doesn't lose it.
-    private static func downloadAfterSpeech(_ notes: NotesModel, models: [SpeechModel]) {
-        Settings.keep(notes.rawValue, forKey: gemmaAfterSpeech)
-        Task { @MainActor in
-            while models.contains(where: { !$0.isInstalled && Dictation.shared.downloads[$0] != nil }) {
-                try? await Task.sleep(for: .seconds(3))
-            }
-            UserDefaults.standard.removeObject(forKey: gemmaAfterSpeech)
-            if case .missing = BetterNotes.shared.state(notes) { BetterNotes.shared.download(notes) }
-        }
-    }
-
     private static let introDownloads = "introDownloads"
 
     private static func rememberDownloads(_ models: [SpeechModel], voices: Bool) {
@@ -351,14 +315,13 @@ struct OnboardingView: View {
     }
 
     /// At launch: what the introduction chose to download and Mindtalk quit before it
-    /// was here, started again (the speech model first), then a Gemma left waiting.
+    /// was here, started again (the speech model first).
     static func resumeIntroDownloads() {
         let names = UserDefaults.standard.stringArray(forKey: introDownloads) ?? []
         let models = names.compactMap(SpeechModel.init(rawValue:))
         for m in models where !m.isInstalled && Dictation.shared.downloads[m] == nil { Dictation.shared.downloadModel(m) }
         if names.contains("voices"), VoiceModels.shared.state == .missing { VoiceModels.shared.download() }
         rememberDownloads(models.filter { !$0.isInstalled }, voices: names.contains("voices") && !VoiceModels.isInstalled)
-        if let notes = pendingGemma { downloadAfterSpeech(notes, models: SpeechModel.allCases) }
     }
 
     private func go(_ delta: Int) {
@@ -431,30 +394,8 @@ private struct LanguageStep: View {
     @Binding var chosen: Set<SpeechModel>
     @Binding var listener: Bool
     @Binding var voices: Bool
-    @Binding var gemma: Bool
-    @Binding var gemmaPick: NotesModel?
     /// Something would be fetched: the line about the room for it.
     var fetching = false
-    @ObservedObject private var notes = BetterNotes.shared
-
-    /// The Gemmas this Mac runs, largest first — none once one is in use, and none if
-    /// not even the smallest fits.
-    static var gemmaOptions: [NotesModel] {
-        guard !BetterNotes.shared.isActive else { return [] }
-        let options = NotesModel.allCases.reversed().filter(\.supported)
-        return options.contains(where: \.hasRoom) ? Array(options) : []
-    }
-
-    /// The best one that fits next to the rest: the recommended one when there's room for it.
-    static func defaultGemma(besides others: Int64) -> NotesModel? {
-        gemmaOptions.first { fits($0, besides: others) }
-    }
-
-    /// Room for a Gemma next to everything else that's ticked, with 2 GB to spare —
-    /// as Modeller counts (RecommendedDownloads).
-    static func fits(_ m: NotesModel, besides others: Int64) -> Bool {
-        m.remainingBytes + others + 2_000_000_000 <= BetterNotes.freeBytes
-    }
 
     /// What the speech models and the small extras still have to fetch.
     static func others(chosen: Set<SpeechModel>, listener: Bool, voices: Bool) -> Int64 {
@@ -486,15 +427,11 @@ private struct LanguageStep: View {
             recommended.staggered(3)
             // Room for it, and that waiting isn't asked for (the way on without it is in the footer).
             if fetching {
-                Text("Du har \(BetterNotes.gigabytes(BetterNotes.freeBytes)) ledigt. Hämtas i bakgrunden medan du fortsätter.")
+                Text("Du har \(SummaryWriting.gigabytes(SummaryWriting.freeBytes)) ledigt. Hämtas i bakgrunden medan du fortsätter.")
                     .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
                     .lineLimit(1)
                     .staggered(4)
             }
-        }
-        // More ticked, less room: a Gemma that no longer fits next to the rest is unticked.
-        .onChange(of: others) { _, now in
-            if gemma, let m = gemmaPick, !Self.fits(m, besides: now) { gemma = false }
         }
     }
 }
@@ -503,14 +440,13 @@ extension LanguageStep {
     @ViewBuilder fileprivate var recommended: some View {
         let showsVoices = !VoiceModels.isInstalled
         let showsListener = !VocabularyBoost.isInstalled
-        let options = Self.gemmaOptions
-        if showsVoices || showsListener || !options.isEmpty {
+        if showsVoices || showsListener {
             VStack(alignment: .leading, spacing: 9) {
                 HStack(spacing: 8) {
                     Text("Rekommenderas också. Laddas ned medan du går vidare.")
                         .font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.Colors.muted)
                     Spacer(minLength: 8)
-                    ModelNamesInfo(gemma: !options.isEmpty)
+                    ModelNamesInfo()
                 }
                 // What each gives, not what it's called: the names are behind the ⓘ.
                 if showsVoices {
@@ -518,16 +454,6 @@ extension LanguageStep {
                 }
                 if showsListener {
                     extra($listener, gives: "Namn stavas rätt när du pratar (\(VocabularyBoost.sizeText))")
-                }
-                if options.count == 1, let m = options.first {
-                    extra($gemma, name: m.name, gives: "ger mer träffsäkra sammanfattningar", size: m.sizeText)
-                } else if !options.isEmpty {
-                    // Both sizes: pick one, the recommended one marked.
-                    extra($gemma, name: "Gemma 4", gives: "ger mer träffsäkra sammanfattningar", size: nil)
-                    VStack(alignment: .leading, spacing: 6) {
-                        ForEach(options) { m in gemmaOption(m, largest: m == options.first) }
-                    }
-                    .padding(.leading, 24)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -559,53 +485,11 @@ extension LanguageStep {
         .toggleStyle(InkCheckboxStyle())
     }
 
-    /// One size of Gemma: picking it ticks Gemma too. One that doesn't fit says how much
-    /// more room it needs.
-    private func gemmaOption(_ m: NotesModel, largest: Bool) -> some View {
-        let picked = gemmaPick == m
-        let fits = Self.fits(m, besides: others)
-        // Not ticked: the sizes wait, greyed — nothing here is on its way.
-        let active = gemma
-        return Button {
-            withAnimation(.snappy(duration: 0.2)) { gemmaPick = m; gemma = true }
-        } label: {
-            HStack(spacing: 7) {
-                Image(systemName: picked ? "largecircle.fill.circle" : "circle")
-                    .font(.system(size: 16)).foregroundStyle(picked && active ? DS.Colors.accent : DS.Colors.muted)
-                Text(verbatim: m.name.replacingOccurrences(of: "Gemma 4 ", with: ""))
-                    .font(.system(size: 12.5, weight: .semibold))
-                Text(verbatim: "· \(m.sizeText) ·").font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted).monospacedDigit()
-                Group {
-                    if !fits {
-                        Text("behöver \(BetterNotes.gigabytes(max(100_000_000, m.remainingBytes + others + 2_000_000_000 - BetterNotes.freeBytes))) mer ledigt")
-                    } else if largest {
-                        Text("mest träffsäker")
-                    } else {
-                        Text("snabbare, tar mindre plats")
-                    }
-                }
-                .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
-                if m == NotesModel.recommended {
-                    Text("Rekommenderas för din Mac")
-                        .font(.system(size: 11, weight: .semibold))
-                        .padding(.horizontal, 7).padding(.vertical, 2)
-                        .background(Capsule().fill(DS.Colors.chip))
-                }
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .disabled(!fits)
-        .opacity(!fits ? 0.4 : active ? 1 : 0.5)
-        .accessibilityAddTraits(picked ? .isSelected : [])
-    }
 }
 
 /// ⓘ "Vilka modeller är det?": the engines behind the choices, with who made them,
 /// as under Tack till (CC BY asks that they're named).
 private struct ModelNamesInfo: View {
-    /// Gemma is on offer: named too.
-    let gemma: Bool
     @State private var open = false
 
     var body: some View {
@@ -625,9 +509,6 @@ private struct ModelNamesInfo: View {
                 }
                 line(String(localized: "Vem som säger vad i möten"), "Nemotron 3", String(localized: "Av NVIDIA, Core ML av FluidInference. OpenMDW 1.1."))
                 line(String(localized: "Namn stavas rätt när du pratar"), "Parakeet CTC", String(localized: "Lyssnaren. Av NVIDIA, Core ML av FluidInference. CC BY 4.0."))
-                if gemma {
-                    line(String(localized: "Sammanfattningar"), "Gemma 4", String(localized: "Av Google DeepMind. Apache 2.0."))
-                }
                 Text("Alla står också under Tack till i Inställningar.")
                     .font(.system(size: 11.5)).foregroundStyle(DS.Colors.muted)
                     .padding(.top, 2)
@@ -1271,13 +1152,12 @@ private struct ProgressSegments: View {
 
 /// The downloads, at the foot of every step while anything is on its way: one line,
 /// "Hämtar 1,2 GB, ungefär 4 minuter kvar." — the speech models, the voice model, the
-/// listener and Gemma added up, with one ring for the whole — or what went wrong, with
+/// listener and the voice model added up, with one ring for the whole — or what went wrong, with
 /// a way to try again. The time left comes from how fast the bytes have come in over
 /// the last little while, not from the start. Gone once everything is in.
 struct DownloadStatus: View {
     @ObservedObject var dictation: Dictation
     @ObservedObject private var voices = VoiceModels.shared
-    @ObservedObject private var notes = BetterNotes.shared
     @ObservedObject private var listener = VocabularyBoostStatus.shared
     @State private var pace = Pace()
 
@@ -1325,11 +1205,6 @@ struct DownloadStatus: View {
         if case .downloading = listener.state {
             items.append(Item(name: String(localized: "Lyssnaren"), total: VocabularyBoost.bytes, done: 0))
         }
-        for m in NotesModel.allCases {
-            if case .downloading(let p) = notes.state(m) {
-                items.append(Item(name: m.name, total: m.bytes, done: Int64(p * Double(m.bytes))))
-            }
-        }
         return items
     }
 
@@ -1346,12 +1221,6 @@ struct DownloadStatus: View {
         if case .failed = listener.state {
             failures.append(Failure(id: "listener", detail: String(localized: "Lyssnaren laddades inte ned"),
                                     retry: { Vocabulary.shared.fetchListener() }))
-        }
-        for m in NotesModel.allCases {
-            if case .failed = notes.state(m) {
-                failures.append(Failure(id: "notes-\(m.rawValue)", detail: String(localized: "\(m.name) laddades inte ned"),
-                                        retry: { BetterNotes.shared.download(m) }))
-            }
         }
         return failures
     }

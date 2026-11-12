@@ -118,7 +118,7 @@ struct ServerModel: Identifiable, Hashable, Sendable {
     /// LM Studio: the largest context any loaded copy has.
     var loadedContext: Int? { instances.compactMap(\.context).max() }
 
-    var sizeText: String? { bytes.map { BetterNotes.gigabytes($0) } }
+    var sizeText: String? { bytes.map { SummaryWriting.gigabytes($0) } }
     /// "upp till 100 000 ord": what it reads at once, in words rather than tokens.
     var wordsText: String? { contextLength.map { String(localized: "upp till \(Self.words($0)) ord") } }
 
@@ -434,7 +434,7 @@ final class LocalServers: ObservableObject {
     /// How much context this Mac affords a model, by its memory: 32k up to 16 GB,
     /// 64k at 32 GB, 128k above.
     nonisolated static var contextCap: Int {
-        let gb = BetterNotes.memoryGB
+        let gb = SummaryWriting.memoryGB
         return gb <= 16 ? 32_768 : gb <= 32 ? 65_536 : 131_072
     }
 
@@ -628,7 +628,7 @@ final class LocalServers: ObservableObject {
     /// A recording is about to start: the chosen server model is let go now, so the
     /// speech models have the memory.
     func release() {
-        guard let server = BetterNotes.shared.server else { return }
+        guard let server = SummaryWriting.shared.server else { return }
         Task.detached(priority: .utility) {
             let writer = await LocalServerWriter(backend: server.backend, model: server.model)
             await writer.unload()

@@ -4,7 +4,7 @@ import os
 
 // MARK: - Model downloads that pick up where they stopped
 //
-// The models are large (Gemma 4 is 16 GB in three files) and Hugging Face can be
+// The models are large (several gigabytes, in three files each) and Hugging Face can be
 // slow to start: the first request for a file at a server near you may crawl
 // while that server fetches it. So a large file is fetched in parts of 16 MB, four
 // at a time, written straight into place in one file, and a small ledger next to

@@ -22,11 +22,11 @@ struct MeetingsStep: View {
     var body: some View {
         VStack(spacing: 24) {
             // A summary is promised only where one can be written (Apple Intelligence, or a
-            // Gemma here or on its way).
+            // model of your own chosen already).
             StepHeader(title: "Möten, i rummet och i samtal",
-                       subtitle: MeetingNotes.isAvailable || BetterNotes.shared.downloading != nil || OnboardingView.pendingGemma != nil
+                       subtitle: MeetingNotes.isAvailable
                            ? "Mindtalk hör vem som säger vad, skriver ned det medan ni pratar och sammanfattar efteråt."
-                           : "Mindtalk hör vem som säger vad och skriver ned det medan ni pratar. Sammanfattningarna skriver Apple Intelligence eller Gemma. Du väljer vilken under Inställningar.")
+                           : "Mindtalk hör vem som säger vad och skriver ned det medan ni pratar. Sammanfattningarna skriver Apple Intelligence, eller en modell du kör själv. Du väljer under Inställningar.")
                 .staggered(0)
             HStack(alignment: .top, spacing: DS.Layout.stepGap) {
                 DemoMeeting()
@@ -684,8 +684,8 @@ private struct VoiceModelCard: View {
                 // After a failed download the reason takes its place.
                 if failure == nil { fact("person.wave.2", Text("Hämta röstmodellen (\(VoiceModels.sizeText)). Utan den går det inte att starta ett möte.")) }
                 fact("lock", Text("Körs på din Mac, ljudet lämnar den aldrig"))
-                fact("internaldrive", Text("Du har \(BetterNotes.gigabytes(BetterNotes.freeBytes)) ledigt"),
-                     warn: BetterNotes.freeBytes < 2_000_000_000)
+                fact("internaldrive", Text("Du har \(SummaryWriting.gigabytes(SummaryWriting.freeBytes)) ledigt"),
+                     warn: SummaryWriting.freeBytes < 2_000_000_000)
             }
             .padding(.top, 12)
             Spacer(minLength: 10)

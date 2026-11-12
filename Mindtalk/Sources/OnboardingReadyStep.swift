@@ -6,13 +6,13 @@ import SwiftUI
 // The last step says what you have: each thing with a tick when it works, its key,
 // or how far its download has come — and what still stands in the way, with the one
 // button that fixes it. Where the summaries come from, with the one thing worth
-// adding (Gemma) offered here, once, if it fits. Then where Mindtalk lives: in the
+// adding a model of your own offered on the Möten page. Then where Mindtalk lives: in the
 // menu bar, started at login if it is.
 
 struct ReadyStep: View {
     @ObservedObject var dictation: Dictation
     @ObservedObject private var voices = VoiceModels.shared
-    @ObservedObject private var notes = BetterNotes.shared
+    @ObservedObject private var notes = SummaryWriting.shared
     @ObservedObject private var listener = VocabularyBoostStatus.shared
 
     var body: some View {
@@ -185,19 +185,9 @@ struct ReadyStep: View {
         if notes.isActive {
             ReadyRow(icon: "sparkle", state: .ready, title: "Sammanfattningar", keys: nil,
                      detail: String(localized: "Skrivs av \(notes.writerName) på din Mac.")) { EmptyView() }
-        } else if let m = notes.downloading, case .downloading(let p) = notes.state(m) {
-            ReadyRow(icon: "sparkle", state: .progress(p), title: "Sammanfattningar", keys: nil,
-                     detail: Polisher.status == .available
-                        ? String(localized: "\(m.name) laddas ned (\(Int(p * 100)) %). Till dess skriver Apple Intelligence.")
-                        : String(localized: "\(m.name) laddas ned (\(Int(p * 100)) %). Sedan skrivs sammanfattningarna.")) { EmptyView() }
-        } else if let m = OnboardingView.pendingGemma {
-            ReadyRow(icon: "sparkle", state: .waiting, title: "Sammanfattningar", keys: nil,
-                     detail: Polisher.status == .available
-                        ? String(localized: "\(m.name) laddas ned när talmodellen är klar. Till dess skriver Apple Intelligence.")
-                        : String(localized: "\(m.name) laddas ned när talmodellen är klar. Sedan skrivs sammanfattningarna.")) { EmptyView() }
         } else {
-            // Apple Intelligence writes them; what a Gemma adds is said on the Möten page and in
-            // Settings, not here. Off: the one button that mends it.
+            // Apple Intelligence writes them; what a model of your own adds is said on the
+            // Möten page and in Settings, not here. Off: the one button that mends it.
             switch Polisher.status {
             case .available:
                 ReadyRow(icon: "sparkle", state: .ready, title: "Sammanfattningar", keys: nil,
@@ -213,9 +203,7 @@ struct ReadyStep: View {
                          detail: String(localized: "macOS laddar fortfarande ned Apple Intelligence. Det brukar ta några minuter.")) { EmptyView() }
             case .unsupported:
                 ReadyRow(icon: "sparkle", state: .optional, title: "Sammanfattningar", keys: nil,
-                         detail: NotesModel.recommended != nil
-                             ? String(localized: "Den här Macen kan inte köra Apple Intelligence. Du kan ladda ned Gemma 4 under Inställningar → Möten.")
-                             : String(localized: "Den här Macen kan inte köra Apple Intelligence.")) { EmptyView() }
+                         detail: String(localized: "Den här Macen kan inte köra Apple Intelligence. Välj en modell du kör själv under Inställningar → Möten.")) { EmptyView() }
             }
         }
     }

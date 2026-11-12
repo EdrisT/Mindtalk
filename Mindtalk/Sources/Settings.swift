@@ -475,10 +475,10 @@ enum PreviewDefaults {
         let before = UserDefaults.standard.persistentDomain(forName: domain)
 
         // The central writers, while previewing: nothing reaches the disk.
-        let choice = BetterNotes.shared.choice
-        BetterNotes.shared.choice = choice == .gemma(.small) ? .gemma(.large) : .gemma(.small)
-        check(BetterNotes.shared.choice != choice, "valet av skribent ändrades inte i minnet")
-        BetterNotes.shared.choice = choice
+        let choice = SummaryWriting.shared.choice
+        SummaryWriting.shared.choice = choice == .apple ? .server(.ollama, "testmodell") : .apple
+        check(SummaryWriting.shared.choice != choice, "valet av skribent ändrades inte i minnet")
+        SummaryWriting.shared.choice = choice
         Settings.appearance = Settings.appearance == .dark ? .light : .dark
         Settings.didOnboard = !Settings.didOnboard
         Settings.hotkey = .default
@@ -500,7 +500,7 @@ enum PreviewDefaults {
         defaults.set(Data([1, 2, 3]), forKey: "bytes")
         let copy = defaults.persistentDomain(forName: scratch)
         check(copy?.count == 3, "provdomänen har inte tre nycklar: \(copy?.count ?? -1)")
-        defaults.set("gemma:e4b", forKey: "summaryWriter")
+        defaults.set("server:ollama:testmodell", forKey: "summaryWriter")
         defaults.set(true, forKey: "added")
         defaults.removeObject(forKey: "bytes")
         check(!same(defaults.persistentDomain(forName: scratch), copy), "ändringar i provdomänen märktes inte")

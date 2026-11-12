@@ -115,7 +115,7 @@ final class VoiceModels: ObservableObject {
         if case .downloading = state { return }
         // Room for the download and for preparing it for this Mac, with some to spare
         // (as for the speech models).
-        guard BetterNotes.freeBytes > Self.downloadBytes * 2 + 500_000_000 else {
+        guard SummaryWriting.freeBytes > Self.downloadBytes * 2 + 500_000_000 else {
             state = .failed(String(localized: "Det behövs drygt \(DiskSize.text(Self.downloadBytes * 2)) ledigt på disken."))
             return
         }

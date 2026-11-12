@@ -588,7 +588,7 @@ struct StartCard: View {
     @ObservedObject private var importer = MeetingImport.shared
     @ObservedObject private var memory = VoiceMemory.shared
     /// Who writes the summaries: the foot of the card follows a change.
-    @ObservedObject private var better = BetterNotes.shared
+    @ObservedObject private var better = SummaryWriting.shared
     /// Room for the card and the file zone side by side.
     @State private var sideBySide = true
     /// A start was just pressed: the card steps back as the room takes over.
@@ -834,7 +834,7 @@ struct StartCard: View {
     /// "Sammanfattas av Apple Intelligence", or that there'll be no summary without one.
     private var writerLine: String {
         guard MeetingNotes.isAvailable else {
-            return String(localized: "Utan Apple Intelligence eller Gemma 4 blir det text men ingen sammanfattning.")
+            return String(localized: "Utan Apple Intelligence eller en egen modell blir det text men ingen sammanfattning.")
         }
         return String(localized: "Sammanfattas av \(better.writerSentenceName)")
     }
@@ -2858,7 +2858,7 @@ private struct SummaryView: View {
             VStack(alignment: .leading, spacing: 32) {
             if writing || justRewritten {
                 RewriteBanner(writing: writing, writer: notes.writerSentenceName(for: record.id),
-                              cancel: (notes.writers[record.id] ?? BetterNotes.shared.choice).isServer ? { notes.cancelSummary(record.id) } : nil)
+                              cancel: (notes.writers[record.id] ?? SummaryWriting.shared.choice).isServer ? { notes.cancelSummary(record.id) } : nil)
                     .transition(.move(edge: .top).combined(with: .opacity))
             } else if notesChanged {
                 NotesChangedRow { notes.summarize(record.id) }
@@ -2919,8 +2919,6 @@ private struct SummaryView: View {
                 }
                 .padding(.top, -8)
                 .staggered(4)
-                // Written by Apple Intelligence: once, the Gemma that suits this Mac.
-                if summary.writer == nil, MeetingSession.shared.record?.id != record.id { NotesModelOffer().staggered(5) }
             }
             .id(summary.created)
             .opacity(writing ? 0.35 : 1)
@@ -2930,14 +2928,14 @@ private struct SummaryView: View {
             }
             .animation(.spring(duration: 0.4, bounce: 0.12), value: writing || justRewritten)
         } else if writing {
-            WritingPlaceholder(writer: notes.writers[record.id] ?? BetterNotes.shared.choice,
-                               cancel: (notes.writers[record.id] ?? BetterNotes.shared.choice).isServer ? { notes.cancelSummary(record.id) } : nil)
+            WritingPlaceholder(writer: notes.writers[record.id] ?? SummaryWriting.shared.choice,
+                               cancel: (notes.writers[record.id] ?? SummaryWriting.shared.choice).isServer ? { notes.cancelSummary(record.id) } : nil)
         } else if !MeetingNotes.isAvailable {
             unavailable
         } else {
             HStack(spacing: 14) {
                 // The mark of whoever will write it: Apple's only for Apple Intelligence.
-                let mark = BetterNotes.shared.isActive ? "sparkle" : "apple.intelligence"
+                let mark = SummaryWriting.shared.isActive ? "sparkle" : "apple.intelligence"
                 Image(systemName: mark).font(.system(size: 18)).foregroundStyle(DS.Colors.muted)
                 // Nothing said: nothing to sum up, and "än" would promise one.
                 Text(record.words.isEmpty ? "Inget tal hördes, så det finns inget att sammanfatta." : "Ingen sammanfattning än")
@@ -2960,7 +2958,7 @@ private struct SummaryView: View {
         HStack(spacing: 14) {
             Image(systemName: "apple.intelligence").font(.system(size: 18)).foregroundStyle(DS.Colors.muted)
             VStack(alignment: .leading, spacing: 4) {
-                Text("Sammanfattningar behöver Apple Intelligence, Gemma 4 eller en egen modell").font(.system(size: 15, weight: .semibold))
+                Text("Sammanfattningar behöver Apple Intelligence eller en egen modell").font(.system(size: 15, weight: .semibold))
                 Text(LocalizedStringKey(unavailableDetail))
                     .font(.system(size: 13)).foregroundStyle(DS.Colors.muted)
             }
@@ -2969,11 +2967,9 @@ private struct SummaryView: View {
                 Button("Slå på") { SummaryWritersCard.openAppleIntelligenceSettings() }
                     .buttonStyle(.soft)
             }
-            // The other way: Gemma 4, on this Mac, when it can run it.
-            if NotesModel.recommended != nil {
-                Button("Ladda ned Gemma 4") { SettingsPage.open(.meetings) }
-                    .buttonStyle(.soft)
-            }
+            // The other way: a model of your own, in Ollama or LM Studio.
+            Button("Välj en egen modell") { SettingsPage.open(.meetings) }
+                .buttonStyle(.soft)
         }
         .padding(20)
         .card()
@@ -2984,9 +2980,7 @@ private struct SummaryView: View {
         case .notEnabled: return String(localized: "Slå på Apple Intelligence för att få en sammanfattning. Texten finns under fliken Text.")
         case .notReady: return String(localized: "Apple Intelligence laddas ned. Sammanfatta när den är klar.")
         default:
-            return NotesModel.recommended != nil
-                ? String(localized: "Den här Macen kan inte köra Apple Intelligence. Ladda ned Gemma 4 under Inställningar → Möten. Du kan läsa och söka i texten som vanligt.")
-                : String(localized: "Den här Macen kan inte köra Apple Intelligence. Du kan läsa och söka i texten som vanligt.")
+            return String(localized: "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama eller LM Studio på den egna datorn. Du kan läsa och söka i texten som vanligt.")
         }
     }
 
@@ -3482,13 +3476,13 @@ private struct ReviewBar: View {
     private var field: some View {
         HStack(spacing: 10) {
             let available = MeetingNotes.isAvailable
-            TextField(available ? String(localized: "Fråga om det här mötet") : String(localized: "Frågor kräver Apple Intelligence, Gemma 4 eller en egen modell."),
+            TextField(available ? String(localized: "Fråga om det här mötet") : String(localized: "Frågor kräver Apple Intelligence eller en egen modell."),
                       text: $question)
                 .textFieldStyle(.plain)
                 .font(.system(size: 14))
                 .focused($focused)
                 .onSubmit { ask(question) }
-                .accessibilityLabel(available ? String(localized: "Fråga om det här mötet") : String(localized: "Frågor kräver Apple Intelligence, Gemma 4 eller en egen modell."))
+                .accessibilityLabel(available ? String(localized: "Fråga om det här mötet") : String(localized: "Frågor kräver Apple Intelligence eller en egen modell."))
             if busy {
                 SettlingLine(color: DS.Colors.ink).scaleEffect(0.7).frame(width: 40)
             } else if available {
@@ -3626,21 +3620,19 @@ private struct SummaryFooter: View {
 
 /// The items of "Skriv om": every writer, the one that wrote this summary ticked, one
 /// that can't write now grey with why; the language; and where the one for all
-/// meetings is chosen. Built from what Mindtalk already knows (the Gemmas on the disk,
-/// the models Ollama and LM Studio listed last time): nothing is asked over the
-/// network for the menu.
+/// meetings is chosen. Built from what Mindtalk already knows (the models Ollama and
+/// LM Studio listed last time): nothing is asked over the network for the menu.
 struct RewriteItems: View {
     let record: MeetingRecord
-    /// Who wrote the summary there is now, by name ("Apple Intelligence", "Gemma 4 E4B").
+    /// Who wrote the summary there is now, by name ("Apple Intelligence", "Qwen3 14B").
     let current: String
     @ObservedObject private var notes = MeetingNotes.shared
-    @ObservedObject private var better = BetterNotes.shared
+    @ObservedObject private var better = SummaryWriting.shared
     @ObservedObject private var servers = LocalServers.shared
 
     /// Every writer; a reason when one can't write now.
     private var items: [(choice: SummaryWriterChoice, reason: String?)] {
         var all: [(choice: SummaryWriterChoice, reason: String?)] = [(.apple, Self.appleReason)]
-        for m in NotesModel.allCases { all.append((.gemma(m), gemmaReason(m))) }
         for b in ServerBackend.allCases where servers.states[b] != .notInstalled {
             for model in servers.models[b] ?? [] { all.append((.server(b, model.id), nil)) }
         }
@@ -3655,15 +3647,6 @@ struct RewriteItems: View {
         case .notEnabled: return String(localized: "Avstängd i Systeminställningar")
         case .notReady: return String(localized: "macOS laddar fortfarande ned den")
         case .unsupported: return String(localized: "Finns inte på den här Macen")
-        }
-    }
-
-    private func gemmaReason(_ m: NotesModel) -> String? {
-        switch better.state(m) {
-        case .ready where m.isInstalled: return nil
-        case .downloading: return String(localized: "Laddas ned")
-        case .unsupported: return String(localized: "Kräver minst \(m.minimumMemoryGB) GB minne")
-        default: return String(localized: "Ladda ned under Inställningar")
         }
     }
 

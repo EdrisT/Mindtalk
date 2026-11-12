@@ -219,29 +219,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         #if DEBUG
         // Self-test: `Mindtalk --meeting file.wav [--model …] [--speed 2]` plays a recording
         // through the meeting pipeline as if it were the microphone.
-        // `Mindtalk --install-notes [e4b|a4b26]`: downloads and checks a notes model (Gemma 4).
-        if let i = args.firstIndex(of: "--install-notes") {
-            Task { @MainActor in
-                let model = (i + 1 < args.count ? NotesModel(rawValue: args[i + 1]) : nil) ?? .large
-                let notes = BetterNotes.shared
-                print("\(model.name) · ledigt: \(BetterNotes.freeBytes / 1_000_000_000) GB, minne: \(BetterNotes.memoryGB) GB")
-                notes.download(model)
-                var last = -1
-                while true {
-                    switch notes.state(model) {
-                    case .downloading(let p):
-                        let pct = Int(p * 100)
-                        if pct / 5 != last / 5 { last = pct; print("\(pct) %") }
-                    case .ready: print("Klar: \(model.directory.path)"); exit(0)
-                    case .failed(let m): print("Fel: \(m)"); exit(1)
-                    case .unsupported: print("Stöds inte på den här Macen."); exit(1)
-                    case .missing: break
-                    }
-                    try? await Task.sleep(for: .seconds(1))
-                }
-            }
-            RunLoop.main.run()
-        }
         // `Mindtalk --signal-test`: the microphone's signal dies after 4 s — it must be
         // noticed then, and not during a headset's quiet start.
         if args.contains("--signal-test") {
@@ -290,11 +267,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
             Task { @MainActor in
                 MeetingStore.shared.loadNow()
                 let question = args[i + 1]
-                let writer = BetterNotes.shared.writer
+                let writer = SummaryWriting.shared.writer
                 let meetings = MeetingStore.shared.meetings.filter { !$0.words.isEmpty }
                 let context = LibraryContext(question: question, meetings: meetings, local: writer != nil,
                                              budget: writer?.wordBudget ?? LibraryContext.localBudget)
-                print("Modell: \(BetterNotes.shared.writerName) · \(context.broad ? "bred" : "särskild") fråga · läser \(context.meetings) av \(context.total) möten, \(context.text.split(separator: " ").count) ord, \(context.parts.count) del(ar)")
+                print("Modell: \(SummaryWriting.shared.writerName) · \(context.broad ? "bred" : "särskild") fråga · läser \(context.meetings) av \(context.total) möten, \(context.text.split(separator: " ").count) ord, \(context.parts.count) del(ar)")
                 if args.contains("--show-context") { print(context.text) }
                 let t0 = Date()
                 do {
@@ -1327,30 +1304,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
                     let line = byName.sorted { $0.value > $1.value }.map { String(format: "%@ %.2f", $0.key, $0.value) }.joined(separator: ", ")
                     print("  \(u.label): \(line)")
                 }
-                exit(0)
-            }
-            RunLoop.main.run()
-        }
-        // `Mindtalk --rewrite-models 20 out.json folder` and `--rewrite-report out.html name=file.json …`
-        if let i = args.firstIndex(of: "--rewrite-models"), i + 3 < args.count {
-            Task { @MainActor in
-                await RewriteCompare.runModel(count: Int(args[i + 1]) ?? 20, folder: URL(fileURLWithPath: args[i + 3]),
-                                              out: URL(fileURLWithPath: args[i + 2]))
-                exit(0)
-            }
-            RunLoop.main.run()
-        }
-        if let i = args.firstIndex(of: "--rewrite-report"), i + 2 < args.count {
-            let cols = args[(i + 2)...].compactMap { a -> (String, URL)? in
-                let p = a.split(separator: "=", maxSplits: 1); return p.count == 2 ? (String(p[0]), URL(fileURLWithPath: String(p[1]))) : nil
-            }
-            RewriteCompare.report(columns: cols, out: URL(fileURLWithPath: args[i + 1]))
-            exit(0)
-        }
-        // `Mindtalk --rewrite-compare 20 out.html`: written language, Apple against Gemma (RewriteCompare).
-        if let i = args.firstIndex(of: "--rewrite-compare"), i + 2 < args.count {
-            Task { @MainActor in
-                await RewriteCompare.run(count: Int(args[i + 1]) ?? 20, out: URL(fileURLWithPath: args[i + 2]))
                 exit(0)
             }
             RunLoop.main.run()

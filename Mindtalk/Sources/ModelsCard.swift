@@ -6,16 +6,15 @@ import SwiftUI
 // No page of models of their own: each sits with what it does. Under Inställningar →
 // Språk, the two speech models, one language each (use, download, size, Finder,
 // removal). Under Möten, one Sammanfattningar card: who writes them, as round buttons
-// (Apple Intelligence, built in, or a Gemma 4 it downloads, the one that suits this
-// Mac's memory marked), the summary's language, and folded under them a model of your
-// own in Ollama or LM Studio; and Nemotron 3, which tells the voices apart, while it
+// (Apple Intelligence, built in), the summary's language, and folded under them a model
+// of your own in Ollama or LM Studio; and Nemotron 3, which tells the voices apart, while it
 // isn't here. The word list's listener is on Ordlista. Under Allmänt, what they take
 // together.
 
 /// "450 MB", "1,2 GB": one way to say a size everywhere.
 enum DiskSize {
     static func text(_ bytes: Int64) -> String {
-        bytes < 1_000_000_000 ? "\(max(1, Int((Double(bytes) / 1_000_000).rounded()))) MB" : BetterNotes.gigabytes(bytes)
+        bytes < 1_000_000_000 ? "\(max(1, Int((Double(bytes) / 1_000_000).rounded()))) MB" : SummaryWriting.gigabytes(bytes)
     }
 
     /// What a folder takes, counted off the main thread.
@@ -192,15 +191,12 @@ struct VoiceModelSettingsCard: View {
 }
 
 /// Who writes a meeting's summary and answers your questions: the round button in
-/// front of a row picks it, and is the only mark of the one chosen. Apple Intelligence
-/// and the Gemmas (downloaded here); then the summary's language; then, folded, Ollama
-/// and LM Studio in other programs on this Mac.
+/// front of a row picks it, and is the only mark of the one chosen. Apple Intelligence,
+/// then the summary's language; then, folded, Ollama and LM Studio in other programs on
+/// this Mac.
 struct SummaryWritersCard: View {
-    @ObservedObject private var notes = BetterNotes.shared
+    @ObservedObject private var notes = SummaryWriting.shared
     @ObservedObject private var servers = LocalServers.shared
-    @State private var onDisk: [URL: Int64] = [:]
-    @State private var confirmDownload: NotesModel?
-    @State private var confirmRemove: NotesModel?
     /// Where Apple Intelligence stands, asked again when the app comes to the front:
     /// switched on in System Settings, or done downloading, meanwhile.
     @State private var appleStatus = Polisher.status
@@ -221,34 +217,20 @@ struct SummaryWritersCard: View {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Siri-Settings.extension")!)
     }
 
-    /// What the card says on top: Apple Intelligence is on, and what a Gemma adds; or,
-    /// while it isn't, only that the writer is chosen here.
+    /// What the card says on top: Apple Intelligence is on, and what a model of your own
+    /// adds; or, while it isn't, only that the writer is chosen here.
     static func headline(_ status: Polisher.Status) -> String {
         status == .available
-            ? String(localized: "Apple Intelligence är redan på. Vill du ha fylligare sammanfattningar kan du ladda ned Gemma 4 från Google, som också körs på din Mac.")
+            ? String(localized: "Apple Intelligence är redan på. Vill du ha fylligare sammanfattningar kan du välja en modell i Ollama eller LM Studio på din egen dator.")
             : String(localized: "Välj vem som skriver dem.")
     }
 
-    /// The one Gemma shown with Apple Intelligence: the one you chose, else the one that
-    /// suits this Mac, or the smaller when neither runs here (its row says why). The
-    /// chosen one first: with the disk nearly full the larger one is "recommended" though
-    /// it doesn't fit, and yours would sit folded away under it.
-    @MainActor static var primaryGemma: NotesModel { BetterNotes.shared.chosen ?? NotesModel.recommended ?? .small }
-
     @State private var summaryLanguage = SummaryLanguage.chosen
-    /// "Fler alternativ": the other Gemma and the writers in other programs, folded unless
-    /// one of them writes now.
+    /// "Fler alternativ": the writers in other programs, folded unless one writes now.
     @State private var more: Bool
-    /// Settled when the card appears: choosing the other Gemma doesn't move the rows.
-    @State private var primary: NotesModel
-    /// The rest, under "Fler alternativ".
-    private var otherGemmas: [NotesModel] { NotesModel.allCases.filter { $0 != primary } }
 
     init() {
-        let notes = BetterNotes.shared
-        let primary = Self.primaryGemma
-        _primary = State(initialValue: primary)
-        _more = State(initialValue: notes.server != nil || (notes.chosen != nil && notes.chosen != primary))
+        _more = State(initialValue: SummaryWriting.shared.server != nil)
     }
 
     var body: some View {
@@ -257,8 +239,6 @@ struct SummaryWritersCard: View {
             CardDivider()
             appleRow
             CardDivider()
-            notesRow(primary, primary: true)
-            CardDivider()
             // The language they're written in, whoever writes them.
             CardRow(title: "Språk", detail: "Sammanfattningen skrivs på mötets språk om du inte väljer ett annat.") {
                 MenuPicker(options: SummaryLanguage.allCases.map { ($0, $0.title) }, selection: $summaryLanguage)
@@ -266,63 +246,20 @@ struct SummaryWritersCard: View {
             }
             CardDivider()
             FoldRow(title: String(localized: "Fler alternativ"),
-                    detail: primary == .small
-                        ? String(localized: "En större Gemma, eller en modell du redan kör i Ollama eller LM Studio.")
-                        : String(localized: "En mindre Gemma, eller en modell du redan kör i Ollama eller LM Studio."),
+                    detail: String(localized: "En modell du redan kör i Ollama eller LM Studio på den egna datorn."),
                     open: $more)
             if more {
-                ForEach(otherGemmas) { m in
-                    CardDivider()
-                    notesRow(m, primary: false)
-                }
                 CardDivider()
                 ServerWriterRows(folded: false)
             }
         }
         .card()
         // Chosen elsewhere meanwhile (the menu bar, a test): shown where it is.
-        .onChange(of: notes.choice) { _, now in
-            if notes.server != nil || otherGemmas.contains(where: { now == .gemma($0) }) { more = true }
-        }
-        .task(id: NotesModel.allCases.map { "\($0.isInstalled)" }.joined()) {
-            onDisk = await DiskSize.measure(NotesModel.allCases.map(\.directory))
-        }
+        .onChange(of: notes.choice) { _, _ in if notes.server != nil { more = true } }
         .task { await servers.refresh() }     // Ollama and LM Studio: here, running, and their models
-        // A Gemma moved to the Trash in Finder (or put back) shows as it is.
-        .onAppear { notes.refresh(); appleStatus = Polisher.status }
+        .onAppear { appleStatus = Polisher.status }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-            notes.refresh()
             appleStatus = Polisher.status
-        }
-        .confirmationDialog(confirmDownload.map { String(localized: "Ladda ned \($0.name) (\($0.sizeText))?") } ?? "",
-                            isPresented: Binding(get: { confirmDownload != nil }, set: { if !$0 { confirmDownload = nil } }),
-                            presenting: confirmDownload) { m in
-            Button("Ladda ned") { notes.download(m) }
-            Button("Avbryt", role: .cancel) {}
-        } message: { m in
-            Text("Den laddas ned i bakgrunden medan du använder Mindtalk och fungerar sedan utan internet. Du har \(BetterNotes.gigabytes(BetterNotes.freeBytes)) ledigt.")
-                + Text(verbatim: m.page.host.map { " " + String(localized: "Från \($0).") } ?? "")
-        }
-        .confirmationDialog(confirmRemove.map { String(localized: "Ta bort \($0.name)?") } ?? "",
-                            isPresented: Binding(get: { confirmRemove != nil }, set: { if !$0 { confirmRemove = nil } }),
-                            presenting: confirmRemove) { m in
-            Button("Ta bort", role: .destructive) { notes.remove(m); confirmRemove = nil }
-            Button("Avbryt", role: .cancel) {}
-        } message: { m in
-            if m.isInstalled {
-                // Who writes next, as removing will leave it: said only when this one writes now.
-                if notes.chosen != m {
-                    Text("Den kan laddas ned igen senare.")
-                } else if let next = notes.successor(of: m) {
-                    Text("Den kan laddas ned igen senare. \(next.name) skriver sammanfattningarna så länge.")
-                } else if Polisher.status == .available {
-                    Text("Den kan laddas ned igen senare. Apple Intelligence skriver sammanfattningarna så länge.")
-                } else {
-                    Text("Den kan laddas ned igen senare.")
-                }
-            } else {
-                Text("Det som laddats ned hittills tas bort. Du kan börja om senare.")
-            }
         }
     }
 
@@ -340,86 +277,6 @@ struct SummaryWritersCard: View {
         }
     }
 
-    private func size(_ m: NotesModel) -> String {
-        guard let bytes = onDisk[m.directory], bytes > 0 else { return m.sizeText }
-        return DiskSize.text(bytes)
-    }
-
-    /// A Gemma's row. The primary one (shown with Apple Intelligence) says what it gives
-    /// before what it costs; the other, under Fler alternativ, only what it costs.
-    private func notesRow(_ m: NotesModel, primary: Bool) -> some View {
-        let state = notes.state(m)
-        let recommended = NotesModel.recommended == m
-        let detail: String = {
-            switch state {
-            case .unsupported:
-                return String(localized: "Kräver minst \(m.minimumMemoryGB) GB minne. Den här Macen har \(BetterNotes.memoryGB) GB.")
-            case .ready:
-                return String(localized: "Nedladdad. Tar \(size(m)).")
-            case .failed(let message):
-                return message
-            case .missing, .downloading:
-                var text = primary
-                    ? String(localized: "Hittar fler beslut och uppgifter. \(m.sizeText), laddas ned en gång, kräver \(m.minimumMemoryGB) GB minne.")
-                    : String(localized: "\(m.sizeText). Kräver minst \(m.minimumMemoryGB) GB minne.")
-                // Not room for it: say how much more, so you can tell whether emptying
-                // the Trash will do.
-                if !m.hasRoom {
-                    let short = max(100_000_000, m.remainingBytes + 2_000_000_000 - BetterNotes.freeBytes)
-                    text += "\n" + String(localized: "Det får inte plats. Frigör \(BetterNotes.gigabytes(short)) till.")
-                }
-                return text
-            }
-        }()
-        // The one that suits this Mac (NotesModel.recommended weighs the memory and the disk).
-        // Shown as chosen while it is, even gone from the disk: then its row says so
-        // and offers the download, and a summary says why it wasn't written.
-        return ModelRow(name: m.name, badge: recommended ? String(localized: "Rekommenderas för din Mac") : nil,
-                        chooser: (notes.chosen == m, state == .ready || notes.chosen == m, { notes.chosen = m })) {
-            ModelParts.detail(detail)
-        } trailing: {
-            switch state {
-            case .unsupported:
-                EmptyView()
-            case .downloading(let p):
-                HStack(spacing: 10) {
-                    ModelParts.progress(p)
-                    Button("Avbryt") { notes.cancel() }.buttonStyle(.soft)
-                }
-            case .ready:
-                // Downloaded says the detail line; the round button says whether it writes.
-                Menu {
-                    Button("Visa i Finder") { DiskSize.reveal(m.directory) }
-                    Divider()
-                    // Not while it may be writing a summary (a meeting ending, an import).
-                    if MeetingSession.shared.isBusy || MeetingImport.shared.busy {
-                        Button("Ta bort… (går när mötet eller importen är klar)") {}.disabled(true)
-                    } else {
-                        Button("Ta bort…", role: .destructive) { confirmRemove = m }
-                    }
-                } label: { ModelParts.more }
-                .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
-                .help("Mer")
-            case .missing, .failed:
-                let partly = m.remainingBytes < m.bytes - 50_000_000
-                HStack(spacing: 10) {
-                    Button(partly ? String(localized: "Fortsätt (\(BetterNotes.gigabytes(m.remainingBytes)) kvar)") : String(localized: "Ladda ned")) {
-                        if partly { notes.download(m) } else { confirmDownload = m }
-                    }
-                    .buttonStyle(.soft)
-                    .disabled(!m.hasRoom || notes.downloading != nil)
-                    // Something of it is on disk (a cancelled or failed download): it can go.
-                    if m.remainingBytes < m.bytes {
-                        Menu {
-                            Button("Ta bort det nedladdade…", role: .destructive) { confirmRemove = m }
-                        } label: { ModelParts.more }
-                        .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
-                        .help("Mer")
-                    }
-                }
-            }
-        }
-    }
 }
 
 // MARK: - Allmänt
@@ -584,7 +441,7 @@ struct FoldRow: View {
 /// open by itself only when one of them writes now. Inside, one row each (running or
 /// not, its models to pick from, Testa), where the models come from, and the ports.
 struct ServerWriterRows: View {
-    @ObservedObject private var notes = BetterNotes.shared
+    @ObservedObject private var notes = SummaryWriting.shared
     @ObservedObject private var servers = LocalServers.shared
     /// Behind its own fold; or, inside "Fler alternativ" on the Sammanfattningar card,
     /// always open under a plain heading.
@@ -596,7 +453,7 @@ struct ServerWriterRows: View {
 
     init(folded: Bool = true) {
         self.folded = folded
-        _open = State(initialValue: !folded || BetterNotes.shared.server != nil)
+        _open = State(initialValue: !folded || SummaryWriting.shared.server != nil)
     }
 
     /// The model this backend's picker shows: the chosen one, or the one picked last time.
@@ -831,7 +688,6 @@ enum ModelHousekeeping {
     static func tidy() {
         let root = SpeechModel.rootDirectory
         let current = Set(SpeechModel.allCases.map { $0.ownDirectory.lastPathComponent })
-        let notesCurrent = Set(NotesModel.allCases.map(\.folderName))
         Task.detached(priority: .background) {
             let fm = FileManager.default
             let old = { (folder: URL, prefixes: [String], keep: Set<String>) -> [URL] in
@@ -841,7 +697,6 @@ enum ModelHousekeeping {
                 }
             }
             let stale = old(root, ["pianissimo-sv-", "parakeet-ultra-"], current)
-                + old(root.appendingPathComponent("Notes"), ["gemma-4-"], notesCurrent)
             for url in stale {
                 try? fm.trashItem(at: url, resultingItemURL: nil)
                 NSLog("Mindtalk: moved an old model version to the Trash: \(url.lastPathComponent)")
@@ -850,88 +705,3 @@ enum ModelHousekeeping {
     }
 }
 
-/// Under a meeting's summary, once: the Gemma that suits this Mac, for summaries
-/// that catch more — its size said, nothing fetched until you say so. Not offered
-/// again once you've answered.
-struct NotesModelOffer: View {
-    @ObservedObject private var notes = BetterNotes.shared
-    @AppStorage("notesOfferAnswered") private var answered = false
-
-    var body: some View {
-        if let m = NotesModel.recommended, !notes.isActive {
-            switch notes.state(m) {
-            case .downloading(let p):
-                HStack(spacing: 12) {
-                    Image(systemName: "sparkle").font(.system(size: 13)).foregroundStyle(DS.Colors.muted).accessibilityHidden(true)
-                    Text("Laddar ned \(m.name)…").font(.system(size: 13, weight: .medium))
-                    InkProgressBar(progress: p).frame(width: 140)
-                    Text(p, format: .percent.precision(.fractionLength(0))).font(.system(size: 12)).monospacedDigit().foregroundStyle(DS.Colors.muted)
-                    Spacer(minLength: 0)
-                }
-                .padding(16)
-                .card()
-            case .failed(let why):
-                // Asked for here: it doesn't go away without a word.
-                HStack(spacing: 12) {
-                    Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 13)).foregroundStyle(DS.Colors.warning).accessibilityHidden(true)
-                    Text(why).font(.system(size: 13)).fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                    Button("Försök igen") { notes.download(m) }.buttonStyle(.soft)
-                }
-                .padding(16)
-                .card()
-            case .missing where !answered && m.hasRoom:
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "sparkle").font(.system(size: 15)).foregroundStyle(DS.Colors.muted).accessibilityHidden(true)
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Mer träffsäkra sammanfattningar").font(.system(size: 14, weight: .semibold))
-                            Text("\(m.name) från Google hittar fler beslut och uppgifter och skriver dem på din Mac. Den laddas ned en gång (\(m.sizeText)) och fungerar sedan utan internet. Du har \(BetterNotes.gigabytes(BetterNotes.freeBytes)) ledigt.")
-                                .font(.system(size: 13)).foregroundStyle(DS.Colors.muted)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                    HStack(spacing: 10) {
-                        Spacer()
-                        Button("Inte nu") { withAnimation(.snappy) { answered = true } }
-                            .buttonStyle(.plain).font(.system(size: 12.5, weight: .medium)).foregroundStyle(DS.Colors.muted)
-                        Button("Ladda ned \(m.sizeText)") {
-                            answered = true
-                            notes.download(m)
-                        }
-                        .buttonStyle(.ink)
-                        .disabled(notes.downloading != nil)
-                    }
-                }
-                .padding(18)
-                .card()
-                .transition(.opacity)
-            // Doesn't fit: said anyway, once — what it would give, and how much room it needs.
-            case .missing where !answered:
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "sparkle").font(.system(size: 15)).foregroundStyle(DS.Colors.muted).accessibilityHidden(true)
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Mer träffsäkra sammanfattningar").font(.system(size: 14, weight: .semibold))
-                            Text("\(m.name) från Google hittar fler beslut och uppgifter och skriver dem på din Mac. Den behöver \(BetterNotes.gigabytes(m.remainingBytes + 2_000_000_000)) ledigt. Du har \(BetterNotes.gigabytes(BetterNotes.freeBytes)).")
-                                .font(.system(size: 13)).foregroundStyle(DS.Colors.muted)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                    HStack(spacing: 10) {
-                        Spacer()
-                        Button("Inte nu") { withAnimation(.snappy) { answered = true } }
-                            .buttonStyle(.plain).font(.system(size: 12.5, weight: .medium)).foregroundStyle(DS.Colors.muted)
-                        Button("Visa modeller") { SettingsPage.open(.meetings) }
-                            .buttonStyle(.ink)
-                    }
-                }
-                .padding(18)
-                .card()
-                .transition(.opacity)
-            default:
-                EmptyView()
-            }
-        }
-    }
-}

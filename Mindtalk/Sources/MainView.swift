@@ -1716,9 +1716,6 @@ struct CreditsSheet: View {
     private static let parakeetCTC = URL(string: "https://huggingface.co/nvidia/parakeet-tdt_ctc-110m")!
     private static let parakeetCTCCoreML = URL(string: "https://huggingface.co/FluidInference/parakeet-ctc-110m-coreml")!
     private static let scbNames = URL(string: "https://doi.org/10.5878/fc4h-rp11")!
-    private static let mlxSwift = URL(string: "https://github.com/ml-explore/mlx-swift")!
-    private static let mlxSwiftLM = URL(string: "https://github.com/ml-explore/mlx-swift-lm")!
-    private static let swiftTransformers = URL(string: "https://github.com/huggingface/swift-transformers")!
 
     var body: some View {
         if plain {
@@ -1776,24 +1773,12 @@ struct CreditsSheet: View {
                 links([("Modell", Self.parakeetCTC), ("Core ML", Self.parakeetCTCCoreML), ("Licens", Self.ccBy)])
             }
             CardDivider()
-            row(title: "Gemma 4", detail: "Skriver sammanfattningar och svar, om du väljer den. Av Google DeepMind, MLX-versioner av lmstudio-community. Apache 2.0.") {
-                links([("26B-A4B-it", NotesModel.large.page), ("E4B-it", NotesModel.small.page), ("Licens", Self.apache)])
-            }
-            CardDivider()
             row(title: "Förnamn", detail: "Namn som presentationsrundan känner igen. Statistiska centralbyrån (SCB), 2020. CC BY 4.0.") {
                 links([("Källa", Self.scbNames), ("Licens", Self.ccBy)])
             }
             CardDivider()
             row(title: "FluidAudio", detail: "Kör modellerna på Neural Engine. Av FluidInference. Apache 2.0.") {
                 links([("Källkod", Self.fluidAudio), ("Licens", Self.apache)])
-            }
-            CardDivider()
-            row(title: "MLX Swift och mlx-swift-lm", detail: "Kör Gemma på din Mac. Av Apple. MIT-licens.") {
-                links([("MLX Swift", Self.mlxSwift), ("mlx-swift-lm", Self.mlxSwiftLM), ("Licens", Self.mit)])
-            }
-            CardDivider()
-            row(title: "swift-transformers", detail: "Läser modellernas ordförråd. Av Hugging Face. Apache 2.0.") {
-                links([("Källkod", Self.swiftTransformers), ("Licens", Self.apache)])
             }
             CardDivider()
             row(title: "Licenser", detail: "Licenstexterna och länkarna som följer med Mindtalk.") {

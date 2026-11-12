@@ -11,8 +11,8 @@ import os
 // Ask: a question about all of them ("vad bestämde vi om budgeten?", "vad ska Anna
 // göra den här veckan?"). The meetings worth reading are picked first — by the
 // words they share with the question, and by the days it names ("i går", "förra
-// veckan", "i tisdags") — then the model (Apple Intelligence, or Gemma 4 when
-// installed) answers from their summaries and the lines that matter, and names the
+// veckan", "i tisdags") — then the model (Apple Intelligence, or a model of your own
+// when one is chosen) answers from their summaries and the lines that matter, and names the
 // lines it used. Each source is a meeting and a moment you can open.
 //
 // Everything stays on the Mac, as with a single meeting.
@@ -297,13 +297,13 @@ struct LibraryContext: Sendable {
     /// "Tuesday 6 October 2026" — so "i dag" and "förra veckan" mean something to the model.
     let today: String
 
-    /// Words Gemma 4 reads across meetings at once; Apple's model reads `Lines.appleBudget`.
+    /// Words a model of your own reads across meetings at once; Apple's model reads `Lines.appleBudget`.
     static let localBudget = 12_000
     /// A broad question with Apple's model: at most this many parts, each this many words.
     static let appleParts = 4
     static let applePart = 1_100
 
-    /// `local`: Gemma 4 or your own model answers (far more room than Apple's model), with
+    /// `local`: a model of your own answers (far more room than Apple's model), with
     /// `budget` words at most. `folder`: its name, which a question may say ("i Kund X")
     /// without being about something in particular.
     @MainActor init(question: String, meetings all: [MeetingRecord], local: Bool, budget: Int = LibraryContext.localBudget,
@@ -635,9 +635,6 @@ struct LibraryAnswer: Identifiable, Equatable {
     /// …in this folder (nil: all of them).
     var folder: String? = nil
     var folderID: UUID? = nil
-    /// Written by Apple Intelligence: across many meetings Gemma reads more carefully,
-    /// and the answers say so (GemmaNudge).
-    var byApple = false
 }
 
 /// Questions about all your meetings, and their answers — kept while Mindtalk runs.
@@ -663,7 +660,7 @@ final class MeetingLibrary: ObservableObject {
         }
         // Not the large model during a meeting: it would crowd the live transcription.
         let recording = MeetingSession.shared.isRecording
-        let writer = recording ? nil : BetterNotes.shared.writer
+        let writer = recording ? nil : SummaryWriting.shared.writer
         // Then only Apple's model answers: without it, say so plainly.
         guard writer != nil || Polisher.status == .available else {
             failed = MeetingNotes.onlyAppleDuringMeeting
@@ -712,7 +709,7 @@ final class MeetingLibrary: ObservableObject {
             return seen.insert(source.id).inserted ? source : nil
         }
         return LibraryAnswer(question: question, answer: reply.answer, sources: sources, read: context.meetings,
-                             total: context.broad ? context.total : nil, folder: folderName, folderID: folder, byApple: writer == nil)
+                             total: context.broad ? context.total : nil, folder: folderName, folderID: folder)
     }
 
     #if DEBUG
@@ -727,11 +724,11 @@ final class MeetingLibrary: ObservableObject {
 #if DEBUG
 // MARK: - Self-test: questions at three levels, read-only
 
-/// `Mindtalk --ask-test [--store dir] [--model apple|gemma|server] [--server ollama:qwen3.5:9b]
-/// [--gemma e4b] [--now 2026-10-16T16:00:00Z] [--title "del av titel"] [--folder "namn"]
+/// `Mindtalk --ask-test [--store dir] [--model apple|server] [--server ollama:qwen3.5:9b]
+/// [--now 2026-10-16T16:00:00Z] [--title "del av titel"] [--folder "namn"]
 /// [--one "fråga|fråga"] [--lib "fråga|fråga"]`: questions about one meeting, a folder's
 /// meetings and all meetings, with each writer there is (the one chosen, or those named
-/// with --server and --gemma, and Apple Intelligence), printed with how many meetings
+/// with --server, and Apple Intelligence), printed with how many meetings
 /// were read and the sources. The meetings are read from their meeting.json files into
 /// memory only: nothing is saved, moved or trashed, and the app's own store is never loaded.
 enum AskTest {
@@ -750,10 +747,9 @@ enum AskTest {
                 writers.append(LocalServerWriter(backend: backend, model: parts[1]))
             }
         }
-        if let g = value("--gemma"), let m = NotesModel(rawValue: g), m.isInstalled { writers.append(GemmaWriter(model: m)) }
-        if writers.isEmpty, let w = BetterNotes.shared.writer, value("--model") != "apple" { writers.append(w) }
-        if Polisher.status == .available, !["gemma", "server"].contains(value("--model") ?? "") { writers.append(nil) }
-        print("\(meetings.count) möten i \(root.path) · Apple Intelligence: \(Polisher.status) · vald: \(BetterNotes.shared.writerName)")
+        if writers.isEmpty, let w = SummaryWriting.shared.writer, value("--model") != "apple" { writers.append(w) }
+        if Polisher.status == .available, value("--model") != "server" { writers.append(nil) }
+        print("\(meetings.count) möten i \(root.path) · Apple Intelligence: \(Polisher.status) · vald: \(SummaryWriting.shared.writerName)")
         // How questions are told apart (QuestionKind): broad reads the notes, particular the lines.
         let samples = ["Vad är läget?", "Sammanfatta mötet.", "Vad hände den här veckan?", "Vilka beslut har vi tagit?",
                        "Vad ska jag göra?", "Vem har lovat vad?", "Vilka uppgifter har jag?", "Vad pratade vi om i går?",

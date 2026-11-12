@@ -479,7 +479,7 @@ final class Vocabulary: ObservableObject {
     private func startListener() {
         if !VocabularyBoost.isInstalled {
             let bytes = VocabularyBoost.bytes
-            guard BetterNotes.freeBytes > bytes * 2 + 500_000_000 else {
+            guard SummaryWriting.freeBytes > bytes * 2 + 500_000_000 else {
                 VocabularyBoostStatus.shared.set(.failed(String(localized: "Det behövs drygt \(DiskSize.text(bytes * 2)) ledigt på disken.")))
                 return
             }
