@@ -25,3 +25,7 @@ Mindtalk.xcodeproj/
 # xcode-build-server post-build phase, which this project does not use.
 buildServer.json
 .compile
+
+# Planning notes of mine: local only, not part of the project
+ROADMAP.md
+PLAN.md
