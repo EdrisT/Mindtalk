@@ -10,7 +10,7 @@ project:
 
 build: project
 	xcodebuild -project $(APP).xcodeproj -scheme $(APP) -configuration $(CONFIG) \
-	  -derivedDataPath $(BUILD) -destination 'platform=macOS' build | tail -25
+	  -derivedDataPath $(BUILD) -destination 'platform=macOS,arch=arm64' build | tail -25
 
 run: build
 	@pkill -x $(APP) 2>/dev/null || true
