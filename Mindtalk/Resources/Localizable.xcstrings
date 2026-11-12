@@ -2282,6 +2282,12 @@
             "state": "translated",
             "value": "API key"
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-nyckel"
+          }
         }
       }
     },
@@ -2291,6 +2297,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "API key for %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-nyckel för %@"
           }
         }
       }
@@ -2796,6 +2808,7 @@
       }
     },
     "Använd Ollama eller LM Studio": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2817,6 +2830,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Use Ollama, LM Studio or oMLX"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Använd Ollama, LM Studio eller oMLX"
           }
         }
       }
@@ -4466,6 +4485,7 @@
       }
     },
     "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama eller LM Studio på den egna datorn. Du kan läsa och söka i texten som vanligt.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4487,6 +4507,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "This Mac can't run Apple Intelligence. Choose a model under Settings → Meetings, in Ollama, LM Studio or oMLX on this computer. You can still read and search the text."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama, LM Studio eller oMLX på den egna datorn. Du kan läsa och söka i texten som vanligt."
           }
         }
       }
@@ -4954,6 +4980,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "There are no models in oMLX yet."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det finns inga modeller i oMLX än."
           }
         }
       }
@@ -6235,6 +6267,7 @@
       }
     },
     "En modell du redan kör i Ollama eller LM Studio på den egna datorn.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -6256,6 +6289,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "A model you already run in Ollama, LM Studio or oMLX on this computer."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En modell du redan kör i Ollama, LM Studio eller oMLX på den egna datorn."
           }
         }
       }
@@ -8514,6 +8553,12 @@
             "state": "translated",
             "value": "Straight to the summary."
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Går direkt till sammanfattningen."
+          }
         }
       }
     },
@@ -9008,6 +9053,7 @@
       }
     },
     "Hämta modeller i Ollama eller LM Studio. Mindtalk skickar bara till program på den här Macen. Molnmodeller visas inte.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -9029,6 +9075,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Get models in Ollama, LM Studio or oMLX. Mindtalk only sends to programs on this Mac. Cloud models aren't shown."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hämta modeller i Ollama, LM Studio eller oMLX. Mindtalk skickar bara till program på den här Macen. Molnmodeller visas inte."
           }
         }
       }
@@ -10543,6 +10595,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "No key saved"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen nyckel sparad"
           }
         }
       }
@@ -12572,6 +12630,7 @@
       }
     },
     "Kör du redan Ollama eller LM Studio? De kan skriva sammanfattningarna.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12593,6 +12652,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Already running one of them? They can write the summaries."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kör du redan någon av dem? De kan skriva sammanfattningarna."
           }
         }
       }
@@ -14668,6 +14733,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Let the model think first"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Låt modellen tänka först"
           }
         }
       }
@@ -18309,6 +18380,7 @@
       }
     },
     "Ollama och LM Studio kan inte ha samma port.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -20052,6 +20124,12 @@
             "state": "translated",
             "value": "The server wants an API key. Enter it under Settings → Meetings."
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Servern vill ha en API-nyckel. Skriv in den under Inställningar → Möten."
+          }
         }
       }
     },
@@ -20318,6 +20396,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Enter the key if the server asks for one. It is kept in the Keychain on this Mac, not among the settings."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skriv nyckeln om servern frågar efter en. Den sparas i Nyckelringen på den här Macen, inte bland inställningarna."
           }
         }
       }
@@ -21054,6 +21138,12 @@
             "state": "translated",
             "value": "Saved in the Keychain"
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sparad i Nyckelringen"
+          }
         }
       }
     },
@@ -21567,6 +21657,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Start oMLX"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starta oMLX"
           }
         }
       }
@@ -23048,6 +23144,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Remove the key"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ta bort nyckeln"
           }
         }
       }
@@ -24933,6 +25035,12 @@
             "state": "translated",
             "value": "Two servers can't use the same port."
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Två servrar kan inte ha samma port."
+          }
         }
       }
     },
@@ -24958,6 +25066,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "It thinks before answering — takes longer."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tänker före svaret — tar längre tid."
           }
         }
       }
@@ -28052,6 +28166,12 @@
             "state": "translated",
             "value": "oMLX isn't on this Mac."
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "oMLX finns inte på den här Macen."
+          }
         }
       }
     },
@@ -28061,6 +28181,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "oMLX is installed but not running."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "oMLX är installerat men inte igång."
           }
         }
       }
@@ -28882,6 +29008,7 @@
       }
     },
     "Ändra bara om du har bytt port i Ollama eller LM Studio. Tryck på retur för att prova.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -28903,6 +29030,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Only change this if you changed the port in the program. Press return to try it."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ändra bara om du har bytt port i programmet. Tryck på retur för att prova."
           }
         }
       }

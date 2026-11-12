@@ -948,8 +948,8 @@ struct LocalServerWriter: SummaryWriter {
         Self.log.info("\(self.name, privacy: .public) wrote in \(Date().timeIntervalSince(t0), format: .fixed(precision: 1)) s, read \(read ?? -1) of about \(Self.estimateTokens(system + user)) tokens in \(context), stopped: \(out.finish ?? "?", privacy: .public)")
         // Read far less than it was sent: the prompt was cut to the context. Counted
         // leanly here (four letters a token, fewer than any language needs), so a model
-        // that read 70 % of that read all of it. Only Ollama's count is trusted, and
-        // only with its cache counted in.
+        // that read 70 % of that read all of it. Only the counts that include what the
+        // server cached are trusted — Ollama's and oMLX's — and LM Studio's are not given.
         let lean = (system + user).utf8.count / 4
         if let read, lean > 1_000, read < lean * 7 / 10 { throw ServerError.truncated }
         let text = Self.unthought(out.text)
@@ -1019,7 +1019,7 @@ struct LocalServerWriter: SummaryWriter {
             // setting of the model itself: Mindtalk reads that number, it doesn't set it.
             let listed = try? await LocalServers.list(.omlx).first { $0.id == model }
             if listed?.instances.isEmpty == false { job.instance = model; return }
-            let (status, reply) = try await LocalServerClient.shared.call(.omlx, "/v1/models/\(model)/load", timeout: 180)
+            let (status, reply) = try await LocalServerClient.shared.call(.omlx, "/v1/models/\(model)/load", json: [:], timeout: 180)
             guard status == 200 else { throw LocalServerClient.serverError(status: status, body: reply) }
             job.instance = model
         }
@@ -1055,7 +1055,9 @@ struct LocalServerWriter: SummaryWriter {
             }
         case .omlx:
             // Asked for and done: the answer is 202 while requests in flight are let go.
-            _ = try? await LocalServerClient.shared.call(.omlx, "/v1/models/\(model)/unload", timeout: 10)
+            // An empty body, but a body: without one the request helper sends a GET, and
+            // these two calls are POSTs — oMLX answers a GET here with "not found".
+            _ = try? await LocalServerClient.shared.call(.omlx, "/v1/models/\(model)/unload", json: [:], timeout: 10)
         }
     }
 
