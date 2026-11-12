@@ -25,7 +25,11 @@ OUT = os.path.join(ROOT, "Mindtalk", "Resources", "Acknowledgements.txt")
 if not os.path.isdir(FLUID):
     sys.exit("Package checkouts missing – run `make build` first.")
 
-versions = dict(re.findall(r'\n  (\w+):\n    url: .*\n    exactVersion:\s*([\d.]+)', open(os.path.join(ROOT, "project.yml")).read()))
+with open(os.path.join(ROOT, "project.yml")) as f:
+    yml = f.read()
+versions = dict(re.findall(r'\n  (\w+):\n    url: .*\n    exactVersion:\s*([\d.]+)', yml))
+if "FluidAudio" not in versions:
+    sys.exit("No FluidAudio pin with an exactVersion: in project.yml – the layout this script reads has changed.")
 version = versions["FluidAudio"]
 rule = "=" * 72
 
@@ -165,7 +169,11 @@ Licensed under the Apache License, Version 2.0:
 
 """, open(os.path.join(FLUID, "LICENSE")).read().strip()]
 
-for path in sorted(glob.glob(os.path.join(FLUID, "ThirdPartyLicenses", "*"))):
+notices_dir = os.path.join(FLUID, "ThirdPartyLicenses")
+notices = [p for p in glob.glob(os.path.join(notices_dir, "*")) if os.path.isfile(p)]
+if not notices:
+    sys.exit(f"No licence files in {os.path.relpath(notices_dir, ROOT)} – FluidAudio's layout changed.")
+for path in sorted(notices):
     name = os.path.splitext(os.path.basename(path))[0].replace("-LICENSE", "")
     parts.append(f"\n\n\nFLUIDAUDIO THIRD-PARTY NOTICE: {name}\n{rule}\n\n" + open(path).read().strip())
 
@@ -175,24 +183,33 @@ for path in sorted(glob.glob(os.path.join(FLUID, "ThirdPartyLicenses", "*"))):
 # (checked with nm on Contents/Helpers/mindtalk: no NIO or Atomics symbols).
 import json
 resolved = next(iter(glob.glob(os.path.join(ROOT, "Mindtalk.xcodeproj", "**", "Package.resolved"), recursive=True)), None)
-pins = json.load(open(resolved))["pins"] if resolved else []
+if not resolved:
+    sys.exit("No Package.resolved under Mindtalk.xcodeproj – run `make project` and `make build` first.")
+with open(resolved) as f:
+    pins = json.load(f)["pins"]
 purpose = {"swift-sdk": "Speaks MCP in the helper mindtalk.",
            "swift-log": "Logging for the helper mindtalk.",
            "swift-system": "System calls for the helper mindtalk.",
            "eventsource": "Server-sent events for the MCP SDK in the helper mindtalk."}
+credited = 0
 for pin in sorted(pins, key=lambda p: p["identity"]):
     name = pin["identity"]
     if name in ("fluidaudio", "swift-syntax", "swift-nio", "swift-atomics"):
         continue
     folder = next((d for d in glob.glob(os.path.join(os.path.dirname(FLUID), "*")) if os.path.basename(d).lower() == name), None)
-    lic = next(iter(sorted(glob.glob(os.path.join(folder, "LICENSE*")))), None) if folder else None
+    if not folder:
+        sys.exit(f"No checkout folder for {name} – run `make build` first.")
+    lic = next(iter(sorted(glob.glob(os.path.join(folder, "LICENSE*")))), None)
     if not lic:
         sys.exit(f"No licence found for {name}")
     title = os.path.basename(folder)
     parts.append(f"\n\n\n{title.upper()} {pin['state'].get('version', '')}\n{rule}\n\n"
                  + (purpose.get(name, "Used by the components above.") + " Included in Mindtalk.\n")
                  + pin["location"] + "\n\n" + open(lic).read().strip())
+    credited += 1
 
+if not credited:
+    sys.exit(f"None of the {len(pins)} resolved packages was credited – check the skip list against Package.resolved.")
 text = "\n".join(parts) + "\n"
 open(OUT, "w").write(text)
 print(f"✓ {os.path.relpath(OUT, ROOT)} ({len(text) // 1024} KB, FluidAudio {version})")
