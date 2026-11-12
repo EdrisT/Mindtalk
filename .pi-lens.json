@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/apmantza/pi-lens/master/docs/schema/pi-lens-config-v1.json",
+  "ignore": [
+    "build/",
+    "dist/",
+    "Mindtalk.xcodeproj/",
+    ".pi/",
+    "docs/images/",
+    "Mindtalk/Resources/Localizable.xcstrings"
+  ],
+  "lsp": {
+    "disabledServers": ["typos"]
+  },
+  "dispatch": {
+    "disabledRunners": ["swiftlint", "actionlint", "helm-lint", "helm-render", "trivy-config"]
+  },
+  "rules": {
+    "style": {
+      "disable": ["line-length"]
+    },
+    "high-complexity": {
+      "threshold": 25
+    }
+  },
+  "madge": {
+    "enabled": false
+  },
+  "deadCode": {
+    "enabled": false
+  }
+}
