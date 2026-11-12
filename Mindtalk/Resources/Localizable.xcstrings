@@ -212,6 +212,7 @@
       }
     },
     "%@ finns inte kvar på disken. Ladda ned den igen under Inställningar → Möten, eller välj en annan där.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -245,6 +246,7 @@
       }
     },
     "%@ finns på din Mac och läser många möten mer noggrant.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -261,6 +263,7 @@
       }
     },
     "%@ från Google hittar fler beslut och uppgifter och skriver dem på din Mac. Den behöver %@ ledigt. Du har %@.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -277,6 +280,7 @@
       }
     },
     "%@ från Google hittar fler beslut och uppgifter och skriver dem på din Mac. Den laddas ned en gång (%@) och fungerar sedan utan internet. Du har %@ ledigt.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -425,6 +429,7 @@
       }
     },
     "%@ laddas fortfarande ned. Sammanfatta igen när den är klar.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -458,6 +463,7 @@
       }
     },
     "%@ laddas ned (%lld %%). Sedan skrivs sammanfattningarna.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -474,6 +480,7 @@
       }
     },
     "%@ laddas ned (%lld %%). Sedan svarar den i stället.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -490,6 +497,7 @@
       }
     },
     "%@ laddas ned (%lld %%). Till dess skriver Apple Intelligence.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -506,6 +514,7 @@
       }
     },
     "%@ laddas ned när talmodellen är klar. Sedan skrivs sammanfattningarna.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -522,6 +531,7 @@
       }
     },
     "%@ laddas ned när talmodellen är klar. Till dess skriver Apple Intelligence.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1008,6 +1018,7 @@
       }
     },
     "%@. Kräver minst %lld GB minne.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2700,6 +2711,7 @@
       }
     },
     "Använd %@": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2958,6 +2970,7 @@
       }
     },
     "Apple Intelligence är redan på. Vill du ha fylligare sammanfattningar kan du ladda ned Gemma 4 från Google, som också körs på din Mac.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2969,6 +2982,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apple Intelligence är redan på. Vill du ha fylligare sammanfattningar kan du ladda ned Gemma 4 från Google, som också körs på din Mac."
+          }
+        }
+      }
+    },
+    "Apple Intelligence är redan på. Vill du ha fylligare sammanfattningar kan du välja en modell i Ollama eller LM Studio på din egen dator.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence is already on. If you want richer summaries, choose a model in Ollama or LM Studio on your own computer."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence är redan på. Vill du ha fylligare sammanfattningar kan du välja en modell i Ollama eller LM Studio på din egen dator."
           }
         }
       }
@@ -3090,6 +3119,7 @@
       }
     },
     "Av Google DeepMind. Apache 2.0.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3496,6 +3526,7 @@
       }
     },
     "Avstängt i utvecklingsbygget.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4321,6 +4352,7 @@
       }
     },
     "Den här Macen kan inte köra Apple Intelligence.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4337,6 +4369,7 @@
       }
     },
     "Den här Macen kan inte köra Apple Intelligence. Du kan ladda ned Gemma 4 under Inställningar → Möten.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4353,6 +4386,7 @@
       }
     },
     "Den här Macen kan inte köra Apple Intelligence. Du kan läsa och söka i texten som vanligt.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4369,6 +4403,7 @@
       }
     },
     "Den här Macen kan inte köra Apple Intelligence. Ladda ned Gemma 4 under Inställningar → Möten. Du kan läsa och söka i texten som vanligt.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4380,6 +4415,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Den här Macen kan inte köra Apple Intelligence. Ladda ned Gemma 4 under Inställningar → Möten. Du kan läsa och söka i texten som vanligt."
+          }
+        }
+      }
+    },
+    "Den här Macen kan inte köra Apple Intelligence. Välj en modell du kör själv under Inställningar → Möten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac can't run Apple Intelligence. Choose a model you run yourself under Settings → Meetings."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den här Macen kan inte köra Apple Intelligence. Välj en modell du kör själv under Inställningar → Möten."
+          }
+        }
+      }
+    },
+    "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama eller LM Studio på den egna datorn. Du kan läsa och söka i texten som vanligt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac can't run Apple Intelligence. Choose a model under Settings → Meetings, in Ollama or LM Studio on your own computer. You can read and search the text as usual."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama eller LM Studio på den egna datorn. Du kan läsa och söka i texten som vanligt."
           }
         }
       }
@@ -4401,6 +4468,7 @@
       }
     },
     "Den kan laddas ned igen senare. %@ skriver sammanfattningarna så länge.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4417,6 +4485,7 @@
       }
     },
     "Den kan laddas ned igen senare. Apple Intelligence skriver sammanfattningarna så länge.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4449,6 +4518,7 @@
       }
     },
     "Den laddas ned i bakgrunden medan du använder Mindtalk och fungerar sedan utan internet. Du har %@ ledigt.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4510,6 +4580,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Den senaste dikteringen blev ingen text"
+          }
+        }
+      }
+    },
+    "Den skrivare som var vald finns inte i den här versionen. Välj en annan under Inställningar → Möten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The writer that was chosen isn't in this version. Choose another one under Settings → Meetings."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den skrivare som var vald finns inte i den här versionen. Välj en annan under Inställningar → Möten."
           }
         }
       }
@@ -4887,6 +4973,7 @@
       }
     },
     "Det får inte plats. Frigör %@ till.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -6081,6 +6168,7 @@
       }
     },
     "En mindre Gemma, eller en modell du redan kör i Ollama eller LM Studio.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -6096,7 +6184,24 @@
         }
       }
     },
+    "En modell du redan kör i Ollama eller LM Studio på den egna datorn.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A model you already run in Ollama or LM Studio on your own computer."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En modell du redan kör i Ollama eller LM Studio på den egna datorn."
+          }
+        }
+      }
+    },
     "En större Gemma, eller en modell du redan kör i Ollama eller LM Studio.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -6970,6 +7075,7 @@
       }
     },
     "Fortsätt (%@ kvar)": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -7361,7 +7467,24 @@
         }
       }
     },
+    "Frågor kräver Apple Intelligence eller en egen modell.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questions need Apple Intelligence or a model of your own."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frågor kräver Apple Intelligence eller en egen modell."
+          }
+        }
+      }
+    },
     "Frågor kräver Apple Intelligence, Gemma 4 eller en egen modell.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -7395,6 +7518,7 @@
       }
     },
     "Från %@.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8488,6 +8612,7 @@
       }
     },
     "Hittar fler beslut och uppgifter. %@, laddas ned en gång, kräver %lld GB minne.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -9154,7 +9279,6 @@
       }
     },
     "Håll in en eller flera tangenter, som ⌥ och ⌘, och släpp. Du kan också trycka på en kombination, som ⌃⌥T. Esc avbryter.": {
-      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -9203,6 +9327,7 @@
       }
     },
     "Håll in en tangent, som vänster ⌥, och släpp. Du kan också trycka på en kombination, som ⌃⌥T. Esc avbryter.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -11397,7 +11522,6 @@
       }
     },
     "Klicka och håll in en eller flera tangenter, som ⌥ och ⌘, och släpp. Eller tryck på en kombination som ⌃⌥T. Esc avbryter.": {
-      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -11414,6 +11538,7 @@
       }
     },
     "Klicka och håll in en tangent ensam, som vänster ⌥, och släpp. Eller tryck på en kombination. Esc avbryter.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12126,6 +12251,7 @@
       }
     },
     "Kräver minst %lld GB minne": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12142,6 +12268,7 @@
       }
     },
     "Kräver minst %lld GB minne. Den här Macen har %lld GB.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12500,6 +12627,7 @@
       }
     },
     "Ladda ned %@ (%@)?": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12548,6 +12676,7 @@
       }
     },
     "Ladda ned Gemma 4": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12694,6 +12823,7 @@
       }
     },
     "Ladda ned under Inställningar": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12776,6 +12906,7 @@
       }
     },
     "Laddar ned %@…": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12954,6 +13085,7 @@
       }
     },
     "Laddas ned": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -15112,6 +15244,7 @@
       }
     },
     "Mer träffsäkra sammanfattningar": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -15862,6 +15995,7 @@
       }
     },
     "Mindtalk hör vem som säger vad och skriver ned det medan ni pratar. Sammanfattningarna skriver Apple Intelligence eller Gemma. Du väljer vilken under Inställningar.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -15873,6 +16007,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mindtalk hör vem som säger vad och skriver ned det medan ni pratar. Sammanfattningarna skriver Apple Intelligence eller Gemma. Du väljer vilken under Inställningar."
+          }
+        }
+      }
+    },
+    "Mindtalk hör vem som säger vad och skriver ned det medan ni pratar. Sammanfattningarna skriver Apple Intelligence, eller en modell du kör själv. Du väljer under Inställningar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk hears who says what and writes it down while you talk. Apple Intelligence writes the summaries, or a model you run yourself. You choose under Settings."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk hör vem som säger vad och skriver ned det medan ni pratar. Sammanfattningarna skriver Apple Intelligence, eller en modell du kör själv. Du väljer under Inställningar."
           }
         }
       }
@@ -17302,6 +17452,7 @@
       }
     },
     "Nedladdad. Tar %@.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -18825,6 +18976,7 @@
       }
     },
     "Rekommenderas för din Mac": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -19553,7 +19705,24 @@
         }
       }
     },
+    "Sammanfattningar behöver Apple Intelligence eller en egen modell": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summaries need Apple Intelligence or a model of your own"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sammanfattningar behöver Apple Intelligence eller en egen modell"
+          }
+        }
+      }
+    },
     "Sammanfattningar behöver Apple Intelligence, Gemma 4 eller en egen modell": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21736,6 +21905,7 @@
       }
     },
     "Svaren skrevs av Apple Intelligence. %@ läser många möten mer noggrant, och den körs också på din Mac.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -22124,6 +22294,7 @@
       }
     },
     "Sök efter uppdateringar automatiskt": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -22269,6 +22440,7 @@
       }
     },
     "Sök nu": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -22818,6 +22990,7 @@
       }
     },
     "Ta bort… (går när mötet eller importen är klar)": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -24900,6 +25073,7 @@
       }
     },
     "Utan Apple Intelligence eller Gemma 4 blir det text men ingen sammanfattning.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -24911,6 +25085,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Utan Apple Intelligence eller Gemma 4 blir det text men ingen sammanfattning."
+          }
+        }
+      }
+    },
+    "Utan Apple Intelligence eller en egen modell blir det text men ingen sammanfattning.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without Apple Intelligence or a model of your own you get the text but no summary."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utan Apple Intelligence eller en egen modell blir det text men ingen sammanfattning."
           }
         }
       }
@@ -25891,6 +26081,7 @@
       }
     },
     "Visa modeller": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -26128,6 +26319,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Välj en annan genväg"
+          }
+        }
+      }
+    },
+    "Välj en egen modell": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a model of your own"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Välj en egen modell"
           }
         }
       }
@@ -26617,6 +26824,7 @@
       }
     },
     "behöver %@ mer ledigt": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -26910,6 +27118,7 @@
       }
     },
     "ger mer träffsäkra sammanfattningar": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -27412,6 +27621,7 @@
       }
     },
     "mest träffsäker": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -28001,6 +28211,7 @@
       }
     },
     "snabbare, tar mindre plats": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
