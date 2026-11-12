@@ -14,6 +14,44 @@ make install   # Release build into /Applications (your own signing identity)
 make open      # Generate the project and open it in Xcode
 ```
 
+## Editor diagnostics
+
+SourceKit-LSP has no build description for this project: there is no `Package.swift`, and
+`Mindtalk.xcodeproj` is generated. Without one it reports about 220 errors that are not
+real — `No such module 'FluidAudio'`, and the cascades that follow it, like
+`Cannot find 'Settings' in scope`, `Cannot find 'ServerBackend'`, `Cannot find type 'AppDelegate'`.
+
+The fix is **xcode-build-server** as a build server (`brew install xcode-build-server`),
+with a `buildServer.json` in the repo root:
+
+```json
+{
+  "name": "xcode build server",
+  "version": "1.3.0",
+  "bspVersion": "2.2.0",
+  "languages": ["c", "cpp", "objective-c", "objective-cpp", "swift"],
+  "argv": ["/opt/homebrew/bin/xcode-build-server"],
+  "build_root": "/Users/edrta913/Projects/Mindtalk/build",
+  "scheme": "Mindtalk",
+  "kind": "xcode"
+}
+```
+
+`kind: "xcode"` is BIND mode: on start the server reads the newest `.xcactivitylog` under
+`build_root/Logs/Build` and takes each file's real compile flags from it, so every
+`make build` keeps the description current on its own. The file is gitignored because it
+names this machine's paths; `xcode-build-server config` writes one for you, or copy the
+block above and change `build_root`.
+
+If those phantom errors come back, the build description is missing, not the code: check
+that `buildServer.json` exists, that `build_root` points at the derived data the last build
+wrote, and that `build/Logs/Build/` holds a log from that build. Do not chase `Cannot find …`
+in the sources — they are the cascade of the one missing module.
+
+`.compile` is the other way to feed flags to the editor: an Xcode post-build script phase
+(`xcode-build-server postaction | bash &`) writes it, and it is ignored in case it is ever
+wired up. This project does not use it — BIND mode reads the logs instead.
+
 ## Self-tests
 
 These run against the same code the app uses. File transcription and text cleanup

@@ -19,7 +19,9 @@ Mindtalk.xcodeproj/
 # pi agent session state
 .pi/
 
-# SourceKit-LSP build description (xcode-build-server): local, regenerated on
-# every full build, and it names this machine's paths.
+# SourceKit-LSP build description (xcode-build-server, BIND mode): local, and it
+# names this machine's paths. The build server re-parses the newest log in
+# build/Logs/Build on start - see docs/DEVELOPMENT.md. .compile would come from an
+# xcode-build-server post-build phase, which this project does not use.
 buildServer.json
 .compile
