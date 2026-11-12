@@ -79,20 +79,6 @@ Nemotron 3 Speaker Diarization — by NVIDIA (who speaks when, in meetings)
   https://openmdw.ai/license/
 
 
-NOTES MODEL (OPTIONAL)
-{rule}
-
-"Bättre anteckningar" downloads, only if you choose it, a model that writes
-meeting notes on your Mac:
-
-Gemma 4 26B-A4B (instruction-tuned) — by Google DeepMind
-  https://huggingface.co/google/gemma-4-26B-A4B-it
-  MLX 4-bit version by LM Studio:
-  https://huggingface.co/lmstudio-community/gemma-4-26B-A4B-it-MLX-4bit
-  Licence: Apache License, Version 2.0
-  https://www.apache.org/licenses/LICENSE-2.0
-
-
 FIRST NAMES (INCLUDED)
 {rule}
 
@@ -183,18 +169,14 @@ for path in sorted(glob.glob(os.path.join(FLUID, "ThirdPartyLicenses", "*"))):
     name = os.path.splitext(os.path.basename(path))[0].replace("-LICENSE", "")
     parts.append(f"\n\n\nFLUIDAUDIO THIRD-PARTY NOTICE: {name}\n{rule}\n\n" + open(path).read().strip())
 
-# Everything else compiled in for "Bättre anteckningar" (MLX and the tokenizer) and
-# for the helper `mindtalk` (the MCP SDK and what it links), with its licence, from
-# the resolved packages. swift-syntax only builds macros; swift-nio and swift-atomics
+# Everything else compiled in for the helper `mindtalk` (the MCP SDK and what it
+# links), with its licence, from the resolved packages. swift-syntax only builds macros; swift-nio and swift-atomics
 # are resolved for the SDK's example servers but never linked into the helper
 # (checked with nm on Contents/Helpers/mindtalk: no NIO or Atomics symbols).
 import json
 resolved = next(iter(glob.glob(os.path.join(ROOT, "Mindtalk.xcodeproj", "**", "Package.resolved"), recursive=True)), None)
 pins = json.load(open(resolved))["pins"] if resolved else []
-purpose = {"mlx-swift": "Runs the notes model on the Mac's GPU.",
-           "mlx-swift-lm": "Loads and runs language models with MLX.",
-           "swift-transformers": "Reads the notes model's tokenizer.",
-           "swift-sdk": "Speaks MCP in the helper mindtalk.",
+purpose = {"swift-sdk": "Speaks MCP in the helper mindtalk.",
            "swift-log": "Logging for the helper mindtalk.",
            "swift-system": "System calls for the helper mindtalk.",
            "eventsource": "Server-sent events for the MCP SDK in the helper mindtalk."}

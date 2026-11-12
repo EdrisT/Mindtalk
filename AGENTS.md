@@ -35,7 +35,7 @@
   `docs/DEVELOPMENT.md` is the reference for the rest.
 - The user's build commands: `make run` (Debug build + launch), `make build CONFIG=Debug|Release`,
   `make clean`. Output lands in `build/Build/Products/<Config>/Mindtalk.app`. A first build
-  resolves SwiftPM packages (FluidAudio, MLXSwiftLM, swift-transformers, MCP) and takes
+  resolves SwiftPM packages (FluidAudio, MCP) and takes
   several minutes — quote that when you ask for a build.
 - The app is `LSUIElement`: no Dock icon, the menu bar is the only UI, `pkill -x Mindtalk` to quit.
 - There is no test target and no `swift test`. The test surface is the Debug-only self-tests on

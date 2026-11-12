@@ -60,7 +60,7 @@ Mindtalk 2.0 is more than dictation. Record meetings, keep your thoughts and ask
 | **Voices it recognizes** | In a round of names, everyone says "Hi, my name is …", and each name lands on the voice that said it. With Remember voices on, a person you've named is recognized in later meetings. A TV or radio in the background is never given a name, and after a meeting you can mark a speaker as background sound. |
 | **Notes and marks** | Type a note and press <kbd>↩</kbd> to pin it to that moment. Mark Decision, To do or Important with <kbd>⌥⌘1</kbd>, <kbd>⌥⌘2</kbd>, <kbd>⌥⌘3</kbd>. The summary builds on both. |
 | **A summary that reads like notes** | An overview, what you talked about, decisions, to do with owners, and what's worth remembering. Every item has a time you can click to hear it, and each one is checked against the line in the transcript it came from. |
-| **Your choice of writer** | Apple Intelligence (built in), Google's Gemma 4 (downloaded once in the app), or your own model in Ollama or LM Studio, reached only on 127.0.0.1. |
+| **Your choice of writer** | Apple Intelligence (built in) or your own model in Ollama or LM Studio, reached only on 127.0.0.1. |
 | **A panel beside your work** | During a meeting, a small floating panel shows the meeting when you switch to another app. It never takes the keyboard. |
 | **Import a recording** | Drop an audio or video file on Meetings, or use Import File… (<kbd>⌘O</kbd>): mp3, m4a, wav, mp4, mov, webm and more. It becomes a meeting like any other. |
 | **Share and export** | PDF, Word (.docx), Markdown or plain text, plus the audio (.m4a) and subtitles (.srt). |
@@ -178,7 +178,7 @@ flowchart LR
     D --> V["ReDimNet2+<br/>voices you've named"]
     L --> E["Meeting ends<br/>whole recording again"]
     V --> E
-    E --> W["Summary<br/>Apple Intelligence · Gemma 4 ·<br/>Ollama / LM Studio"]
+    E --> W["Summary<br/>Apple Intelligence ·<br/>Ollama / LM Studio"]
     W --> C["Checked against<br/>the transcript"]
     C --> F["Saved on your Mac"]
 ```
@@ -207,10 +207,8 @@ For meetings and summaries:
 |---|---|---|---|
 | [Nemotron 3](https://huggingface.co/FluidInference/nemotron-3-diarization-coreml) | Keeps speakers apart | NVIDIA, Core ML by FluidInference | 400 MB, downloaded |
 | [ReDimNet2+](https://huggingface.co/lab260/redimnet2-plus) | Recognizes voices | LAB260, built on ReDimNet2 by Palabra.ai | 13 MB, in the app |
-| [Gemma 4 E4B](https://huggingface.co/google/gemma-4-E4B-it) *(optional)* | Writes summaries, titles and answers | Google DeepMind | 6.9 GB, for 16 GB of memory |
-| [Gemma 4 26B](https://huggingface.co/google/gemma-4-26B-A4B-it) *(optional)* | The same, most accurate | Google DeepMind | 15.6 GB, for 32 GB of memory |
 
-Without Gemma, summaries and answers are written by Apple Intelligence, or by your own model in Ollama or LM Studio.
+Summaries and answers are written by Apple Intelligence, or by your own model in Ollama or LM Studio.
 
 ## Privacy
 
@@ -235,7 +233,7 @@ Without Gemma, summaries and answers are written by Apple Intelligence, or by yo
 See what's new under [Releases](https://github.com/dragon6sic6/Mindtalk/releases).
 
 
-**Requirements:** a Mac with Apple Silicon (M1 or later) and macOS 26 Tahoe or later. Disk: about 700 MB per speech model, plus 400 MB for the meetings voice model, and 6.9 GB or 15.6 GB if you choose Gemma. *Polish with AI* needs Apple Intelligence, and so do summaries and Ask unless you use Gemma, Ollama or LM Studio.
+**Requirements:** a Mac with Apple Silicon (M1 or later) and macOS 26 Tahoe or later. Disk: about 700 MB per speech model, plus 400 MB for the meetings voice model. *Polish with AI* needs Apple Intelligence, and so do summaries and Ask unless you use Ollama or LM Studio.
 
 ## Keyboard
 
@@ -277,7 +275,6 @@ More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): self-tests and live micropho
 - **[FluidAudio](https://github.com/FluidInference/FluidAudio)**: the speech and speaker models on the Neural Engine via Core ML
 - **Core ML**: ReDimNet2+, the voice model included in the app
 - **Foundation Models**: Apple's on-device language model, for the optional polish and for summaries and answers
-- **[MLX Swift](https://github.com/ml-explore/mlx-swift)** and **mlx-swift-lm**: Gemma 4 on your Mac's GPU
 - **Core Audio**: microphone selection, device changes, knowing which apps are playing sound, and the process tap for calls
 - **Audio Queue**: capture from the chosen input device and conversion to 16 kHz mono
 - **Core Graphics event taps**: the global keys for dictation, thoughts and meetings
@@ -294,7 +291,6 @@ Mindtalk is made by [Mindact Solutions AB](https://mindact.ai) in Sweden.
 - Speech recognition by **Klang Pianissimo** (Klang AI AB) and **Parakeet Ultra** (Moondream), both built on **NVIDIA Parakeet TDT 0.6B v3**. CC BY 4.0.
 - Speaker separation by **Nemotron 3** (NVIDIA, Core ML by FluidInference). OpenMDW 1.1.
 - Voice recognition by **ReDimNet2+** (LAB260, built on ReDimNet2 by Palabra.ai). Apache 2.0.
-- Summaries and answers, if you choose it, by **Gemma 4** (Google). Apache 2.0.
 - Inference by **FluidAudio** (FluidInference). Apache 2.0.
 
 Full credits and links are in the app under *About Mindtalk → Credits and Licenses…*.

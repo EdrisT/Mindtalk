@@ -59,7 +59,7 @@ Mindtalk 2.0 är mer än diktering. Spela in möten, spara dina tankar och fråg
 | **Röster som känns igen** | I en namnrunda säger var och en ”Hej, jag heter …”, och varje namn hamnar på rösten som sa det. Med Kom ihåg röster påslaget känns en person du har namngett igen i kommande möten. En tv eller radio i bakgrunden får aldrig ett namn, och efter mötet kan du markera en talare som ljud i bakgrunden. |
 | **Anteckningar och markeringar** | Skriv en anteckning och tryck <kbd>↩</kbd>, så hamnar den vid just det ögonblicket. Markera Beslut, Att göra eller Viktigt med <kbd>⌥⌘1</kbd>, <kbd>⌥⌘2</kbd> och <kbd>⌥⌘3</kbd>. Sammanfattningen bygger på båda. |
 | **En sammanfattning som läses som anteckningar** | En översikt, det här pratade ni om, beslut, att göra med vem som ansvarar, och det som är värt att komma ihåg. Varje punkt har en tid du kan klicka på för att lyssna, och varje punkt kontrolleras mot raden i utskriften den kommer från. |
-| **Du väljer vem som skriver** | Apple Intelligence (inbyggt), Googles Gemma 4 (laddas ned en gång i appen) eller din egen modell i Ollama eller LM Studio, som bara nås på 127.0.0.1. |
+| **Du väljer vem som skriver** | Apple Intelligence (inbyggt) eller din egen modell i Ollama eller LM Studio, som bara nås på 127.0.0.1. |
 | **En panel bredvid ditt arbete** | Under ett möte visas mötet i en liten flytande panel när du byter till en annan app. Den tar aldrig tangentbordet. |
 | **Importera en inspelning** | Släpp en ljud- eller videofil på Möten, eller välj Importera fil… (<kbd>⌘O</kbd>). Det går med mp3, m4a, wav, mp4, mov, webm och fler. Filen blir ett möte som alla andra. |
 | **Dela och exportera** | PDF, Word (.docx), Markdown eller vanlig text, och dessutom ljudet (.m4a) och undertexter (.srt). |
@@ -177,7 +177,7 @@ flowchart LR
     D --> V["ReDimNet2+<br/>röster du har namngett"]
     L --> E["Mötet slutar<br/>hela inspelningen igen"]
     V --> E
-    E --> W["Sammanfattning<br/>Apple Intelligence · Gemma 4 ·<br/>Ollama / LM Studio"]
+    E --> W["Sammanfattning<br/>Apple Intelligence ·<br/>Ollama / LM Studio"]
     W --> C["Kontrolleras mot<br/>utskriften"]
     C --> F["Sparas på din Mac"]
 ```
@@ -206,10 +206,8 @@ För möten och sammanfattningar:
 |---|---|---|---|
 | [Nemotron 3](https://huggingface.co/FluidInference/nemotron-3-diarization-coreml) | Håller isär vem som pratar | NVIDIA, Core ML av FluidInference | 400 MB, laddas ned |
 | [ReDimNet2+](https://huggingface.co/lab260/redimnet2-plus) | Känner igen röster | LAB260, byggd på ReDimNet2 av Palabra.ai | 13 MB, ingår i appen |
-| [Gemma 4 E4B](https://huggingface.co/google/gemma-4-E4B-it) *(valfri)* | Skriver sammanfattningar, titlar och svar | Google DeepMind | 6,9 GB, för 16 GB minne |
-| [Gemma 4 26B](https://huggingface.co/google/gemma-4-26B-A4B-it) *(valfri)* | Samma sak, mest träffsäker | Google DeepMind | 15,6 GB, för 32 GB minne |
 
-Utan Gemma skrivs sammanfattningar och svar av Apple Intelligence, eller av din egen modell i Ollama eller LM Studio.
+Utan Apple Intelligence skrivs sammanfattningar och svar av din egen modell i Ollama eller LM Studio.
 
 ## Integritet
 
@@ -234,7 +232,7 @@ Utan Gemma skrivs sammanfattningar och svar av Apple Intelligence, eller av din 
 Nyheterna finns under [Releases](https://github.com/dragon6sic6/Mindtalk/releases).
 
 
-**Krav:** en Mac med Apple Silicon (M1 eller senare) och macOS 26 Tahoe eller senare. Ledigt utrymme: ungefär 700 MB per talmodell, 400 MB till röstmodellen för möten, och 6,9 GB eller 15,6 GB om du väljer Gemma. *Putsa med AI* kräver Apple Intelligence, och det gör också sammanfattningar och frågor om du inte använder Gemma, Ollama eller LM Studio.
+**Krav:** en Mac med Apple Silicon (M1 eller senare) och macOS 26 Tahoe eller senare. Ledigt utrymme: ungefär 700 MB per talmodell, 400 MB till röstmodellen för möten. *Putsa med AI* kräver Apple Intelligence, och det gör också sammanfattningar och frågor om du inte använder Ollama eller LM Studio.
 
 ## Tangentbord
 
@@ -276,7 +274,6 @@ Mer i [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (på engelska): självtester oc
 - **[FluidAudio](https://github.com/FluidInference/FluidAudio)**: tal- och talarmodellerna på Neural Engine via Core ML
 - **Core ML**: ReDimNet2+, röstmodellen som följer med appen
 - **Foundation Models**: Apples språkmodell på enheten, för den valfria putsningen och för sammanfattningar och svar
-- **[MLX Swift](https://github.com/ml-explore/mlx-swift)** och **mlx-swift-lm**: Gemma 4 på datorns grafikkrets
 - **Core Audio**: mikrofonval, enhetsbyten, vilka appar som spelar ljud, och ljudet från samtal
 - **Audio Queue**: inspelning från vald mikrofon och konvertering till 16 kHz mono
 - **Core Graphics event taps**: de globala tangenterna för diktering, tankar och möten
@@ -293,7 +290,6 @@ Mindtalk görs av [Mindact Solutions AB](https://mindact.ai) i Sverige.
 - Taligenkänning av **Klang Pianissimo** (Klang AI AB) och **Parakeet Ultra** (Moondream), båda byggda på **NVIDIA Parakeet TDT 0.6B v3**. CC BY 4.0.
 - Vem som pratar hålls isär av **Nemotron 3** (NVIDIA, Core ML av FluidInference). OpenMDW 1.1.
 - Röster känns igen av **ReDimNet2+** (LAB260, byggd på ReDimNet2 av Palabra.ai). Apache 2.0.
-- Sammanfattningar och svar, om du väljer den, av **Gemma 4** (Google). Apache 2.0.
 - Modellerna körs med **FluidAudio** (FluidInference). Apache 2.0.
 
 Alla krediter och länkar finns i appen under *Om Mindtalk → Tack till och licenser…*.

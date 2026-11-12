@@ -10,4 +10,4 @@ Include what you found, how to reproduce it, and the Mindtalk and macOS versions
 
 ## How the downloads are protected
 
-- Speech models (and Gemma, if you choose it) are downloaded from pinned revisions on Hugging Face and every file is checked against its SHA-256 before use. The meeting and word-list models (Nemotron 3, Parakeet CTC 110M) are fetched by FluidAudio from FluidInference's repositories on Hugging Face.
+- Speech models are downloaded from pinned revisions on Hugging Face and every file is checked against its SHA-256 before use. The meeting and word-list models (Nemotron 3, Parakeet CTC 110M) are fetched by FluidAudio from FluidInference's repositories on Hugging Face.
