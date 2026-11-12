@@ -116,7 +116,7 @@ struct AppleWriter: SummaryWriter {
     func complete(system: String, user: String, maxTokens: Int) async throws -> String {
         let model = SystemLanguageModel(guardrails: .permissiveContentTransformations)
         let session = system.isEmpty ? LanguageModelSession(model: model) : LanguageModelSession(model: model, instructions: system)
-        return try await session.respond(to: user, options: GenerationOptions(sampling: .greedy, maximumResponseTokens: maxTokens)).content
+        return try await session.respond(to: user, options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: maxTokens)).content
     }
 }
 

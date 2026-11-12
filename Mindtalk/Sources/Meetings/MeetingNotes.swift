@@ -502,11 +502,11 @@ final class MeetingNotes: ObservableObject {
         """
     }
 
-    private static let options = GenerationOptions(sampling: .greedy)
+    private static let options = GenerationOptions(samplingMode: .greedy)
     /// Answers and condensed notes are short: a model that loops stops long before the
     /// context is full.
-    private static let answerOptions = GenerationOptions(sampling: .greedy, maximumResponseTokens: 450)
-    private static let condenseOptions = GenerationOptions(sampling: .greedy, maximumResponseTokens: 350)
+    private static let answerOptions = GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 450)
+    private static let condenseOptions = GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 350)
 
     /// The notes transform what was said in the meeting — Apple's guardrails for
     /// that, so a meeting about, say, security or health isn't refused as a topic.

@@ -311,7 +311,7 @@ actor Polisher {
 
     private static func polish(line: String, in session: LanguageModelSession) async -> String? {
         do {
-            let answer = try await session.respond(to: line, options: GenerationOptions(sampling: .greedy)).content
+            let answer = try await session.respond(to: line, options: GenerationOptions(samplingMode: .greedy)).content
             let cleaned = answer.components(separatedBy: .newlines).joined(separator: " ")
                 .trimmingCharacters(in: .whitespaces)
                 .trimmingCharacters(in: CharacterSet(charactersIn: "\"“”«»"))
