@@ -284,9 +284,8 @@ final class MeetingImport: ObservableObject {
         }
     }
 
-    /// Being written out now — quitting asks first, an update waits.
+    /// Being written out now — quitting asks first.
     var busy: Bool { jobs.contains(where: \.active) || running != nil }
-    private func busyAfter(_ id: UUID) -> Bool { jobs.contains { $0.id != id && $0.active } }
 
     private func update(_ id: UUID, _ change: (inout Job) -> Void) {
         guard let i = jobs.firstIndex(where: { $0.id == id }) else { return }
@@ -318,8 +317,6 @@ final class MeetingImport: ObservableObject {
             ProcessInfo.processInfo.endActivity(activity)
             // A copy made for this import (from Röstmemon, Bilder): not left in the temporary folder.
             Self.dropCopy(job.url)
-            // An update waiting for a quiet moment: now, if nothing else runs.
-            if !busyAfter(id), !MeetingSession.shared.isBusy { Updates.shared.meetingEnded() }
         }
         let language = job.language
         guard language.isInstalled, VoiceModels.isInstalled else {

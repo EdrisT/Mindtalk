@@ -16,7 +16,7 @@
   },
   "rules": {
     "style": {
-      "disable": ["line-length"]
+      "disable": ["line-length", "SC2283"]
     },
     "high-complexity": {
       "threshold": 25

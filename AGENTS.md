@@ -35,16 +35,16 @@
   `docs/DEVELOPMENT.md` is the reference for the rest.
 - The user's build commands: `make run` (Debug build + launch), `make build CONFIG=Debug|Release`,
   `make clean`. Output lands in `build/Build/Products/<Config>/Mindtalk.app`. A first build
-  resolves SwiftPM packages (FluidAudio, Sparkle, MLXSwiftLM, swift-transformers, MCP) and takes
+  resolves SwiftPM packages (FluidAudio, MLXSwiftLM, swift-transformers, MCP) and takes
   several minutes — quote that when you ask for a build.
 - The app is `LSUIElement`: no Dock icon, the menu bar is the only UI, `pkill -x Mindtalk` to quit.
 - There is no test target and no `swift test`. The test surface is the Debug-only self-tests on
   the built binary (`--hotkey-test`, `--record-test`, `--simulate-keys`,
   `--transcribe <file> --model swedish`, …) — ask the user to run the one that matches the change.
-- Never suggest `scripts/release.sh`, `make dmg` or `make install-signed`: those sign with the
-  upstream Developer ID and notarize. Local signing is Manual with `edrta913-local-dev` and no
-  Apple team (set in `project.yml`), and `SUEnableAutomaticChecks: false` keeps Sparkle from
-  pulling upstream builds over this fork.
+- This fork has no updater and no release path: no Sparkle, no `scripts/release.sh`, no DMG and
+  no notarization — the upstream project is closed, so this snapshot is what gets built.
+  Signing is Manual with `edrta913-local-dev` and no Apple team (set in `project.yml`).
+  `make install` is how the user puts a build in `/Applications`.
 
 ## Style specifics
 

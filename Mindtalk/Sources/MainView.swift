@@ -352,7 +352,6 @@ struct SettingsPage: View {
     /// Screenshots: this section, whatever was shown last.
     var fixedSection: SettingsSection? = nil
     @ObservedObject private var mics = Microphones.shared
-    @ObservedObject private var updates = Updates.shared
     @ObservedObject private var voices = VoiceModels.shared
     @State private var loginStatus = SMAppService.mainApp.status
     /// Why "Starta vid inloggning" couldn't be switched, from macOS.
@@ -430,10 +429,9 @@ struct SettingsPage: View {
         .animation(.easeOut(duration: 0.18), value: section)
         // A new dictation key moves the thought key's default (left ⌥ unless dictation has it).
         .onChange(of: dictation.hotkey) { _, _ in thoughtShortcut = Settings.thoughtShortcut }
-        .onAppear { loginStatus = SMAppService.mainApp.status; updates.refresh() }
+        .onAppear { loginStatus = SMAppService.mainApp.status }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             loginStatus = SMAppService.mainApp.status
-            updates.refresh()
         }
         .sheet(isPresented: $showMicPicker) {
             MicrophonePicker(mics: mics) { showMicPicker = false }
@@ -490,17 +488,7 @@ struct SettingsPage: View {
         }
         .card()
 
-        // Updates in one row: the text says whether Mindtalk looks on its own.
         VStack(spacing: 0) {
-            CardRow(title: "Uppdateringar", detail: updatesDetail) {
-                HStack(spacing: 12) {
-                    Button("Sök nu") { Updates.shared.checkNow() }.buttonStyle(.soft)
-                    InkToggle(label: "Sök efter uppdateringar automatiskt", isOn: $updates.automatic)
-                        .help("Sök efter uppdateringar automatiskt")
-                }
-                .disabled(!Updates.isAvailable || !AppMover.isInApplications)
-            }
-            CardDivider()
             ModelsFootprintRow()
             CardDivider()
             // Everything in one folder, so an uninstall leaves nothing behind.
@@ -621,16 +609,6 @@ struct SettingsPage: View {
                     }))
             }
         }
-    }
-
-    private var updatesDetail: String {
-        #if DEBUG
-        return String(localized: "Avstängt i utvecklingsbygget.")
-        #else
-        if !AppMover.isInApplications { return String(localized: "Mindtalk behöver ligga i Program för att uppdateras.") }
-        return updates.automatic ? String(localized: "Mindtalk söker själv en gång om dagen.")
-                                 : String(localized: "Mindtalk söker bara när du trycker på Sök nu.")
-        #endif
     }
 
     /// The app's language; "Starta om" once another one is chosen.
@@ -1738,7 +1716,6 @@ struct CreditsSheet: View {
     private static let parakeetCTC = URL(string: "https://huggingface.co/nvidia/parakeet-tdt_ctc-110m")!
     private static let parakeetCTCCoreML = URL(string: "https://huggingface.co/FluidInference/parakeet-ctc-110m-coreml")!
     private static let scbNames = URL(string: "https://doi.org/10.5878/fc4h-rp11")!
-    private static let sparkle = URL(string: "https://github.com/sparkle-project/Sparkle")!
     private static let mlxSwift = URL(string: "https://github.com/ml-explore/mlx-swift")!
     private static let mlxSwiftLM = URL(string: "https://github.com/ml-explore/mlx-swift-lm")!
     private static let swiftTransformers = URL(string: "https://github.com/huggingface/swift-transformers")!
@@ -1817,10 +1794,6 @@ struct CreditsSheet: View {
             CardDivider()
             row(title: "swift-transformers", detail: "Läser modellernas ordförråd. Av Hugging Face. Apache 2.0.") {
                 links([("Källkod", Self.swiftTransformers), ("Licens", Self.apache)])
-            }
-            CardDivider()
-            row(title: "Sparkle", detail: "Håller Mindtalk uppdaterad. Öppen källkod, MIT-licens.") {
-                links([("Källkod", Self.sparkle)])
             }
             CardDivider()
             row(title: "Licenser", detail: "Licenstexterna och länkarna som följer med Mindtalk.") {

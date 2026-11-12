@@ -289,7 +289,6 @@ More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): self-tests and live micropho
 - **Core Graphics event taps**: the global keys for dictation, thoughts and meetings
 - **MCP over a local Unix socket**: a small helper inside the app that only your user account can reach
 - **ServiceManagement**: open at login
-- **[Sparkle](https://sparkle-project.org)**: signed automatic updates
 - **String Catalogs**: Swedish and English interface
 - **Icon Composer**: a layered Liquid Glass app icon
 - **XcodeGen** and **dmgbuild**: reproducible project and a laid-out DMG
@@ -303,7 +302,6 @@ Mindtalk is made by [Mindact Solutions AB](https://mindact.ai) in Sweden.
 - Voice recognition by **ReDimNet2+** (LAB260, built on ReDimNet2 by Palabra.ai). Apache 2.0.
 - Summaries and answers, if you choose it, by **Gemma 4** (Google). Apache 2.0.
 - Inference by **FluidAudio** (FluidInference). Apache 2.0.
-- Updates by **Sparkle**. MIT.
 
 Full credits and links are in the app under *About Mindtalk → Credits and Licenses…*.
 

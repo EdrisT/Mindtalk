@@ -3,8 +3,8 @@ import AppKit
 // MARK: - Move to Applications
 //
 // Run from the disk image, from Downloads, or from macOS's hidden "translocated"
-// copy, Mindtalk can't update itself (Sparkle refuses) and won't reliably open
-// at login. So at launch it offers — once — to move itself into Applications:
+// copy, Mindtalk won't reliably open at login. So at launch it offers — once —
+// to move itself into Applications:
 // copy there (replacing an older copy), drop the quarantine flag on the copy so
 // macOS runs it in place, open it, and tidy up behind itself: eject the disk
 // image, or move the original from Downloads to the Trash.
@@ -25,7 +25,7 @@ enum AppMover {
         NSApp.activate()
         let alert = NSAlert()
         alert.messageText = String(localized: "Flytta Mindtalk till Program?")
-        alert.informativeText = String(localized: "Mindtalk behöver ligga i Program för att kunna uppdatera sig själv och starta vid inloggning.")
+        alert.informativeText = String(localized: "Mindtalk behöver ligga i Program för att starta vid inloggning.")
         alert.addButton(withTitle: String(localized: "Flytta till Program"))
         alert.addButton(withTitle: String(localized: "Inte nu"))
         alert.showsSuppressionButton = true

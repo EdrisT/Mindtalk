@@ -1882,7 +1882,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         if AppMover.offerIfNeeded() { return }
         MediaControl.shared.restoreAfterCrash()
         SpeechModel.removeLeftoverDownloads()
-        Updates.shared.start()
         // AI-appar → MCP: the socket the helper asks over, and the fixed path to the helper.
         Bridge.launch()
         // The voice models, ready before the first meeting (after an update macOS can
@@ -2237,11 +2236,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         let main = NSMenu()
         main.addItem(submenu("Mindtalk", [
             item("Om Mindtalk", #selector(AppDelegate.menuAbout)),
-            {
-                let check = item("Sök efter uppdateringar…", #selector(Updates.checkNow))
-                check.target = Updates.shared
-                return check
-            }(),
             .separator(),
             item("Inställningar…", #selector(AppDelegate.menuSettings), ","),
             .separator(),

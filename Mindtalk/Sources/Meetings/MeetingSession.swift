@@ -2327,7 +2327,7 @@ final class MeetingSession: ObservableObject {
         LiveMeter.shared.reset()
         phase = .idle
         #if DEBUG
-        if simulation != nil { simulation = nil; Updates.shared.meetingEnded(); return }
+        if simulation != nil { simulation = nil; return }
         #endif
         Dictation.shared.meetingEnded()
         // Notes are written once; listening again keeps the ones you have (and your
@@ -2340,15 +2340,6 @@ final class MeetingSession: ObservableObject {
         }
         if let finished {
             AccessibilityNotification.Announcement(Self.endedSentence(summarizing: MeetingNotes.shared.writing.contains(finished))).post()
-        }
-        // A postponed update restarts Mindtalk: only once the notes are written.
-        Task { @MainActor in
-            // (Nor while a meeting runs again — continued, or a new one.)
-            for _ in 0..<600 where !MeetingNotes.shared.writing.isEmpty || MeetingSession.shared.isBusy {
-                try? await Task.sleep(for: .seconds(1))
-            }
-            guard !MeetingSession.shared.isBusy else { return }     // that meeting's end will do it
-            Updates.shared.meetingEnded()
         }
         MeetingStore.shared.applyRetention()
     }

@@ -128,7 +128,6 @@ enum PanelMetrics {
 struct StatusPanelView: View {
     @ObservedObject var dictation: Dictation
     @ObservedObject var stats: Stats
-    @ObservedObject var updates: Updates = .shared
     @ObservedObject var meeting: MeetingSession = .shared
     let close: () -> Void
     /// No glass (ImageRenderer can't draw it) — screenshots only.
@@ -156,13 +155,6 @@ struct StatusPanelView: View {
             PanelSeparator()
             today
             PanelSeparator()
-            if let version = updates.available {
-                PanelRow(title: String(localized: "Installera ny version \(version)…"), icon: "arrow.down.circle") {
-                    close()
-                    updates.checkNow()
-                }
-                PanelSeparator()
-            }
             // What you do most, right under the figures: the meeting going on, or the
             // ways to start one, a thought, the window.
             if meeting.isBusy {

@@ -9,9 +9,6 @@ packages:
   FluidAudio:
     url: https://github.com/FluidInference/FluidAudio.git
     exactVersion: 0.17.4
-  Sparkle:
-    url: https://github.com/sparkle-project/Sparkle
-    exactVersion: 2.10.0
   # "Bättre anteckningar": Gemma 4 on the Mac through Apple's MLX.
   MLXSwiftLM:
     url: https://github.com/ml-explore/mlx-swift-lm
@@ -61,7 +58,6 @@ targets:
         optional: true
     dependencies:
       - package: FluidAudio
-      - package: Sparkle
       - package: MLXSwiftLM
         product: MLXLLM
       - package: MLXSwiftLM
@@ -93,15 +89,6 @@ targets:
         LSApplicationCategoryType: public.app-category.productivity
         NSPrincipalClass: NSApplication
         NSHumanReadableCopyright: "© 2026 Mindact Solutions AB. Taligenkänning: Klang Pianissimo av Klang AI AB och Parakeet Ultra av Moondream (CC BY 4.0)."
-        # Updates (Sparkle): the appcast published with each GitHub release, signed with Mindtalk's own key.
-        SUFeedURL: https://github.com/dragon6sic6/Mindtalk/releases/latest/download/appcast.xml
-        SUPublicEDKey: FrkJNGYBpCm6THhdPrqRSuypbMKROa27oKJR/hhCgUY=
-        # Local fork: don't pull upstream builds over mine.
-        SUEnableAutomaticChecks: false
-        # Hardening: the feed itself must carry a valid signature, and an update is
-        # verified before it's even unpacked.
-        SURequireSignedFeed: true
-        SUVerifyUpdateBeforeExtraction: true
         # "Öppna med › Mindtalk" for sound and video: transcribed as a meeting.
         CFBundleDocumentTypes:
           - CFBundleTypeName: Audio

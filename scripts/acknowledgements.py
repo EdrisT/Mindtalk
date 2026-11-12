@@ -20,10 +20,9 @@ def checkout(name):
                 os.path.join(ROOT, "build", "SourcePackages", "checkouts", name))
 
 FLUID = checkout("FluidAudio")
-SPARKLE = checkout("Sparkle")
 OUT = os.path.join(ROOT, "Mindtalk", "Resources", "Acknowledgements.txt")
 
-if not (os.path.isdir(FLUID) and os.path.isdir(SPARKLE)):
+if not os.path.isdir(FLUID):
     sys.exit("Package checkouts missing – run `make build` first.")
 
 versions = dict(re.findall(r'\n  (\w+):\n    url: .*\n    exactVersion:\s*([\d.]+)', open(os.path.join(ROOT, "project.yml")).read()))
@@ -184,14 +183,6 @@ for path in sorted(glob.glob(os.path.join(FLUID, "ThirdPartyLicenses", "*"))):
     name = os.path.splitext(os.path.basename(path))[0].replace("-LICENSE", "")
     parts.append(f"\n\n\nFLUIDAUDIO THIRD-PARTY NOTICE: {name}\n{rule}\n\n" + open(path).read().strip())
 
-parts.append(f"""\n\n\nSPARKLE {versions["Sparkle"]}
-{rule}
-
-Keeps Mindtalk up to date. Included in Mindtalk.
-https://sparkle-project.org
-
-""" + open(os.path.join(SPARKLE, "LICENSE")).read().strip())
-
 # Everything else compiled in for "Bättre anteckningar" (MLX and the tokenizer) and
 # for the helper `mindtalk` (the MCP SDK and what it links), with its licence, from
 # the resolved packages. swift-syntax only builds macros; swift-nio and swift-atomics
@@ -209,7 +200,7 @@ purpose = {"mlx-swift": "Runs the notes model on the Mac's GPU.",
            "eventsource": "Server-sent events for the MCP SDK in the helper mindtalk."}
 for pin in sorted(pins, key=lambda p: p["identity"]):
     name = pin["identity"]
-    if name in ("fluidaudio", "sparkle", "swift-syntax", "swift-nio", "swift-atomics"):
+    if name in ("fluidaudio", "swift-syntax", "swift-nio", "swift-atomics"):
         continue
     folder = next((d for d in glob.glob(os.path.join(os.path.dirname(FLUID), "*")) if os.path.basename(d).lower() == name), None)
     lic = next(iter(sorted(glob.glob(os.path.join(folder, "LICENSE*")))), None) if folder else None
@@ -222,4 +213,4 @@ for pin in sorted(pins, key=lambda p: p["identity"]):
 
 text = "\n".join(parts) + "\n"
 open(OUT, "w").write(text)
-print(f"✓ {os.path.relpath(OUT, ROOT)} ({len(text) // 1024} KB, FluidAudio {version}, Sparkle {versions['Sparkle']})")
+print(f"✓ {os.path.relpath(OUT, ROOT)} ({len(text) // 1024} KB, FluidAudio {version})")

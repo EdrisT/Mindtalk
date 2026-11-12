@@ -10,10 +10,8 @@ The Xcode project is generated from `project.yml` and isn't checked in.
 
 ```bash
 make run       # Debug build and launch
-make install   # Release build into /Applications (development signature)
-make install-signed   # Same, signed with Developer ID — keeps macOS permissions across builds and updates
+make install   # Release build into /Applications (your own signing identity)
 make open      # Generate the project and open it in Xcode
-make dmg       # Signed, notarized DMG in dist/ (scripts/release.sh)
 ```
 
 ## Self-tests
@@ -104,37 +102,19 @@ scripts/screenshots/shoot.sh en <models>    # and: sv
 
 It draws every view in light and dark mode into `docs/images/<lang>/` with the app's own renderers (nothing on screen, your running Mindtalk untouched) and composes the hero images (`scripts/screenshots/hero.swift`). `<models>` is a folder with the speech and voice models, such as an APFS clone (`cp -c -R`) of `~/Library/Application Support/Mindtalk/Models`, so the pages look as on a Mac that has them.
 
-## Releasing
+## Installing the app you use day to day
 
-`scripts/release.sh` builds for Apple Silicon, signs with Developer ID (hardened runtime, secure timestamp), lays out the DMG window with [dmgbuild](https://github.com/dmgbuild/dmgbuild) (background drawn by `scripts/dmg/background.swift`), signs the DMG, notarizes it and staples the ticket.
-
-Notarization uses a notarytool profile in the keychain. Create it once — you'll be asked for an app-specific password from [account.apple.com](https://account.apple.com):
-
-```bash
-xcrun notarytool store-credentials Mindtalk --apple-id <apple-id> --team-id <team-id>
-```
-
-`NOTARIZE=0 scripts/release.sh` skips notarization (the DMG then only opens on your own Mac).
-
-## Updates (Sparkle)
-
-Mindtalk updates itself with [Sparkle](https://sparkle-project.org). The app reads
-`releases/latest/download/appcast.xml` from this repository once a day (setting in
-Settings → App). `scripts/release.sh` writes `dist/appcast-<version>/appcast.xml`,
-signed with Mindtalk's EdDSA key; upload it to the release together with `Mindtalk.dmg`.
-
-- The private key is in the login keychain, account `mindtalk`. Back it up
-  (`generate_keys --account mindtalk -x key.txt`) — without it no update can be signed.
-- The public key is `SUPublicEDKey` in `project.yml`.
-- Every release needs a higher `CURRENT_PROJECT_VERSION`; that is what Sparkle compares.
-- Release notes: put them in `dist/notes-<version>.md` before running the script.
-- The feed is only reachable while the repository is public.
+`make install` builds Release and copies it to `/Applications/Mindtalk.app`, signed with the
+identity in `project.yml` (`edrta913-local-dev`, Manual, no Apple team). Same identity as your
+Debug builds, so the microphone and Accessibility grants carry between the two. There is no
+DMG, no notarization and no release script in this fork — the upstream project is closed, so
+the last open source version is what you build here.
 
 ## Licences in the app
 
 FluidAudio is compiled into Mindtalk, so its licence and third-party notices ship
 in the app (`Mindtalk/Resources/Acknowledgements.txt`, shown under Settings → About →
-Show Licences). `scripts/release.sh` regenerates it; by hand after a FluidAudio update:
+Show Licences). Regenerate it after a dependency update:
 
 ```bash
 make build && python3 scripts/acknowledgements.py
@@ -182,6 +162,5 @@ It pulls in new strings, fills in the Swedish values (required — otherwise a S
 | `VocabularyMatcher.swift` | Vocabulary matching in one pass (self-contained, testable) |
 | `SecureInput.swift` | Is the cursor in a password field? |
 | `FocusedField.swift` | Is there a text field to paste into? If clearly not, the text goes to the clipboard |
-| `Updates.swift` | Sparkle: signed automatic updates |
 | `AppMover.swift` | Offers to move itself into Applications when run from the DMG or Downloads |
 | `Demo.swift` | Demo mode for screenshots (Debug builds only) |

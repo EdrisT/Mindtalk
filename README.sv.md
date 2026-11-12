@@ -288,7 +288,6 @@ Mer i [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (på engelska): självtester oc
 - **Core Graphics event taps**: de globala tangenterna för diktering, tankar och möten
 - **MCP via en lokal Unix-socket**: en liten hjälpare i appen som bara ditt användarkonto kommer åt
 - **ServiceManagement**: starta vid inloggning
-- **[Sparkle](https://sparkle-project.org)**: signerade automatiska uppdateringar
 - **String Catalogs**: svenskt och engelskt gränssnitt
 - **Icon Composer**: appikon i lager med Liquid Glass
 - **XcodeGen** och **dmgbuild**: reproducerbart projekt och en snygg DMG
