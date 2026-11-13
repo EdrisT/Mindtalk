@@ -3997,6 +3997,22 @@
         }
       }
     },
+    "Bättre än nästa förslag med": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Better than the next suggestion by"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bättre än nästa förslag med"
+          }
+        }
+      }
+    },
     "Börja": {
       "extractionState": "stale",
       "localizations": {
@@ -4042,6 +4058,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Börja prata, så kommer texten här."
+          }
+        }
+      }
+    },
+    "Började rösten tala längre tillbaka än så, pratar den ända fram till namnet: namnordet är troligare någon annans.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If the voice started talking earlier than this, it has talked right up to the name: the name word is more likely someone else's."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Började rösten tala längre tillbaka än så, pratar den ända fram till namnet: namnordet är troligare någon annans."
           }
         }
       }
@@ -4304,6 +4336,22 @@
         }
       }
     },
+    "Del av turens tal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share of the turn's speech"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Del av turens tal"
+          }
+        }
+      }
+    },
     "Dela": {
       "localizations": {
         "en": {
@@ -4348,6 +4396,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Deltagarna informerades om inspelningen kl. %@."
+          }
+        }
+      }
+    },
+    "Den bästa träffen måste slå den näst bästa med så mycket, annars nämns ingen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The best match must beat the next best by this much, otherwise no one is named."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den bästa träffen måste slå den näst bästa med så mycket, annars nämns ingen."
           }
         }
       }
@@ -4678,6 +4742,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Den som används kan inte tas bort. Byt språk först."
+          }
+        }
+      }
+    },
+    "Den starkaste rösten måste vara bättre än den närmaste med så mycket, annars får orden den talare de redan har.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The strongest voice must be better than the closest by this much, otherwise the words keep the speaker they already have."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den starkaste rösten måste vara bättre än den närmaste med så mycket, annars får orden den talare de redan har."
           }
         }
       }
@@ -6136,6 +6216,22 @@
         }
       }
     },
+    "Efter så här många ord i samma stycke bryts det redan vid en punkt, inte bara vid tystnad.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After this many words in the same paragraph it breaks at a full stop, not only at silence."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Efter så här många ord i samma stycke bryts det redan vid en punkt, inte bara vid tystnad."
+          }
+        }
+      }
+    },
     "Eh, öh och um försvinner ur texten.": {
       "extractionState": "stale",
       "localizations": {
@@ -6181,6 +6277,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Eller skriv en tanke och tryck på retur"
+          }
+        }
+      }
+    },
+    "En annan röst måste hålla i så här många ord för att dela en mening i två.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Another voice must hold this many words in a row to split a sentence in two."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En annan röst måste hålla i så här många ord för att dela en mening i två."
           }
         }
       }
@@ -6249,6 +6361,70 @@
         }
       }
     },
+    "En kortare paus håller ihop en talares ord till ett block; längre börjar ett nytt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A shorter pause holds a speaker's words together in one block; a longer one starts a new one."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En kortare paus håller ihop en talares ord till ett block; längre börjar ett nytt."
+          }
+        }
+      }
+    },
+    "En kortare paus än så här håller ihop en talares stycken till ett prov.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A shorter pause than this holds a speaker's stretches together into one sample."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En kortare paus än så här håller ihop en talares stycken till ett prov."
+          }
+        }
+      }
+    },
+    "En mening får sin talare när det har varit tyst så här länge — annars vid . ? !": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A sentence gets its speaker when it has been silent this long — otherwise at . ? !"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En mening får sin talare när det har varit tyst så här länge — annars vid . ? !"
+          }
+        }
+      }
+    },
+    "En mening får vara så här lång": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A sentence may be this long"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En mening får vara så här lång"
+          }
+        }
+      }
+    },
     "En mindre Gemma, eller en modell du redan kör i Ollama eller LM Studio.": {
       "extractionState": "stale",
       "localizations": {
@@ -6299,6 +6475,54 @@
         }
       }
     },
+    "En namnfras får vara högst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A name phrase may be at most"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En namnfras får vara högst"
+          }
+        }
+      }
+    },
+    "En paus på så här långt börjar en ny fras i mätningen av namnorden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A pause this long starts a new phrase in the measurement of the name words."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En paus på så här långt börjar en ny fras i mätningen av namnorden."
+          }
+        }
+      }
+    },
+    "En röst måste ha minst så här mycket av talet runt namnordet för att få det.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A voice must have at least this much of the speech around the name word to get it."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En röst måste ha minst så här mycket av talet runt namnordet för att få det."
+          }
+        }
+      }
+    },
     "En större Gemma, eller en modell du redan kör i Ollama eller LM Studio.": {
       "extractionState": "stale",
       "localizations": {
@@ -6312,6 +6536,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "En större Gemma, eller en modell du redan kör i Ollama eller LM Studio."
+          }
+        }
+      }
+    },
+    "En tur avslutas alltid efter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A turn always ends after"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En tur avslutas alltid efter"
+          }
+        }
+      }
+    },
+    "En tur som fick sitt namn in skrivet eller känt igen: en röst måste ha minst så här mycket av den.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A turn whose name was typed in or recognised: a voice must have at least this much of it."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En tur som fick sitt namn in skrivet eller känt igen: en röst måste ha minst så här mycket av den."
+          }
+        }
+      }
+    },
+    "En turrunda låter som från": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A turn in the round sounds like from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En turrunda låter som från"
           }
         }
       }
@@ -6416,6 +6688,22 @@
         }
       }
     },
+    "Ett kort ljudprov behöver vara bättre än så här för att nämna en person.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A short voice sample needs to be better than this to name a person."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ett kort ljudprov behöver vara bättre än så här för att nämna en person."
+          }
+        }
+      }
+    },
     "Ett möte går att läsa två minuter efter att det har slutat. Fråga igen om en stund.": {
       "localizations": {
         "en": {
@@ -6444,6 +6732,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ett möte kunde inte flyttas till papperskorgen"
+          }
+        }
+      }
+    },
+    "Ett möte som fortsätter från ett tidigare behöver så här nära en röst från förut för att slås ihop.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A meeting that continues from an earlier one needs to be this close to a voice from before to be merged."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ett möte som fortsätter från ett tidigare behöver så här nära en röst från förut för att slås ihop."
           }
         }
       }
@@ -6524,6 +6828,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ett möte spelas in. Öppna länken igen när det är klart."
+          }
+        }
+      }
+    },
+    "Ett ord räknas som tal högst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A word counts as speech for at most"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ett ord räknas som tal högst"
+          }
+        }
+      }
+    },
+    "Ett prov är kort under": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A sample is short under"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ett prov är kort under"
           }
         }
       }
@@ -7683,6 +8019,38 @@
         }
       }
     },
+    "Från så här lite tal säger ett ljudprov ingenting alls — åt något håll.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This little speech and less says nothing at all about a voice — either way."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Från så här lite tal säger ett ljudprov ingenting alls — åt något håll."
+          }
+        }
+      }
+    },
+    "Från så här mycket tal krävs det inte längre en högre poäng för att nämna någon.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From this much speech a sample no longer needs a higher score to name someone."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Från så här mycket tal krävs det inte längre en högre poäng för att nämna någon."
+          }
+        }
+      }
+    },
     "Fungerar i ChatGPT-appen för Mac, inte på webben eller i mobilen.": {
       "localizations": {
         "en": {
@@ -8072,6 +8440,38 @@
         }
       }
     },
+    "Först efter så här mycket tal avslutas en tur av tystnaden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only after this much speech does silence end a turn."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Först efter så här mycket tal avslutas en tur av tystnaden."
+          }
+        }
+      }
+    },
+    "Först efter så här mycket tal får ett ljudprov avgöra att det inte är personen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only after this much speech may a voice sample decide that it is not the person."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Först efter så här mycket tal får ett ljudprov avgöra att det inte är personen."
+          }
+        }
+      }
+    },
     "Försök igen": {
       "localizations": {
         "en": {
@@ -8415,6 +8815,22 @@
         }
       }
     },
+    "Golvet är det tystaste av ljudet under en så här lång tid: kortare än så hinner inte ett bullrigt rum hinna visa vad som är tyst.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The floor is the quietest of the sound over this long a time: any shorter and a noisy room never gets to show what is quiet."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golvet är det tystaste av ljudet under en så här lång tid: kortare än så hinner inte ett bullrigt rum hinna visa vad som är tyst."
+          }
+        }
+      }
+    },
     "Grundmodellen som båda talmodellerna bygger på. Av NVIDIA. CC BY 4.0.": {
       "extractionState": "manual",
       "localizations": {
@@ -8478,6 +8894,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gäller diktering, tankar och möten."
+          }
+        }
+      }
+    },
+    "Gånger bättre än nästa röst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Times better than the next voice"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gånger bättre än nästa röst"
           }
         }
       }
@@ -9813,6 +10245,22 @@
         }
       }
     },
+    "Högst under så här mycket av mätpunkterna anses ingen ha talat alls.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Below this share of the sample points no one is taken to have spoken at all."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högst under så här mycket av mätpunkterna anses ingen ha talat alls."
+          }
+        }
+      }
+    },
     "Hör dig bara när du dikterar, sparar en tanke eller spelar in ett möte. Ljudet lämnar aldrig din Mac.": {
       "extractionState": "stale",
       "localizations": {
@@ -9875,6 +10323,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hör inget från samtalet ännu. Pratar de andra? Tillåt då Mindtalk i Systeminställningar under Integritet och säkerhet → Skärm- och systemljudsinspelning."
+          }
+        }
+      }
+    },
+    "Hörd i så här många av rondens turar är rösten inte en deltagares: en TV väntar inte på sin tur.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heard in this many of the round's turns, the voice is not a participant's: a TV does not wait for its turn."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hörd i så här många av rondens turar är rösten inte en deltagares: en TV väntar inte på sin tur."
           }
         }
       }
@@ -11265,6 +11729,22 @@
         }
       }
     },
+    "Inte samma person under": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not the same person under"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inte samma person under"
+          }
+        }
+      }
+    },
     "Inte under Plugins. Där fungerar bara servrar på internet.": {
       "localizations": {
         "en": {
@@ -11454,6 +11934,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jag tar testerna och ger besked på torsdag."
+          }
+        }
+      }
+    },
+    "Justering av röster": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voice tuning"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Justering av röster"
           }
         }
       }
@@ -12298,6 +12794,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koppla Mindtalk till din AI-assistent"
+          }
+        }
+      }
+    },
+    "Kortaste provet som gäller": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The shortest sample that counts"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kortaste provet som gäller"
           }
         }
       }
@@ -13655,6 +14167,22 @@
         }
       }
     },
+    "Ljudet från en rundes tur som är så här nära en röst i rummet väger tyngre än etiketten på namnordet.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sound from a round's turn that is this close to a voice in the room weighs more than the label on the name word."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ljudet från en rundes tur som är så här nära en röst i rummet väger tyngre än etiketten på namnordet."
+          }
+        }
+      }
+    },
     "Ljudet sparas så länge mötet finns. Texten sparas alltid.": {
       "localizations": {
         "en": {
@@ -13667,6 +14195,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ljudet sparas så länge mötet finns. Texten sparas alltid."
+          }
+        }
+      }
+    },
+    "Ljudnivån måste vara så här mycket över rummets eget golv för att räknas som tal.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sound level must be this much above the room's own floor to count as speech."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ljudnivån måste vara så här mycket över rummets eget golv för att räknas som tal."
           }
         }
       }
@@ -14445,6 +14989,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lämna texten i urklipp"
+          }
+        }
+      }
+    },
+    "Längre än så här väntar inte röstkänningen på punkt eller tystnad.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Longer than this, speaker recognition does not wait for a full stop or silence."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Längre än så här väntar inte röstkänningen på punkt eller tystnad."
           }
         }
       }
@@ -15441,6 +16001,22 @@
         }
       }
     },
+    "Mer än så här behövs inte: proverna tas från de längsta styckena upp till hit.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More than this is not needed: the samples come from the longest stretches up to this much."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mer än så här behövs inte: proverna tas från de längsta styckena upp till hit."
+          }
+        }
+      }
+    },
     "Mest använda": {
       "localizations": {
         "en": {
@@ -15469,6 +16045,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mest använt: %@"
+          }
+        }
+      }
+    },
+    "Mest tal för ett ljudprov": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most speech for a voice sample"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mest tal för ett ljudprov"
           }
         }
       }
@@ -15695,6 +16287,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mikrofonen är tillbaka och inspelningen fortsätter."
+          }
+        }
+      }
+    },
+    "Mindre än så här räcker inte för att bilda en röststämpling av en talare i ett möte.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less than this is not enough to form a voiceprint of a speaker in a meeting."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindre än så här räcker inte för att bilda en röststämpling av en talare i ett möte."
           }
         }
       }
@@ -16612,6 +17220,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Minimera"
+          }
+        }
+      }
+    },
+    "Minst tal för ett ljudprov": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Least speech for a voice sample"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minst tal för ett ljudprov"
           }
         }
       }
@@ -18104,6 +18728,22 @@
         }
       }
     },
+    "När namnordet själv inte har en klar röst: så här mycket före det väger med.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When the name word itself has no clear voice: this much before it counts in."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "När namnordet själv inte har en klar röst: så här mycket före det väger med."
+          }
+        }
+      }
+    },
     "När något du dikterar liknar ett ord i listan lyssnar Mindtalk en gång till just där, så att namnet stavas rätt.": {
       "localizations": {
         "en": {
@@ -18249,6 +18889,38 @@
         }
       }
     },
+    "Någon har svarat och det har varit tyst så här länge: ronden går vidare till nästa.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone has answered and it has been silent this long: the round moves on to the next."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Någon har svarat och det har varit tyst så här länge: ronden går vidare till nästa."
+          }
+        }
+      }
+    },
+    "Någon som pratar i sträck delas upp efter en paus på så här lång.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone talking at a stretch is split up after a pause this long."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Någon som pratar i sträck delas upp efter en paus på så här lång."
+          }
+        }
+      }
+    },
     "Något behöver ordnas": {
       "extractionState": "stale",
       "localizations": {
@@ -18326,6 +18998,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "OK"
+          }
+        }
+      }
+    },
+    "Och så mycket bättre än den närmaste rösten, annars avgör inte namnordet.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "And this much better than the closest voice, otherwise the name word decides nothing."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Och så mycket bättre än den närmaste rösten, annars avgör inte namnordet."
           }
         }
       }
@@ -18493,6 +19181,54 @@
         }
       }
     },
+    "Ord i rad innan ett byte räknas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Words in a row before a change counts"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ord i rad innan ett byte räknas"
+          }
+        }
+      }
+    },
+    "Ord innan punkten klipper": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Words before the full stop splits"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ord innan punkten klipper"
+          }
+        }
+      }
+    },
+    "Ord som ännu ingen röst tagit får en egen rad när det har varit tyst så här länge.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Words that no voice has taken yet get their own line when it has been silent this long."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ord som ännu ingen röst tagit får en egen rad när det har varit tyst så här länge."
+          }
+        }
+      }
+    },
     "Ordet är för långt. Högst 60 tecken.": {
       "localizations": {
         "en": {
@@ -18554,6 +19290,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
+          }
+        }
+      }
+    },
+    "Paus som avbryter en fras": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause that breaks a phrase"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paus som avbryter en fras"
           }
         }
       }
@@ -18782,6 +19534,22 @@
         }
       }
     },
+    "Pratar rösten så här länge före en tur och vidare in i den, är den bakgrund till den turen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If the voice talks this long before a turn and on into it, it is background to that turn."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratar rösten så här länge före en tur och vidare in i den, är den bakgrund till den turen."
+          }
+        }
+      }
+    },
     "Presentationsrunda": {
       "extractionState": "stale",
       "localizations": {
@@ -18910,6 +19678,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prova på riktigt"
+          }
+        }
+      }
+    },
+    "Prova röster under möte från": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try voices during a meeting from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prova röster under möte från"
+          }
+        }
+      }
+    },
+    "Provet får säga nej från": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sample may say no from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provet får säga nej från"
           }
         }
       }
@@ -19319,6 +20119,54 @@
         }
       }
     },
+    "Ronden: när någon pratar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The round: when someone talks"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ronden: när någon pratar"
+          }
+        }
+      }
+    },
+    "Ronden: vem sa namnet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The round: who said the name"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ronden: vem sa namnet"
+          }
+        }
+      }
+    },
+    "Rummets golv mäts över": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The room's floor is measured over"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rummets golv mäts över"
+          }
+        }
+      }
+    },
     "Räknar ihop…": {
       "localizations": {
         "en": {
@@ -19399,6 +20247,22 @@
         }
       }
     },
+    "Röstandel som räknas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voice share that counts"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röstandel som räknas"
+          }
+        }
+      }
+    },
     "Röstavtryck sparat": {
       "localizations": {
         "en": {
@@ -19459,6 +20323,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rösten känns inte igen nästa gång. Namnet i gamla möten finns kvar."
+          }
+        }
+      }
+    },
+    "Röster från olika möten som är lika mycket räknas som samma person. 0,60 valdes efter uppmätning: samma röst i ett nytt möte 0,64 och uppåt, två olika personer högst 0,54.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voices from different meetings that are this similar count as the same person. 0.60 was chosen after measuring: the same voice in a new meeting scored 0.64 and up, two different people at most 0.54."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röster från olika möten som är lika mycket räknas som samma person. 0,60 valdes efter uppmätning: samma röst i ett nytt möte 0,64 och uppåt, två olika personer högst 0,54."
           }
         }
       }
@@ -19675,6 +20555,38 @@
         }
       }
     },
+    "Röstpoäng där någon talar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voice score where someone talks"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röstpoäng där någon talar"
+          }
+        }
+      }
+    },
+    "Röstpoäng som räknas som tal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voice score that counts as speech"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röstpoäng som räknas som tal"
+          }
+        }
+      }
+    },
     "Sa du nej? Ändra det i Systeminställningar.": {
       "localizations": {
         "en": {
@@ -19736,6 +20648,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Samma röst"
+          }
+        }
+      }
+    },
+    "Samma röst från": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The same voice from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Samma röst från"
+          }
+        }
+      }
+    },
+    "Samma röst från kort prov, från": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The same voice from a short sample, from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Samma röst från kort prov, från"
           }
         }
       }
@@ -21861,6 +22805,22 @@
         }
       }
     },
+    "Stycke och turtagning": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paragraphs and turns"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stycke och turtagning"
+          }
+        }
+      }
+    },
     "Ställ in ”Tryck på 🌐 för att” till ”Gör ingenting” under Tangentbord i Systeminställningar.": {
       "localizations": {
         "en": {
@@ -22441,6 +23401,22 @@
         }
       }
     },
+    "Säkrare när mötet fortsätter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Safer when the meeting continues"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Säkrare när mötet fortsätter"
+          }
+        }
+      }
+    },
     "Sätt igång": {
       "localizations": {
         "en": {
@@ -22501,6 +23477,118 @@
           "stringUnit": {
             "state": "translated",
             "value": "Så börjar ett möte"
+          }
+        }
+      }
+    },
+    "Så här hör Mindtalk vem som säger vad": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How Mindtalk hears who says what"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så här hör Mindtalk vem som säger vad"
+          }
+        }
+      }
+    },
+    "Så här länge innan talet börjar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This long before speech begins"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så här länge innan talet börjar"
+          }
+        }
+      }
+    },
+    "Så här mycket av en röst måste höras i turen för att den ska räknas som hörd där.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This much of a voice must be heard in the turn for it to count as heard there."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så här mycket av en röst måste höras i turen för att den ska räknas som hörd där."
+          }
+        }
+      }
+    },
+    "Så här nära golvet räknas det som tyst. Måste vara lägre än gränsen för tal.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This close to the floor counts as silent. Must be lower than the limit for speech."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så här nära golvet räknas det som tyst. Måste vara lägre än gränsen för tal."
+          }
+        }
+      }
+    },
+    "Så långt tal avslutar turen ändå, hur tyst det än varit.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This much speech ends the turn anyway, however quiet it has been."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så långt tal avslutar turen ändå, hur tyst det än varit."
+          }
+        }
+      }
+    },
+    "Så mycket tal behövs för att nämna någon inom loppet av sekunder medan mötet går.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This much speech is needed to name someone within seconds while the meeting runs."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så mycket tal behövs för att nämna någon inom loppet av sekunder medan mötet går."
+          }
+        }
+      }
+    },
+    "Så mycket tal under ronden utanför någon tur gör rösten till bakgrund.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This much speech during the round, outside any turn, makes the voice background."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så mycket tal under ronden utanför någon tur gör rösten till bakgrund."
           }
         }
       }
@@ -23400,6 +24488,134 @@
         }
       }
     },
+    "Tal efter namnet räknas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech after the name counts"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal efter namnet räknas"
+          }
+        }
+      }
+    },
+    "Tal före namnet räknas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech before the name counts"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal före namnet räknas"
+          }
+        }
+      }
+    },
+    "Tal i en tur räknas från": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech in a turn counts from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal i en tur räknas från"
+          }
+        }
+      }
+    },
+    "Tal i en tur utan namnord": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech in a turn without a name word"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal i en tur utan namnord"
+          }
+        }
+      }
+    },
+    "Tal som avslutar en tur": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech that ends a turn"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal som avslutar en tur"
+          }
+        }
+      }
+    },
+    "Tal strax före en tur": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech just before a turn"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal strax före en tur"
+          }
+        }
+      }
+    },
+    "Tal så här mycket över rummet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech this much above the room"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal så här mycket över rummet"
+          }
+        }
+      }
+    },
+    "Tal utanför turarna": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech outside the turns"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal utanför turarna"
+          }
+        }
+      }
+    },
     "Talare": {
       "localizations": {
         "en": {
@@ -23448,6 +24664,22 @@
         }
       }
     },
+    "Talet anses ha börjat efter så här långt sammanhängande ljud — och börjar inte vid en hosta.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech is taken to have begun after this long a stretch of sound — and does not begin at a cough."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talet anses ha börjat efter så här långt sammanhängande ljud — och börjar inte vid en hosta."
+          }
+        }
+      }
+    },
     "Taligenkänningen behöver talmodellen. Den laddas ned en gång.": {
       "localizations": {
         "en": {
@@ -23460,6 +24692,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Taligenkänningen behöver talmodellen. Den laddas ned en gång."
+          }
+        }
+      }
+    },
+    "Talmodellen drar ut det sista ordet över tystnaden efter sig; ett ord räknas inte längre än så.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The speech model stretches the last word over the silence after it; a word does not count as longer than this."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talmodellen drar ut det sista ordet över tystnaden efter sig; ett ord räknas inte längre än så."
           }
         }
       }
@@ -25012,6 +26260,22 @@
         }
       }
     },
+    "Turar som gör en röst till bakgrund": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turns that make a voice background"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turar som gör en röst till bakgrund"
+          }
+        }
+      }
+    },
     "Två behövs. Den tredje är för samtal på datorn. Du ger dem bara en gång.": {
       "localizations": {
         "en": {
@@ -25024,6 +26288,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Två behövs. Den tredje är för samtal på datorn. Du ger dem bara en gång."
+          }
+        }
+      }
+    },
+    "Två röster nära varandra: osäkert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Two voices close together: uncertain"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Två röster nära varandra: osäkert"
           }
         }
       }
@@ -25056,6 +26336,118 @@
           "stringUnit": {
             "state": "translated",
             "value": "Två talare som är samma person slås ihop"
+          }
+        }
+      }
+    },
+    "Tyst innan en rad utan röst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silent before a line without a voice"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst innan en rad utan röst"
+          }
+        }
+      }
+    },
+    "Tyst inuti ett ljudprov": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silent inside a voice sample"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst inuti ett ljudprov"
+          }
+        }
+      }
+    },
+    "Tyst som avslutar en tur": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silence that ends a turn"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst som avslutar en tur"
+          }
+        }
+      }
+    },
+    "Tyst som klipper ett stycke": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silence that splits a paragraph"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst som klipper ett stycke"
+          }
+        }
+      }
+    },
+    "Tyst som skiljer åt en talare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silence that separates one speaker"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst som skiljer åt en talare"
+          }
+        }
+      }
+    },
+    "Tyst som slutar en mening": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silence that ends a sentence"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst som slutar en mening"
+          }
+        }
+      }
+    },
+    "Tyst så här nära rummets golv": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silent this close to the room's floor"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyst så här nära rummets golv"
           }
         }
       }
@@ -25121,6 +26513,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Under mötet går frågor bara med Apple Intelligence. Fråga igen när mötet är klart."
+          }
+        }
+      }
+    },
+    "Under så här mycket är det tydligt att det är någon annan — men ett kort ljudprov får aldrig säga det.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Below this much it is clear that it is someone else — but a short voice sample may never say so."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Under så här mycket är det tydligt att det är någon annan — men ett kort ljudprov får aldrig säga det."
           }
         }
       }
@@ -25612,6 +27020,22 @@
         }
       }
     },
+    "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What counts as silence, how long a sentence is, and how similar a voice must be to be the same person. The defaults were measured on real recorded meetings; change one if it does not fit how your room sounds."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter."
+          }
+        }
+      }
+    },
     "Vad var det viktigaste?": {
       "extractionState": "stale",
       "localizations": {
@@ -25711,6 +27135,22 @@
         }
       }
     },
+    "Varje mätpunkt på 10 ms räknas som tal från så här hög poäng. Används när ett mötes röster jämförs med varandra.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every 10 ms sample point counts as speech from this high a score. Used when a meeting's voices are compared with each other."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varje mätpunkt på 10 ms räknas som tal från så här hög poäng. Används när ett mötes röster jämförs med varandra."
+          }
+        }
+      }
+    },
     "Vecka %lld": {
       "localizations": {
         "en": {
@@ -25773,6 +27213,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vem gör vad?"
+          }
+        }
+      }
+    },
+    "Vem som säger meningen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Who says the sentence"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vem som säger meningen"
           }
         }
       }
@@ -27290,6 +28746,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ändra"
+          }
+        }
+      }
+    },
+    "enheter|ggr": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "times"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ggr"
+          }
+        }
+      }
+    },
+    "enheter|ord": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "words"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ord"
+          }
+        }
+      }
+    },
+    "enheter|turar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "turns"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "turar"
           }
         }
       }
@@ -29169,6 +30673,22 @@
         }
       }
     },
+    "Är det samma person?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is it the same person?"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Är det samma person?"
+          }
+        }
+      }
+    },
     "Ångra": {
       "localizations": {
         "en": {
@@ -29734,6 +31254,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "•"
+          }
+        }
+      }
+    },
+    "…och så här mycket efter det.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…and this much after it."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…och så här mycket efter det."
+          }
+        }
+      }
+    },
+    "…och så stor del av allt som hördes i turen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…and so large a share of everything heard in the turn."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…och så stor del av allt som hördes i turen."
           }
         }
       }
