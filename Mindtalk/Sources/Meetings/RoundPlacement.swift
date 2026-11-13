@@ -41,40 +41,44 @@ import Foundation
 
 enum RoundPlacement {
     // MARK: Thresholds (seconds of speech, cosine scores of ReDimNet2+ prints)
+    //
+    // All of them live in Settings → Möten → Justering (MeetingTuning), where the
+    // ladders stop at what the measurements below support. They read the numbers the
+    // meeting started with, so a name placed once is not placed again by other ones.
 
     /// A voice is heard in a turn from this much of its speech inside it — a name said
     /// on its own ("Anna") is half a second, a whole introduction three or four.
-    static let heardInTurn = 1.0
+    static var heardInTurn: Double { MeetingTuning.running.heardInTurn }
     /// Heard in this many turns of the round: background. A participant talks in their
     /// own turn (and now and then into the next one, which "first keeps it" covers).
-    static let backgroundTurns = 2
+    static var backgroundTurns: Int { Int(MeetingTuning.running.backgroundTurns) }
     /// Talking within this long before a turn began, and on into it: background for
     /// that turn (still talking when the next person's turn began).
-    static let beforeTurn = 1.5
+    static var beforeTurn: Double { MeetingTuning.running.beforeTurn }
     /// Talking this much during the round outside every turn (while the round waited for
     /// someone, asked for a name, counted down): background. Someone at the table speaks
     /// on their turn; a TV doesn't wait for one.
-    static let outsideTurns = 4.0
+    static var outsideTurns: Double { MeetingTuning.running.outsideTurns }
     /// "Hej, jag heter …": the run of speech a name ends takes at most this long. A
     /// background voice whose run (no pause of `pause` in it) began earlier was talking
     /// right up to the name: the name word under its label is likelier someone else's,
     /// said over it — a TV reads on; a person starts afresh after the turn's prompt.
-    static let phraseLength = 2.0
-    static let pause = 0.5
+    static var phraseLength: Double { MeetingTuning.running.phraseLength }
+    static var pause: Double { MeetingTuning.running.roundPause }
     /// The speech model stretches a last word over the quiet after it ("ekonomin." 4.4–
     /// 8.3 s): a word counts as speech for at most this long.
-    static let longestWord = 1.0
+    static var longestWord: Double { MeetingTuning.running.longestWord }
     /// The speech around a name word that counts when the word itself has no clear
     /// voice (two voices at once): this long before it and after it…
-    static let aroundBefore = 1.5
-    static let aroundAfter = 1.0
+    static var aroundBefore: Double { MeetingTuning.running.aroundBefore }
+    static var aroundAfter: Double { MeetingTuning.running.aroundAfter }
     /// …where the voice must have this much of it, and twice the next voice's.
-    static let minimumVote = 0.3
-    static let voteMargin = 2.0
+    static var minimumVote: Double { MeetingTuning.running.minimumVote }
+    static var voteMargin: Double { MeetingTuning.running.voteMargin }
     /// A turn without a name word (typed, or recognised): one voice must have this much
     /// speech in it, and this share of all of it (the unknown "two at once" included).
-    static let dominantSpeech = 1.0
-    static let dominance = 0.7
+    static var dominantSpeech: Double { MeetingTuning.running.dominantSpeech }
+    static var dominance: Double { MeetingTuning.running.dominance }
     // Measured with `Mindtalk --print-length-test` on 49 named voices in 87 meetings
     // (11 people you know; clips of each voice against that person's prints from other
     // meetings, and against everyone else's):
@@ -93,13 +97,13 @@ enum RoundPlacement {
 
     /// A print from less speech than this says nothing either way (as when the meeting
     /// runs: voices are first compared from two seconds of speech).
-    static let shortestPrint = 2.0
+    static var shortestPrint: Double { MeetingTuning.running.shortestPrint }
     /// Under this much speech a print is "short": a sure match needs a higher score.
-    static let shortPrint = 4.0
+    static var shortPrint: Double { MeetingTuning.running.shortPrint }
     /// A sure match from a short print: as when the meeting runs (recogniseIntroduced).
-    static let shortSameVoice: Float = 0.65
+    static var shortSameVoice: Float { Float(MeetingTuning.running.shortSameVoice) }
     /// "Clearly not them" only from this much speech (below VoiceMemory.notThem, 0.50).
-    static let notThemSpeech = 10.0
+    static var notThemSpeech: Double { MeetingTuning.running.notThemSpeech }
 
     // The turn's own print (the round makes one from the turn's audio) against the voices
     // of the same meeting, measured with `--print-length-test` on 22 meetings with two
@@ -116,7 +120,7 @@ enum RoundPlacement {
     /// A turn that scores this against a voice (and the margin over every other voice)
     /// sounds like it — evidence that outweighs the label on the name word (a radio's
     /// label on someone's "Hej, jag heter Karin", said over it).
-    static let turnThisVoice: Float = 0.50
+    static var turnThisVoice: Float { Float(MeetingTuning.running.turnThisVoice) }
 
     // MARK: Inputs
 

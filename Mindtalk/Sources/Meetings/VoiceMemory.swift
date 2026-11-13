@@ -412,13 +412,14 @@ final class VoiceMemory: ObservableObject {
     /// Two voices are the same person from this score on (cosine of ReDimNet2+ prints) —
     /// measured on real meetings (scripts/voice-models): the same voice in another
     /// meeting scored 0.64 and up from four seconds of speech, two different people at
-    /// most 0.54.
-    nonisolated static let sameVoice: Float = 0.60
+    /// most 0.54. Tunable in Settings → Möten (MeetingTuning); 0.60 is what the
+    /// measurement chose.
+    nonisolated static var sameVoice: Float { Float(MeetingTuning.running.sameVoice) }
     /// And the best match must beat the next by this much.
-    nonisolated static let margin: Float = 0.1
+    nonisolated static var margin: Float { Float(MeetingTuning.running.voiceMargin) }
     /// A new print for someone you know that scores below this against their earlier
     /// ones is probably someone else's voice (speakers mixed up in that meeting).
-    nonisolated static let notThem: Float = 0.5
+    nonisolated static var notThem: Float { Float(MeetingTuning.running.notThem) }
 
     /// The people you've named, as RoundPlacement compares voices with them (nobody while
     /// switched off, or before the model is ready).
@@ -571,19 +572,20 @@ actor VoicePrints {
     }
 
     /// At least this much clear speech, or no print — a few words say little about a voice.
-    static let minimumSpeech = 6.0
+    static var minimumSpeech: Double { MeetingTuning.running.printSpeech }
     /// And at most this much: enough for a steady print, quick to compute.
-    static let maximumSpeech = 30.0
+    static var maximumSpeech: Double { MeetingTuning.running.printMaxSpeech }
 
     /// The speaker's longest stretches of speech (on their own, not right next to
     /// someone else's words) put together, as a voiceprint.
     func print(of speaker: Int, in words: [MeetingWord], audio url: URL) async -> [Float]? {
         guard (try? load()) != nil, let embedder else { return nil }
-        // Their stretches: their words in a row, gaps under 0.6 s inside.
+        // Their stretches: their words in a row, gaps under `printGap` inside.
         var stretches: [(start: Double, end: Double)] = []
+        let gap = MeetingTuning.running.printGap
         for (i, w) in words.enumerated() where w.speaker == speaker {
             let previous = i > 0 ? words[i - 1] : nil
-            if let last = stretches.last, previous?.speaker == speaker, w.start - last.end < 0.6 {
+            if let last = stretches.last, previous?.speaker == speaker, w.start - last.end < gap {
                 stretches[stretches.count - 1].end = w.end
             } else {
                 stretches.append((w.start, w.end))
@@ -611,7 +613,7 @@ actor VoicePrints {
     /// `origin` seconds into it (a continued meeting) — while it is still being written.
     /// `minimum`: seconds of their speech needed — less while a meeting runs, to name
     /// someone within seconds (strangers don't score higher on short prints).
-    func print(of speaker: Int, in words: [MeetingWord], samples: [Float], minimum: Double = 3.5,
+    func print(of speaker: Int, in words: [MeetingWord], samples: [Float], minimum: Double = MeetingTuning.running.livePrintSpeech,
                origin: Double = 0) async -> [Float]? {
         guard (try? load()) != nil, let embedder else { return nil }
         var audio: [Float] = []

@@ -506,9 +506,11 @@ enum MeetingText {
     }
 
     /// Groups words into turns. Words with no clear speaker stay with the one before.
-    /// With `paragraphs`, someone speaking at length is broken up — at a pause of two
-    /// seconds, or at a full stop once a paragraph is long — so a monologue isn't one
-    /// endless bubble (and the live view only redraws its last part).
+    /// With `paragraphs`, someone speaking at length is broken up — at a pause of
+    /// `MeetingTuning.paragraphPause`, or at a full stop once a paragraph has
+    /// `paragraphWords` in it — so a monologue isn't one endless bubble (and the live
+    /// view only redraws its last part). A meeting is grouped when it is shown, so
+    /// those two numbers reach the meetings that are already over too.
     @MainActor static func turns(_ words: [MeetingWord], pending: [MeetingWord] = [],
                                  paragraphs: Bool = false) -> [MeetingTurn] {
         guard paragraphs else { return raw(ArraySlice(words), pending: pending, paragraphs: false) }
@@ -548,6 +550,8 @@ enum MeetingText {
         var turns: [MeetingTurn] = []
         var current: (id: Int, speaker: Int?, start: Double, words: [String], pending: [String])?
         var previous: MeetingWord?
+        // Once per pass, not per word.
+        let tuning = MeetingTuning.chosen
         func flush() {
             guard let c = current else { return }
             turns.append(MeetingTurn(id: c.id, speaker: c.speaker, start: c.start,
@@ -561,7 +565,7 @@ enum MeetingText {
             if n == 0, speaker == nil || speaker == MeetingWord.unknown, let seed { speaker = seed }
             // Words still being written that no voice has claimed yet, after a pause:
             // someone may have taken over — a row of their own until it's known.
-            let unclaimed = isPending && speaker == nil && previous.map { word.start - $0.end >= 1.0 } ?? false
+            let unclaimed = isPending && speaker == nil && previous.map { word.start - $0.end >= tuning.unclaimedPause } ?? false
             if unclaimed, current?.speaker != nil {
                 flush()
                 current = (i, nil, word.start, [], [word.text])
@@ -574,8 +578,9 @@ enum MeetingText {
             if paragraphs, let c = current, let previous {
                 let sentenceOver = previous.text.last.map { ".?!".contains($0) } ?? false
                 breaks = isPending || !c.pending.isEmpty
-                    ? word.start - previous.end >= 2
-                    : word.start - previous.end >= 2 || (c.words.count >= 60 && sentenceOver)
+                    ? word.start - previous.end >= tuning.paragraphPause
+                    : word.start - previous.end >= tuning.paragraphPause
+                        || (Double(c.words.count) >= tuning.paragraphWords && sentenceOver)
             }
             if !breaks, let c = current, c.speaker == speaker || speaker == nil || speaker == MeetingWord.unknown {
                 if isPending { current?.pending.append(word.text) } else if c.pending.isEmpty {
@@ -664,7 +669,8 @@ enum MeetingText {
         MeetingSearch.forget()
     }
 
-    /// Who spoke when: runs of one speaker, a pause of up to 1.5 s kept inside.
+    /// Who spoke when: runs of one speaker, a pause of up to `MeetingTuning.speakerGap`
+    /// kept inside.
     struct Segment: Equatable {
         let speaker: Int
         let start: Double
@@ -674,11 +680,12 @@ enum MeetingText {
     static func segments(_ words: [MeetingWord]) -> [Segment] {
         var out: [Segment] = []
         var last: Int?
+        let gap = MeetingTuning.chosen.speakerGap
         for w in words {
             var s = w.speaker ?? MeetingWord.unknown
             if s < 0 { s = last ?? -1 }
             guard s >= 0 else { continue }
-            if let i = out.indices.last, out[i].speaker == s, w.start - out[i].end < 1.5 {
+            if let i = out.indices.last, out[i].speaker == s, w.start - out[i].end < gap {
                 out[i].end = w.end
             } else {
                 out.append(Segment(speaker: s, start: w.start, end: w.end))

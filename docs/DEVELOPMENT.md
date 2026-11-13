@@ -82,6 +82,10 @@ $BIN --shortcut-field-test
 # Speaker picker: native completion, selection, editing and keyboard actions (Debug only)
 $BIN --speaker-name-test
 
+# The numbers VAD and diarization work with: their defaults, the ladders they may
+# change between, and reading them back (Debug only; writes nothing)
+$BIN --tuning-test
+
 # Pause/fade whatever is playing for three seconds (Debug only)
 $BIN --media-test
 

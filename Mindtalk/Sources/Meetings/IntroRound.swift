@@ -309,8 +309,10 @@ final class IntroRound: ObservableObject {
             }
             guard case .listening = phase else { return }
             // Talked, but no name: asked for it. (After a few words and a pause, or a
-            // few seconds of speech and a pause, or ten seconds whatever.)
-            if (voiced >= 3.5 && silence >= 1.4) || voiced >= 10 || saidWithoutName() {
+            // few seconds of speech and a pause, or a stretch of speech whatever — the
+            // three lengths are knobs in Settings → Möten → Justering.)
+            let tuning = MeetingTuning.running
+            if (voiced >= tuning.turnEndSpeech && silence >= tuning.turnEndSilence) || voiced >= tuning.turnAlways || saidWithoutName() {
                 await finishTurn()
             }
         case .known:
@@ -351,22 +353,26 @@ final class IntroRound: ObservableObject {
         }
     }
 
-    /// Levels in 20 ms frames against the room's own floor (its quietest tenth over the
-    /// last five seconds): speech 10 dB above it, silence under 6 dB above it.
+    /// Levels in 20 ms frames against the room's own floor (its quietest tenth over
+    /// `MeetingTuning.floorWindow`): speech `speechOverFloor` dB above it, silence under
+    /// `silenceUnderFloor` dB above it — both in Settings → Möten → Justering.
     private func analyse(_ samples: [Float]) {
         var i = 0
+        let tuning = MeetingTuning.running
+        let floorFrames = max(1, Int(tuning.floorWindow / 0.02))
+        let startFrames = max(1, Int(tuning.speechStart / 0.02))
         while i + Self.frame <= samples.count {
             var sum: Float = 0
             for k in i..<(i + Self.frame) { sum += samples[k] * samples[k] }
             let db = 10 * log10(sum / Float(Self.frame) + 1e-10)
             floor.append(db)
-            if floor.count > 250 { floor.removeFirst(floor.count - 250) }
+            if floor.count > floorFrames { floor.removeFirst(floor.count - floorFrames) }
             let sorted = floor.sorted()
             let quietest = sorted[sorted.count / 10]
-            let speaking = db > quietest + 10 && db > -62
-            let silent = db < quietest + 6 || db < -66
+            let speaking = db > quietest + Float(tuning.speechOverFloor) && db > -62
+            let silent = db < quietest + Float(tuning.silenceUnderFloor) || db < -66
             if speaking { runFrames += 1 } else if silent { runFrames = 0 }
-            if runFrames >= 10 { inSpeech = true }      // 200 ms of speech: it has begun
+            if runFrames >= startFrames { inSpeech = true }   // 200 ms of speech: it has begun
             if silent { inSpeech = false }
             if inSpeech, speechStart == nil, phase == .listening || phase == .new {
                 speechStart = max(turnStart, cursor + i - 10 * Self.frame - 1_600)

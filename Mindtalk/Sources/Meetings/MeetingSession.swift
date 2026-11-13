@@ -669,6 +669,8 @@ final class MeetingSession: ObservableObject {
 
     /// The live text, the voices and the recognising, from the moment the mic is on.
     private func begin() {
+        // The voices keep these numbers to themselves until the meeting is written out.
+        MeetingTuning.begin()
         loop = Task { await self.run() }
         heartbeat = Task { await self.beat() }
         callWatch?.cancel()
@@ -841,7 +843,7 @@ final class MeetingSession: ObservableObject {
             // for a print of their own. From under four seconds, surer still.
             let voicesBefore = Set(latest.words.compactMap(\.speaker).filter { $0 >= 0 && $0 < speakerBase })
             let thin = earlier.count < 2 || voicesBefore.count > earlier.count
-            let bar: Float = heard < 4 ? 0.7 : thin ? 0.7 : VoiceMemory.sameVoice
+            let bar: Float = heard < 4 || thin ? Float(MeetingTuning.running.continuedBar) : VoiceMemory.sameVoice
             guard best.score >= bar, lead >= VoiceMemory.margin,
                   latest.words.contains(where: { $0.speaker == speaker }) || pending.contains(where: { $0.speaker == speaker })
             else { continue }
@@ -1911,6 +1913,7 @@ final class MeetingSession: ObservableObject {
     nonisolated static func assignSentences(_ words: inout [MeetingWord], from start: Int, scores: [Float],
                                             final: Bool) -> Int {
         let frames = scores.count / VoiceTracker.speakers
+        let tuning = MeetingTuning.running
         var i = start
         while i < words.count {
             guard let j = sentenceEnd(words, from: i, final: final),
@@ -1928,7 +1931,8 @@ final class MeetingSession: ObservableObject {
                 }
             }
             runs = runs.reduce(into: []) { merged, run in
-                if let last = merged.last, run.to - run.from < 2 || last.to - last.from < 2 && merged.count == 1 && last.speaker == MeetingWord.unknown {
+                if let last = merged.last, Double(run.to - run.from) < tuning.voiceChangeWords
+                    || Double(last.to - last.from) < tuning.voiceChangeWords && merged.count == 1 && last.speaker == MeetingWord.unknown {
                     merged[merged.count - 1].to = run.to
                 } else {
                     merged.append(run)
@@ -1951,10 +1955,11 @@ final class MeetingSession: ObservableObject {
     /// The last word of the sentence starting at `i`, or nil if it isn't over yet.
     nonisolated static func sentenceEnd(_ words: [MeetingWord], from i: Int, final: Bool) -> Int? {
         var k = i
+        let tuning = MeetingTuning.running
         while k < words.count {
             if let c = words[k].text.last, ".?!".contains(c) { return k }
-            if k + 1 < words.count, words[k + 1].start - words[k].end >= 0.5 { return k }
-            if k - i >= 40 { return k }            // a very long run: don't wait forever
+            if k + 1 < words.count, words[k + 1].start - words[k].end >= tuning.sentencePause { return k }
+            if Double(k - i) >= tuning.sentenceWords { return k }   // a very long run: don't wait forever
             if k + 1 == words.count { return final ? k : nil }
             k += 1
         }
@@ -2288,6 +2293,8 @@ final class MeetingSession: ObservableObject {
     }
 
     private func done() {
+        // The meeting has had its numbers: the settings (and the next meeting) have their own.
+        MeetingTuning.end()
         // Awake until here — the final pass too, which can take minutes.
         if let activity { ProcessInfo.processInfo.endActivity(activity) }
         activity = nil
@@ -2503,9 +2510,10 @@ final class MeetingSession: ObservableObject {
         guard let best = sums.indices.max(by: { sums[$0] < sums[$1] }) else { return MeetingWord.unknown }
         // Two voices about as strong (talking at once, or a near tie): undecided — the
         // words stay with whoever spoke before rather than flip back and forth.
+        let tuning = MeetingTuning.running
         let second = sums.indices.filter { $0 != best }.map { sums[$0] }.max() ?? 0
-        guard (sums[best] - second) / Float(b - a) >= 0.02 else { return MeetingWord.unknown }
-        return sums[best] / Float(b - a) > 0.05 ? best : MeetingWord.unknown
+        guard (sums[best] - second) / Float(b - a) >= Float(tuning.tieMargin) else { return MeetingWord.unknown }
+        return sums[best] / Float(b - a) > Float(tuning.voiceFloor) ? best : MeetingWord.unknown
     }
 
     /// Pairs the final pass's speakers with the live ones (by how much they speak at
@@ -2526,7 +2534,7 @@ final class MeetingSession: ObservableObject {
         let n = VoiceTracker.speakers
         func active(_ scores: [Float], _ f: Int) -> Int? {
             var best: Int?
-            var top: Float = 0.5
+            var top: Float = Float(MeetingTuning.running.frameActive)
             for s in 0..<n where scores[f * n + s] > top { top = scores[f * n + s]; best = s }
             return best
         }

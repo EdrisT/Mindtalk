@@ -89,6 +89,8 @@ enum SettingsSection: String, CaseIterable, Identifiable {
 enum SettingsAnchor: String {
     /// Möten → Sammanfattningar.
     case summaries
+    /// Möten → Justering av röster.
+    case tuning
 }
 
 struct MainView: View {
@@ -695,6 +697,7 @@ struct SettingsPage: View {
         .card()
         MeetingStorageCard()
         VoiceMemoryCard(memory: .shared)
+        MeetingTuningCard().id(SettingsAnchor.tuning)
         SummaryWritersCard().id(SettingsAnchor.summaries)
     }
 }

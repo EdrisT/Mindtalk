@@ -1398,6 +1398,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         if args.contains("--defaults-test") {
             exit(PreviewDefaults.selfTest())
         }
+        // `Mindtalk --tuning-test`: the numbers VAD and diarization work with — their
+        // defaults, the ladders they may be changed between, and reading them back
+        // (MeetingTuning, Settings → Möten → Justering).
+        #if DEBUG
+        if args.contains("--tuning-test") {
+            exit(MeetingTuning.selfTest())
+        }
+        #endif
         // `Mindtalk --round-test`: the round's names onto the voices (RoundPlacement), on
         // made-up words, turns and prints — no audio, nothing read or written.
         if args.contains("--round-test") {
