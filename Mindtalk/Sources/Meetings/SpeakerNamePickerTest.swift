@@ -7,7 +7,7 @@ import SwiftUI
 enum SpeakerNamePickerTest {
     private final class Model: ObservableObject {
         @Published var name = "Existing name"
-        @Published var names = SpeakerNames.choices(["Danni Efraim", "Anna", "Åsa", " anna ", "", " \n"])
+        @Published var rows = SpeakerNames.rows(known: ["Danni Efraim", "Anna", "Åsa", " anna ", "", " \n"], invited: [])
         var saved: [String] = []
         var cancelled = 0
     }
@@ -17,7 +17,7 @@ enum SpeakerNamePickerTest {
         var body: some View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Vem är det här?")
-                SpeakerNameField(name: $model.name, names: model.names, placeholder: "Speaker 1",
+                SpeakerNameField(name: $model.name, rows: model.rows, placeholder: "Speaker 1",
                                  submit: { model.saved.append($0) }, cancel: { model.cancelled += 1 })
                     .frame(width: 280, height: 26)
                 HStack {
@@ -44,7 +44,7 @@ enum SpeakerNamePickerTest {
         defer { window.close() }
         do {
             try await settle()
-            try require(model.names.count == 3 && model.names.contains("Anna"), "Names were not trimmed and deduplicated")
+            try require(model.rows.count == 3 && model.rows.contains(.name("Anna")), "Names were not trimmed and deduplicated")
             guard let field = findField(in: host) else { throw failure("Native speaker picker is missing") }
             try require(field.numberOfItems == 3, "Known names are missing from the list")
             try require(field.stringValue == "Existing name", "Existing name was not preserved")
@@ -60,7 +60,7 @@ enum SpeakerNamePickerTest {
 
             // Selecting a row updates the binding even if AppKit notifies before it
             // updates the field editor (the Save button reads the binding directly).
-            let anna = model.names.firstIndex(of: "Anna")!
+            let anna = model.rows.firstIndex(of: .name("Anna"))!
             field.selectItem(at: anna)
             try await settle()
             try require(model.name == "Anna" && field.stringValue == "Anna", "List selection did not update the draft")
@@ -79,19 +79,35 @@ enum SpeakerNamePickerTest {
             try await key("\u{1b}", code: 53, in: window)
             try require(model.cancelled == 1 && model.saved.count == 2, "Escape did not cancel without saving")
 
-            model.names = []
+            model.rows = []
             try await settle()
             try require(field.numberOfItems == 0, "The list retained forgotten names")
             field.selectText(nil)
             try await key("Z", code: 6, in: window)
             try require(model.name == "Z", "An empty list prevented free text entry")
-            model.names = ["Åsa", "Zara"]
+            model.rows = SpeakerNames.rows(known: ["Åsa", "Zara"], invited: [])
             try await settle()
             try require(field.numberOfItems == 2 && field.stringValue == "Z", "Refreshing names reset the draft")
+
+            // Two sets: the invited from the calendar stand under a label of their own,
+            // and a label is never taken for a name — not by the pointer, not by Return.
+            model.rows = SpeakerNames.rows(known: ["Åsa"], invited: ["Zoe"])
+            try await settle()
+            let labels = model.rows.filter { row in if case .header = row { return true }; return false }
+            try require(field.numberOfItems == 4 && labels.count == 2, "The two sets did not get their labels: \(model.rows)")
+            field.selectItem(at: 0)
+            try await settle()
+            try require(model.name == "Åsa" && field.indexOfSelectedItem == 1,
+                        "A label was taken for a name: \(model.name) at \(field.indexOfSelectedItem)")
+            field.selectItem(at: 2)
+            try await settle()
+            try require(model.name == "Zoe" && field.indexOfSelectedItem == 3,
+                        "The label over the invited names was taken for a name: \(model.name)")
+
             field.selectText(nil)
             try await key("a", code: 0, in: window)
             try require(model.name == "Åsa", "Completion did not preserve the accented spelling")
-            print("Speaker picker self-test passed (existing name, focus, completion, list selection, Return, new name, clear, Escape, empty list, refreshed names, accents).")
+            print("Speaker picker self-test passed (existing name, focus, completion, list selection, Return, new name, clear, Escape, empty list, refreshed names, two sets with labels, labels never chosen, accents).")
             return 0
         } catch {
             print("Speaker picker self-test failed: \(error.localizedDescription)")

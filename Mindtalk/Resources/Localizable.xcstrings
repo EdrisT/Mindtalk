@@ -8147,6 +8147,22 @@
         }
       }
     },
+    "Från kalendern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From the calendar"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Från kalendern"
+          }
+        }
+      }
+    },
     "Från möte": {
       "localizations": {
         "en": {
@@ -14015,6 +14031,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Känd röst: %@"
+          }
+        }
+      }
+    },
+    "Kända namn": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Known names"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kända namn"
           }
         }
       }

@@ -14,7 +14,7 @@ struct SpeakerNamePicker: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            SpeakerNameField(name: $name, names: names, placeholder: placeholder,
+            SpeakerNameField(name: $name, rows: rows, placeholder: placeholder,
                              submit: submit, cancel: cancel)
                 .frame(height: 26)
             Text("Välj en känd talare eller skriv ett nytt namn.")
@@ -24,18 +24,39 @@ struct SpeakerNamePicker: View {
         .frame(width: 280)
     }
 
-    private var names: [String] {
-        SpeakerNames.choices(memory.people.map(\.name)
+    private var rows: [SpeakerNames.Row] {
+        SpeakerNames.rows(known: memory.people.map(\.name)
             + cast.order.filter { !cast.background.contains($0) }.compactMap { cast.names[String($0)] }
+            + store.meetings.flatMap { VoiceMemory.namesToRemember(in: $0) }
+            + [Settings.myName ?? ""],
             // The people invited to the event this meeting started from: a name to pick,
             // never a conclusion — one of them may have stayed home.
-            + cast.expected
-            + store.meetings.flatMap { VoiceMemory.namesToRemember(in: $0) }
-            + [Settings.myName ?? ""])
+            invited: cast.expected)
     }
 }
 
 enum SpeakerNames {
+    /// A row in the list: a name, or the quiet label over a set of names. A label is not
+    /// a name — it is never taken for one, and typing never completes to one.
+    enum Row: Equatable {
+        case header(String)
+        case name(String)
+    }
+
+    /// The names you already know, then the ones the calendar said were invited, each set
+    /// under its own label — so you can tell where a name came from before you give it to
+    /// a voice. A name in both sets stands once, with the known ones. One set only, which
+    /// is every meeting without a calendar event, and the list stays as plain as it was.
+    static func rows(known: [String], invited: [String]) -> [Row] {
+        let first = choices(known)
+        let rest = choices(invited).filter { name in
+            !first.contains { $0.caseInsensitiveCompare(name) == .orderedSame }
+        }
+        guard !first.isEmpty, !rest.isEmpty else { return (first + rest).map(Row.name) }
+        return [.header(String(localized: "Kända namn"))] + first.map(Row.name)
+            + [.header(String(localized: "Från kalendern"))] + rest.map(Row.name)
+    }
+
     /// Prefer the remembered spelling, without merging distinct accented names.
     static func choices(_ names: [String]) -> [String] {
         var seen = Set<String>()
@@ -49,7 +70,7 @@ enum SpeakerNames {
 /// name, and the usual arrow keys, Return and Escape work in the list and field.
 struct SpeakerNameField: NSViewRepresentable {
     @Binding var name: String
-    let names: [String]
+    let rows: [SpeakerNames.Row]
     let placeholder: String
     let submit: (String) -> Void
     let cancel: () -> Void
@@ -71,9 +92,9 @@ struct SpeakerNameField: NSViewRepresentable {
     }
 
     func updateNSView(_ field: Field, context: Context) {
-        let previousNames = context.coordinator.parent.names
+        let previousRows = context.coordinator.parent.rows
         context.coordinator.parent = self
-        if previousNames != names { field.reloadData() }
+        if previousRows != rows { field.reloadData() }
         field.placeholderString = placeholder
         // Don't reset the field editor or its completion selection on each keystroke.
         if field.stringValue != name { field.stringValue = name }
@@ -95,17 +116,38 @@ struct SpeakerNameField: NSViewRepresentable {
         var parent: SpeakerNameField
         init(_ parent: SpeakerNameField) { self.parent = parent }
 
-        func numberOfItems(in comboBox: NSComboBox) -> Int { parent.names.count }
+        func numberOfItems(in comboBox: NSComboBox) -> Int { parent.rows.count }
         func comboBox(_ comboBox: NSComboBox, objectValueForItemAt index: Int) -> Any? {
-            guard parent.names.indices.contains(index) else { return nil }
-            let name = parent.names[index]
-            let selected = comboBox.indexOfSelectedItem == index
-                || (comboBox.indexOfSelectedItem < 0 && comboBox.stringValue == name)
-            // AppKit's default white selected text disappears on our white dark-mode
-            // accent. Give the list an explicit foreground for its actual highlight.
-            return NSAttributedString(string: name, attributes: [
-                .foregroundColor: selected ? selectionTextColor(in: comboBox) : NSColor.controlTextColor,
-            ])
+            guard parent.rows.indices.contains(index) else { return nil }
+            switch parent.rows[index] {
+            case .header(let label):
+                // Smaller and quieter than a name, so two sets read as two without a line.
+                return NSAttributedString(string: label, attributes: [
+                    .foregroundColor: NSColor.secondaryLabelColor,
+                    .font: NSFont.systemFont(ofSize: 10.5, weight: .semibold),
+                ])
+            case .name(let name):
+                let selected = comboBox.indexOfSelectedItem == index
+                    || (comboBox.indexOfSelectedItem < 0 && comboBox.stringValue == name)
+                // AppKit's default white selected text disappears on our white dark-mode
+                // accent. Give the list an explicit foreground for its actual highlight.
+                return NSAttributedString(string: name, attributes: [
+                    .foregroundColor: selected ? selectionTextColor(in: comboBox) : NSColor.controlTextColor,
+                ])
+            }
+        }
+
+        /// The name on a row, nil for the label over a set: a label is never a name.
+        private func person(_ index: Int) -> String? {
+            guard parent.rows.indices.contains(index), case .name(let name) = parent.rows[index] else { return nil }
+            return name
+        }
+
+        private var people: [String] {
+            parent.rows.compactMap { row -> String? in
+                if case .name(let name) = row { return name }
+                return nil
+            }
         }
 
         private func selectionTextColor(in comboBox: NSComboBox) -> NSColor {
@@ -124,11 +166,14 @@ struct SpeakerNameField: NSViewRepresentable {
             return result
         }
         func comboBox(_ comboBox: NSComboBox, indexOfItemWithStringValue string: String) -> Int {
-            parent.names.firstIndex { $0.caseInsensitiveCompare(string) == .orderedSame } ?? NSNotFound
+            parent.rows.firstIndex { row in
+                if case .name(let name) = row { return name.caseInsensitiveCompare(string) == .orderedSame }
+                return false
+            } ?? NSNotFound
         }
         func comboBox(_ comboBox: NSComboBox, completedString string: String) -> String? {
             guard !string.isEmpty else { return nil }
-            return parent.names.first {
+            return people.first {
                 $0.range(of: string, options: [.anchored, .caseInsensitive, .diacriticInsensitive]) != nil
             }
         }
@@ -147,9 +192,17 @@ struct SpeakerNameField: NSViewRepresentable {
 
         func comboBoxSelectionDidChange(_ notification: Notification) {
             guard let field = notification.object as? NSComboBox,
-                  parent.names.indices.contains(field.indexOfSelectedItem) else { return }
+                  parent.rows.indices.contains(field.indexOfSelectedItem) else { return }
+            // The pointer and the arrow keys step over a label to the name nearest it:
+            // a set's heading is not a name and never becomes one in the field.
+            if person(field.indexOfSelectedItem) == nil {
+                let past = (field.indexOfSelectedItem + 1..<parent.rows.count).first { person($0) != nil }
+                    ?? (0..<field.indexOfSelectedItem).reversed().first { person($0) != nil }
+                if let past { field.selectItem(at: past) }
+                return
+            }
             // AppKit can notify before stringValue reflects the selected row.
-            parent.name = parent.names[field.indexOfSelectedItem]
+            parent.name = person(field.indexOfSelectedItem) ?? ""
             field.reloadData()
         }
 
