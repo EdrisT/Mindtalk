@@ -91,6 +91,8 @@ enum SettingsAnchor: String {
     case summaries
     /// Möten → Justering av röster.
     case tuning
+    /// Möten → Kalender.
+    case calendar
 }
 
 struct MainView: View {
@@ -697,6 +699,7 @@ struct SettingsPage: View {
         .card()
         MeetingStorageCard()
         VoiceMemoryCard(memory: .shared)
+        CalendarCard().id(SettingsAnchor.calendar)
         MeetingTuningCard().id(SettingsAnchor.tuning)
         SummaryWritersCard().id(SettingsAnchor.summaries)
     }

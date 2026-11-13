@@ -3248,6 +3248,22 @@
         }
       }
     },
+    "Av: Mindtalk öppnar aldrig din kalender.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off: Mindtalk never opens your calendar."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Av: Mindtalk öppnar aldrig din kalender."
+          }
+        }
+      }
+    },
     "Avancerat": {
       "extractionState": "stale",
       "localizations": {
@@ -3817,6 +3833,22 @@
         }
       }
     },
+    "Beskrivningen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The description"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beskrivningen"
+          }
+        }
+      }
+    },
     "Beslut": {
       "extractionState": "manual",
       "localizations": {
@@ -4320,6 +4352,22 @@
         }
       }
     },
+    "De inbjudna och hur de svarat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Who was invited, and how they answered"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "De inbjudna och hur de svarat"
+          }
+        }
+      }
+    },
     "De ligger kvar i listan. Försök igen, eller titta efter om disken är full.": {
       "localizations": {
         "en": {
@@ -4577,6 +4625,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Den här Macen kan inte köra Apple Intelligence. Välj en modell under Inställningar → Möten, i Ollama, LM Studio eller oMLX på den egna datorn. Du kan läsa och söka i texten som vanligt."
+          }
+        }
+      }
+    },
+    "Den här Macen tillåter inte att program läser kalendern.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac doesn't allow apps to read the calendar."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den här Macen tillåter inte att program läser kalendern."
           }
         }
       }
@@ -5086,6 +5150,22 @@
         }
       }
     },
+    "Det finns ingen kalender på den här Macen som Mindtalk får läsa.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no calendar on this Mac that Mindtalk may read."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det finns ingen kalender på den här Macen som Mindtalk får läsa."
+          }
+        }
+      }
+    },
     "Det finns inte tillräckligt med ledigt utrymme på din Mac.": {
       "localizations": {
         "en": {
@@ -5199,6 +5279,22 @@
         }
       }
     },
+    "Det här mötet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This meeting"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det här mötet"
+          }
+        }
+      }
+    },
     "Det här pratade ni om": {
       "localizations": {
         "en": {
@@ -5293,6 +5389,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Det som saknas står här nedanför."
+          }
+        }
+      }
+    },
+    "Det som skrivs i mötets fil. Avbockat läses aldrig ur kalendern. Med MCP på kan AI-program som får läsa mötena läsa det här avsnittet — aldrig adresserna.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What is written into the meeting’s file. What is unticked is never read out of the calendar. With MCP on, AI apps that may read your meetings can read this section too — never the addresses."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det som skrivs i mötets fil. Avbockat läses aldrig ur kalendern. Med MCP på kan AI-program som får läsa mötena läsa det här avsnittet — aldrig adresserna."
+          }
+        }
+      }
+    },
+    "Det som står som plats i inbjudan: ett rum, en våning eller länken till samtalet.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What the invitation says as the place: a room, a floor, or the link to the call."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det som står som plats i inbjudan: ett rum, en våning eller länken till samtalet."
           }
         }
       }
@@ -5405,6 +5533,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Det är genvägen för diktering. För en tanke håller du in knappen."
+          }
+        }
+      }
+    },
+    "Detta följer med mötet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What comes with the meeting"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detta följer med mötet"
           }
         }
       }
@@ -9517,6 +9661,22 @@
         }
       }
     },
+    "Hämta mötet ur kalendern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring the meeting in from the calendar"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hämta mötet ur kalendern"
+          }
+        }
+      }
+    },
     "Hämta röstmodellen (%@). Utan den går det inte att starta ett möte.": {
       "localizations": {
         "en": {
@@ -11500,6 +11660,22 @@
         }
       }
     },
+    "Inga kalendrar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No calendars"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga kalendrar"
+          }
+        }
+      }
+    },
     "Inga möten i %@ än": {
       "localizations": {
         "en": {
@@ -12321,6 +12497,22 @@
         }
       }
     },
+    "Inte det här": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not this one"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inte det här"
+          }
+        }
+      }
+    },
     "Inte gjort än": {
       "localizations": {
         "en": {
@@ -12638,6 +12830,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "Justering av röster"
+          }
+        }
+      }
+    },
+    "Kalender": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendar"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender"
+          }
+        }
+      }
+    },
+    "Kalenderåtkomst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendar access"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalenderåtkomst"
+          }
+        }
+      }
+    },
+    "Kalendrar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendars"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendrar"
+          }
+        }
+      }
+    },
+    "Kalendrar som kan läsas: %lld.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendars that can be read: %lld."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendrar som kan läsas: %lld."
           }
         }
       }
@@ -17011,6 +17267,22 @@
         }
       }
     },
+    "Mindtalk behöver ditt tillstånd för att läsa kalendern.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk needs your permission to read the calendar."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk behöver ditt tillstånd för att läsa kalendern."
+          }
+        }
+      }
+    },
     "Mindtalk behöver få använda mikrofonen": {
       "localizations": {
         "en": {
@@ -17318,6 +17590,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mindtalk finns kvar i menyraden. Diktera med din tangent som vanligt. Klicka där för tankar, möten och inställningar."
+          }
+        }
+      }
+    },
+    "Mindtalk får bara skriva i kalendern, inte läsa den. Välj fullständig åtkomst under Systeminställningar → Integritet och säkerhet → Kalendrar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk may only write in the calendar, not read it. Choose full access under System Settings → Privacy & Security → Calendars."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk får bara skriva i kalendern, inte läsa den. Välj fullständig åtkomst under Systeminställningar → Integritet och säkerhet → Kalendrar."
+          }
+        }
+      }
+    },
+    "Mindtalk får inte läsa kalendern. Slå på det under Systeminställningar → Integritet och säkerhet → Kalendrar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk isn't allowed to read the calendar. Turn it on under System Settings → Privacy & Security → Calendars."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk får inte läsa kalendern. Slå på det under Systeminställningar → Integritet och säkerhet → Kalendrar."
           }
         }
       }
@@ -18702,6 +19006,22 @@
         }
       }
     },
+    "Mötets namn": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meeting's name"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mötets namn"
+          }
+        }
+      }
+    },
     "Mötets språk": {
       "localizations": {
         "en": {
@@ -18831,6 +19151,22 @@
         }
       }
     },
+    "Namn, och om de accepterat, tackat nej eller inte svarat. Adressen sparas bara för att känna igen samma person — den visas inte, följer inte med en export och kan inte läsas av AI-program.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Names, and whether they accepted, declined or haven't answered. The address is kept only to recognise the same person — it is never shown, never part of an export, and no AI app can read it."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namn, och om de accepterat, tackat nej eller inte svarat. Adressen sparas bara för att känna igen samma person — den visas inte, följer inte med en export och kan inte läsas av AI-program."
+          }
+        }
+      }
+    },
     "Namn: mindtalk. Command: klistra in. Argument: mcp.": {
       "localizations": {
         "en": {
@@ -18843,6 +19179,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Namn: mindtalk. Command: klistra in. Argument: mcp."
+          }
+        }
+      }
+    },
+    "Namnet från inbjudan. Ett möte du själv döpt behåller sitt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The name from the invitation. A meeting you named yourself keeps its name."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namnet från inbjudan. Ett möte du själv döpt behåller sitt."
           }
         }
       }
@@ -19367,6 +19719,22 @@
         }
       }
     },
+    "När du börjar spela in letar Mindtalk upp mötet i kalendern — det som pågår eller börjar inom tio minuter. Det som hittas sparas med mötet och stannar på din Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you start recording, Mindtalk finds the meeting in your calendar — the one under way, or beginning within ten minutes. What it finds is saved with the meeting and stays on your Mac."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "När du börjar spela in letar Mindtalk upp mötet i kalendern — det som pågår eller börjar inom tio minuter. Det som hittas sparas med mötet och stannar på din Mac."
+          }
+        }
+      }
+    },
     "När ett samtal i Teams, Zoom eller Meet börjar frågar Mindtalk först. Inget spelas in förrän du trycker.": {
       "localizations": {
         "en": {
@@ -19412,6 +19780,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "När ett samtal i Teams, Zoom eller Meet börjar frågar Mindtalk i en liten ruta. Inget spelas in förrän du trycker, och med hörlurar kommer de andra också med. Säg till alla att mötet spelas in."
+          }
+        }
+      }
+    },
+    "När mötet var planerat att börja och sluta.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When the meeting was planned to start and end."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "När mötet var planerat att börja och sluta."
           }
         }
       }
@@ -20142,6 +20526,22 @@
         }
       }
     },
+    "Platsen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The location"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platsen"
+          }
+        }
+      }
+    },
     "Port för %@": {
       "localizations": {
         "en": {
@@ -20234,6 +20634,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pratar rösten så här länge före en tur och vidare in i den, är den bakgrund till den turen."
+          }
+        }
+      }
+    },
+    "Prenumererad": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subscribed"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prenumererad"
           }
         }
       }
@@ -22120,6 +22536,22 @@
         }
       }
     },
+    "Skriver inget om kalendern till det här mötet.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Writes nothing about the calendar into this meeting."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skriver inget om kalendern till det här mötet."
+          }
+        }
+      }
+    },
     "Skriver klart…": {
       "localizations": {
         "en": {
@@ -23149,6 +23581,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Språket i filen"
+          }
+        }
+      }
+    },
+    "Start- och sluttid": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start and end time"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start- och sluttid"
           }
         }
       }
@@ -26154,6 +26602,22 @@
         }
       }
     },
+    "Texten i inbjudan. Det är någon annans ord: den säger vad mötet var tänkt, inte vad som hände.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The text in the invitation. It is someone else's words: it says what the meeting was meant to be, not what happened."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texten i inbjudan. Det är någon annans ord: den säger vad mötet var tänkt, inte vad som hände."
+          }
+        }
+      }
+    },
     "Texten kan inte skrivas just nu. Ljudet spelas in och skrivs ned efter mötet.": {
       "localizations": {
         "en": {
@@ -28147,6 +28611,22 @@
         }
       }
     },
+    "Vilket möte?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which meeting?"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vilket möte?"
+          }
+        }
+      }
+    },
     "Vilket språk pratar du?": {
       "localizations": {
         "en": {
@@ -28981,6 +29461,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Välj vem som skriver dem."
+          }
+        }
+      }
+    },
+    "Välj vilka kalendrar Mindtalk får titta i. Prenumererade — födelsedagar, helgdagar, andras listor — är av från början.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose which calendars Mindtalk may look in. Subscribed ones — birthdays, holidays, other people's lists — are off to begin with."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Välj vilka kalendrar Mindtalk får titta i. Prenumererade — födelsedagar, helgdagar, andras listor — är av från början."
           }
         }
       }
@@ -29827,6 +30323,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "importerad i går från %@"
+          }
+        }
+      }
+    },
+    "inbjudna: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld invited"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "inbjudna: %lld"
           }
         }
       }

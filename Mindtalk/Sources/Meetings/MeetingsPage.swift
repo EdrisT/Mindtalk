@@ -587,6 +587,8 @@ struct StartCard: View {
     @ObservedObject private var folders = MeetingFolders.shared
     @ObservedObject private var importer = MeetingImport.shared
     @ObservedObject private var memory = VoiceMemory.shared
+    /// The calendar's guess at which meeting this is (Settings → Möten → Kalender).
+    @ObservedObject private var calendar = CalendarEvents.shared
     /// Who writes the summaries: the foot of the card follows a change.
     @ObservedObject private var better = SummaryWriting.shared
     /// Room for the card and the file zone side by side.
@@ -669,6 +671,9 @@ struct StartCard: View {
         .animation(.spring(duration: 0.3, bounce: 0.15), value: importer.dropping)
         .animation(.easeOut(duration: 0.25), value: session.voiceQuestion)
         .onGeometryChange(for: Bool.self) { $0.size.width >= 680 } action: { sideBySide = $0 }
+        // Read again each time the card is put up: an event added or moved in the
+        // meantime shows up without a restart. Does nothing while calendars are off.
+        .onAppear { calendar.refresh() }
         .onDisappear { putDown() }
         .onChange(of: session.phase) { _, now in if now == .idle { starting = false } }
         // Back in view after the start bar was used: the way it chose is the ink tile.
@@ -860,6 +865,7 @@ struct StartCard: View {
                            caption: "Namnge talarna under mötet om du vill.")
                 }
                 .disabled(dictation.phase != .idle || starting)
+                calendarLine
                 languageLine
                 callLine
                 if let line = waitingLine {
@@ -915,6 +921,55 @@ struct StartCard: View {
                     .transition(.opacity)
             }
         }
+    }
+
+    /// The event the calendar thinks this meeting is, before you press: its name and the
+    /// time the invitation says. One is shown as a fact; two are asked about, and the one
+    /// you tap is what follows the meeting. "Inte det här" lets it go: then nothing about
+    /// the calendar is written, which is what a wrong guess should end as.
+    @ViewBuilder private var calendarLine: some View {
+        let here = calendar.found.filter { !calendar.skipped.contains($0.eventID) }
+        if here.count == 1, let one = here.first {
+            HStack(spacing: 8) {
+                Label {
+                    Text(verbatim: "\(one.title)  \(Self.range(one))")
+                } icon: {
+                    Image(systemName: "calendar")
+                }
+                .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
+                .fixedSize(horizontal: false, vertical: true)
+                Button("Inte det här") { calendar.skipped.insert(one.eventID) }
+                    .buttonStyle(.plain).fontWeight(.semibold).foregroundStyle(.primary)
+                    .fixedSize()
+                    .help("Skriver inget om kalendern till det här mötet.")
+            }
+        } else if here.count > 1 {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Vilket möte?")
+                    .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                ForEach(here.prefix(3)) { event in
+                    Button { calendar.picked = event.eventID } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: calendar.picked == event.eventID ? "checkmark.circle.fill" : "circle")
+                            Text(verbatim: "\(event.title)  \(Self.range(event))")
+                                .lineLimit(1)
+                        }
+                    }
+                    .buttonStyle(.soft)
+                    .accessibilityLabel(String(localized: "Det här mötet") + ": " + event.title)
+                }
+            }
+        }
+    }
+
+    /// The times of an event, as the app shows a time. Empty when the settings left the
+    /// times out, so the line never shows a dash with nothing on either side of it.
+    private static func range(_ event: CalendarMeeting) -> String {
+        let style = Date.FormatStyle(date: .omitted, time: .shortened).locale(AppLanguage.locale)
+        guard let start = event.start else { return "" }
+        guard let end = event.end else { return start.formatted(style) }
+        return "\(start.formatted(style))–\(end.formatted(style))"
     }
 
     /// What a start still waits for, in a line under the tiles (nil: nothing).

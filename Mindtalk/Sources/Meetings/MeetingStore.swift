@@ -86,6 +86,11 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
     /// Which of the named speakers you are ("Vem av er är du?"), by the name they had:
     /// your tasks read "Du" on screen. The summary itself keeps the name.
     var me: String?
+    /// What the calendar said this meeting was: found when the recording started
+    /// (CalendarEvents). Mindtalk wrote it, not you — so it is read the way what the
+    /// app writes is read, and a copy that can't be understood leaves the meeting as
+    /// it was.
+    var calendar: CalendarMeeting?
 
     struct Source: Codable, Equatable {
         /// The file's name, as it was.
@@ -272,6 +277,7 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
         source = try? c.decodeIfPresent(Source.self, forKey: .source)
         endedAt = try? c.decodeIfPresent(Date.self, forKey: .endedAt)
         me = try? c.decodeIfPresent(String.self, forKey: .me)
+        calendar = (try? c.decodeIfPresent(CalendarMeeting.self, forKey: .calendar)) ?? nil
         // A field since dropped ("hiddenFromAI") is passed over: the meeting opens as before.
     }
 
@@ -293,7 +299,7 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
     }
 
     /// Who's who, worked out once — views ask it many times per redraw.
-    var cast: Cast { Cast(words: words, names: names, background: Set(background)) }
+    var cast: Cast { Cast(words: words, names: names, background: Set(background), expected: calendar?.names ?? []) }
 
     /// "Anna", or "Talare 2" — numbered in the order people first spoke.
     func name(of speaker: Int) -> String { cast.name(of: speaker) }
@@ -327,14 +333,18 @@ struct Cast: Equatable {
     let names: [String: String]
     /// Not taking part (a TV, a radio): numbered as before, so "Talare 3" stays Talare 3.
     var background: Set<Int> = []
+    /// Invited according to the calendar: expected, not seen. Offered when you name a
+    /// voice — never given to one by itself, because an invited person may never spoke.
+    var expected: [String] = []
 
-    init(words: [MeetingWord], names: [String: String], background: Set<Int> = []) {
+    init(words: [MeetingWord], names: [String: String], background: Set<Int> = [], expected: [String] = []) {
         var seen: [Int] = []
         var known = Set<Int>()
         for w in words { if let s = w.speaker, s >= 0, known.insert(s).inserted { seen.append(s) } }
         order = seen
         self.names = names
         self.background = background
+        self.expected = expected
     }
 
     /// The people taking part, in order: everyone but the background.

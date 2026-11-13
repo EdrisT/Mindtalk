@@ -71,6 +71,10 @@
 	<true/>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>Mindtalk tar med datorns ljud i ett möte, så att det de andra säger i Teams, Zoom eller Meet också skrivs ned. Allt tolkas på din Mac, och inget ljud lämnar datorn.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Mindtalk läser din kalender för att hitta mötet du spelar in — namnet, vem som är inbjuden och vad som står i inbjudan. Allt stannar på din Mac, och Mindtalk skriver aldrig något i kalendern.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Mindtalk läser vilka möten som står i din kalender när du spelar in, så att mötets namn och de inbjudna följer med. Allt stannar på din Mac, och Mindtalk skriver aldrig något i kalendern.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 Mindact Solutions AB. Taligenkänning: Klang Pianissimo av Klang AI AB och Parakeet Ultra av Moondream (CC BY 4.0).</string>
 	<key>NSMicrophoneUsageDescription</key>

@@ -1405,6 +1405,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         if args.contains("--tuning-test") {
             exit(MeetingTuning.selfTest())
         }
+        // `Mindtalk --calendar-test`: which calendar event counts as the meeting that is
+        // starting, what follows it into the meeting's file, and reading the section
+        // back (CalendarEvents, Settings → Möten → Kalender). Never opens the calendar
+        // and never asks for leave.
+        if args.contains("--calendar-test") {
+            exit(CalendarEvents.selfTest())
+        }
         #endif
         // `Mindtalk --round-test`: the round's names onto the voices (RoundPlacement), on
         // made-up words, turns and prints — no audio, nothing read or written.

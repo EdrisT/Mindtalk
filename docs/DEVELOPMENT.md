@@ -57,6 +57,22 @@ wired up. This project does not use it — BIND mode reads the logs instead.
 These run against the same code the app uses. File transcription and text cleanup
 do not need a microphone; the recorder test below exercises live microphone input.
 
+Two ways to start the app, and they are not the same for permissions. `$BIN …` runs the
+binary straight from the shell, which is what most of these want. A test that needs one
+of the system's own permission windows — microphone, screen recording, calendars — has
+to go through LaunchServices instead (`open -n -W --stdout /dev/stdout build/…/Mindtalk.app
+--args --simulate-keys`): started from a shell, macOS holds *the terminal* responsible for
+the app's requests, and tccd then answers for the terminal instead of for Mindtalk, so the
+window never appears and the answer is a quiet "no" with no error to show for it. And a
+permission the app has no entitlement for is refused the same quiet way: with the hardened
+runtime on, calendars need `com.apple.security.personal-information.calendars`, and without
+it there is no window and no error in EventKit — tccd says which of the two it was, so
+`log show --last 2m --predicate 'subsystem == "com.apple.TCC"' --info | grep -i calendar`
+beats guessing at the code. That entitlement, like the usage strings, is listed under
+`entitlements.properties` / `info.properties` in `project.yml`: xcodegen writes
+`Mindtalk.entitlements` and `Info.plist` from there, so a hand-edit to either is gone the
+next time you build.
+
 ```bash
 BIN=build/Build/Products/Debug/Mindtalk.app/Contents/MacOS/Mindtalk
 
@@ -85,6 +101,17 @@ $BIN --speaker-name-test
 # The numbers VAD and diarization work with: their defaults, the ladders they may
 # change between, and reading them back (Debug only; writes nothing)
 $BIN --tuning-test
+
+# The calendar: which event counts as the meeting that is starting, what follows it
+# into the meeting's file, and reading the section back (Debug only; never opens the
+# calendar and never asks for leave)
+$BIN --calendar-test
+
+# Claude's seven tools through the socket, and the helper's own commands as processes,
+# both against a made-up store in an empty folder (Debug only; the store is thrown away).
+# The folder must be new and empty, and the path must end in the models folder itself.
+D=$(mktemp -d /tmp/mt.XXXX); $BIN --bridge-test --models-dir "$D/models"
+D=$(mktemp -d /tmp/mt.XXXX); $BIN --cli-test --models-dir "$D/models"
 
 # Pause/fade whatever is playing for three seconds (Debug only)
 $BIN --media-test

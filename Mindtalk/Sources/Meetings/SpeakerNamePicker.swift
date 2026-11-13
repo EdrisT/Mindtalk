@@ -27,6 +27,9 @@ struct SpeakerNamePicker: View {
     private var names: [String] {
         SpeakerNames.choices(memory.people.map(\.name)
             + cast.order.filter { !cast.background.contains($0) }.compactMap { cast.names[String($0)] }
+            // The people invited to the event this meeting started from: a name to pick,
+            // never a conclusion — one of them may have stayed home.
+            + cast.expected
             + store.meetings.flatMap { VoiceMemory.namesToRemember(in: $0) }
             + [Settings.myName ?? ""])
     }

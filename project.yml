@@ -108,10 +108,19 @@ targets:
             CFBundleURLSchemes: [mindtalk]
         NSMicrophoneUsageDescription: "Mindtalk använder mikrofonen när du dikterar och när du spelar in möten. Allt tolkas på din Mac, och inget ljud lämnar datorn."
         NSAudioCaptureUsageDescription: "Mindtalk tar med datorns ljud i ett möte, så att det de andra säger i Teams, Zoom eller Meet också skrivs ned. Allt tolkas på din Mac, och inget ljud lämnar datorn."
+        # EventKit asks for these by name: without one the request is refused quietly, with
+        # no window and no error to see — the calendar never opens at all.
+        NSCalendarsUsageDescription: "Mindtalk läser vilka möten som står i din kalender när du spelar in, så att mötets namn och de inbjudna följer med. Allt stannar på din Mac, och Mindtalk skriver aldrig något i kalendern."
+        NSCalendarsFullAccessUsageDescription: "Mindtalk läser din kalender för att hitta mötet du spelar in — namnet, vem som är inbjuden och vad som står i inbjudan. Allt stannar på din Mac, och Mindtalk skriver aldrig något i kalendern."
     entitlements:
       path: Mindtalk/Mindtalk.entitlements
       properties:
         com.apple.security.device.audio-input: true
+        # Hardened runtime, and no prompt at all without this one: tccd answers
+        # "service: kTCCServiceCalendar requires entitlement
+        # com.apple.security.personal-information.calendars but it is missing" and denies
+        # the request in silence — no window, and EventKit reports neither error nor grant.
+        com.apple.security.personal-information.calendars: true
     settings:
       base:
         PRODUCT_NAME: Mindtalk

@@ -593,6 +593,17 @@ final class MeetingSession: ObservableObject {
         new.finished = false
         new.folder = MeetingFolders.shared.folder(folder)?.id
         new.folderAsked = new.folder != nil
+        // What the calendar said about this moment, taken now: the event can be moved,
+        // changed or deleted later, and the meeting keeps the invitation as it read when
+        // the recording started. Its name is the meeting's name only while the meeting
+        // has none of its own — a title you typed is never overwritten.
+        let events = CalendarEvents.shared
+        if let event = events.upcoming(now: date) {
+            let found = events.stored(event)
+            new.calendar = found
+            if !new.userTitled, !found.title.isEmpty { new.title = found.title }
+        }
+        events.startedMeeting()
         if informed { new.informed = date }
         do {
             try MeetingStore.prepareFolder(for: new.id)
