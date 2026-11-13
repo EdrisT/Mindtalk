@@ -41,6 +41,10 @@ let instructions = """
     with mindtalk_get_transcript only when the summary and search are not enough, and expect it in pages. \
     Every item has a link (mindtalk://meeting/<id>?t=<seconds>, mindtalk://thought/<id>) that opens that \
     moment in Mindtalk: include it when you cite something. Dates are ISO 8601 in the user’s time zone. \
+    A meeting may carry a calendar section: what its calendar event said when recording started — the \
+    invitation's words, its time, who was invited and how they answered. That is what the meeting was \
+    planned to be, not what happened in it: an invited person may never have spoken, and who spoke is \
+    only ever said by the transcript. \
     The user switches this on in Mindtalk under Settings → AI apps → MCP (Inställningar → AI-appar → MCP in Swedish); while it is on, the user’s \
     meetings and thoughts can be read (never dictations, audio or voiceprints), except a meeting still being recorded or that ended \
     in the last two minutes: if the user asks about a meeting that just ended, say it can be read a couple of minutes after it ended.

@@ -77,12 +77,15 @@ enum Commands {
               --limit        At most this many (default 20, up to 50).
             """,
         "meeting": """
-            mindtalk meeting <id> [--summary | --tasks | --notes | --text] [--json]
-              One meeting. Without a part: the summary, decisions, tasks, notes and marks.
-              --summary   Only the summary and the decisions.
-              --tasks     Only the tasks.
-              --notes     Only your notes and the moments you marked.
-              --text      What was said, as "[mm:ss] Speaker: text".
+            mindtalk meeting <id> [--summary | --tasks | --notes | --text | --calendar] [--json]
+              One meeting. Without a part: the summary, decisions, tasks, notes, marks
+              and what the calendar said when it started.
+              --summary    Only the summary and the decisions.
+              --tasks      Only the tasks.
+              --notes      Only your notes and the moments you marked.
+              --text       What was said, as "[mm:ss] Speaker: text".
+              --calendar   Only the calendar event: its name, time, calendar and the
+                           people invited and how they answered. Never their addresses.
             """,
         "search": """
             mindtalk search <words> [--folder <name|id>] [--meeting <id>] [--from DATE] [--to DATE] [--limit N] [--json]
@@ -112,7 +115,7 @@ enum Commands {
 
           mindtalk folders                   the folders
           mindtalk meetings [options]        meetings, newest first
-          mindtalk meeting <id> [part]       one meeting: summary, tasks, notes or text
+          mindtalk meeting <id> [part]       one meeting: summary, tasks, notes, text or calendar
           mindtalk search <words> [options]  where words occur, with the moment
           mindtalk thoughts [options]        your thoughts, newest first
           mindtalk tasks [options]           tasks from the meetings
@@ -171,11 +174,11 @@ enum Commands {
     }
 
     private static func meeting(_ args: [String], json: Bool) async throws -> String {
-        let opts = try Options(args, flags: ["--summary", "--tasks", "--notes", "--text"], valued: [])
+        let opts = try Options(args, flags: ["--summary", "--tasks", "--notes", "--text", "--calendar"], valued: [])
         guard opts.words.count == 1 else { throw Usage(message: "Give one meeting id (from mindtalk meetings). See mindtalk meeting --help.") }
         let id = opts.words[0]
-        let parts = ["--summary", "--tasks", "--notes", "--text"].filter { opts.has($0) }
-        guard parts.count <= 1 else { throw Usage(message: "Choose one of --summary, --tasks, --notes and --text.") }
+        let parts = ["--summary", "--tasks", "--notes", "--text", "--calendar"].filter { opts.has($0) }
+        guard parts.count <= 1 else { throw Usage(message: "Choose one of --summary, --tasks, --notes, --text and --calendar.") }
         if parts.first == "--text" {
             // Every page, so the whole text comes out at once.
             var segments: [String] = []
@@ -206,6 +209,7 @@ enum Commands {
         case "--summary": a["include"] = .array([.string("summary"), .string("decisions")])
         case "--tasks": a["include"] = .array([.string("tasks")])
         case "--notes": a["include"] = .array([.string("notes"), .string("marks")])
+        case "--calendar": a["include"] = .array([.string("calendar")])
         default: break
         }
         let (value, object) = try await call("mindtalk_get_meeting", a)
@@ -238,6 +242,32 @@ enum Commands {
         section("Tasks", "tasks") { "\(box($0["done"])) \(str($0["text"]))\(owner($0))\(at($0))" }
         section("Notes", "notes") { "· \(str($0["text"]))\(at($0))" }
         section("Marks", "marks") { "· \(str($0["kind"])): \(str($0["text"]))\(at($0))" }
+        if let event = object["calendar"] as? [String: Any] {
+            // What the invitation said when recording started: the plan, not the outcome.
+            out.append("")
+            out.append("Calendar (as the invitation said it, when the meeting started)")
+            var line = "  \(str(event["title"]))"
+            if let start = event["start"] as? String { line += "  \(when(start))" }
+            if let end = event["end"] as? String { line += "–\(time(end))" }
+            let from = str(event["calendar"])
+            // How you answered, and whether you had to pick it out — the file says so,
+            // so the terminal says so.
+            var tag = from
+            if let you = event["your_answer"] as? String { tag += tag.isEmpty ? "you: \(you)" : ", you: \(you)" }
+            if str(event["match"]) == "chosen" { tag += tag.isEmpty ? "you chose this" : ", you chose this" }
+            if !tag.isEmpty { line += "  [\(tag)]" }
+            out.append(line)
+            let place = str(event["location"])
+            if !place.isEmpty { out.append("  Where: \(place)") }
+            if let people = event["people"] as? [[String: Any]], !people.isEmpty {
+                out.append("  Invited: " + people.map { "\(str($0["name"])) (\(str($0["answer"])))" }.joined(separator: ", "))
+            }
+            let notes = str(event["notes"])
+            if !notes.isEmpty {
+                out.append("")
+                out += notes.split(separator: "\n").map { "  \($0.trimmingCharacters(in: .whitespaces))" }
+            }
+        }
         if let note = object["note"] as? String { out.append(""); out.append(note) }
         return out.joined(separator: "\n")
     }
@@ -440,6 +470,14 @@ enum Commands {
         guard let d = date(text) else { return text }
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: d)
+    }
+
+    /// "15:20" in the user's time zone; the text as it was when it isn't a date.
+    static func time(_ text: String) -> String {
+        guard let d = date(text) else { return text }
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
         return f.string(from: d)
     }
 

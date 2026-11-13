@@ -243,13 +243,32 @@ enum BridgeTest {
               (r.result?["summary"] as? [String: Any])?["overview"] as? String == fixture.overview
                 && decisions.first?["t_seconds"] as? Int == 120 && decisions.first?["time"] as? String == "2:00"
                 && tasks.count == 2 && tasks.first?["owner"] as? String == "Anna" && tasks.first?["done"] as? Bool == false
-                && rows(r.result, "notes").count == 2 && rows(r.result, "marks").count == 2)
+                && rows(r.result, "notes").count == 2 && rows(r.result, "marks").count == 2
+                && (r.result?["calendar"] as? [String: Any])?["title"] as? String == "Möte med Klang")
         check("get_meeting: aldrig texten", r.result?["segments"] == nil && r.result?["transcript"] == nil)
         r = await call("mindtalk_get_meeting", ["meeting_id": m1, "include": ["tasks"], "response_format": "detailed"])
         check("get_meeting: include och detailed", r.result?["decisions"] == nil && rows(r.result, "tasks").first?["link"] as? String == "mindtalk://meeting/\(m1)?t=300")
         r = await call("mindtalk_get_meeting", ["meeting_id": m1, "include": ["marks"]])
         check("get_meeting: bara markeringar", r.error == nil && rows(r.result, "marks").count == 2 && r.result?["summary"] == nil
               && r.result?["notes"] == nil, r.error ?? "")
+        // The calendar: what the invitation said, never who it is at.
+        r = await call("mindtalk_get_meeting", ["meeting_id": m1, "include": ["calendar"]])
+        let event = r.result?["calendar"] as? [String: Any]
+        let invited = event?["people"] as? [[String: Any]] ?? []
+        check("get_meeting: bara kalendern", r.error == nil && event?["title"] as? String == "Möte med Klang"
+              && event?["calendar"] as? String == "Jobb" && event?["match"] as? String == "running"
+              && event?["notes"] as? String == "Gå igenom offerten. Ta med underlaget."
+              && event?["location"] as? String == "Rum 3, Klarabergsviadukten 60"
+              && invited.count == 3 && invited.first?["answer"] as? String == "organizer"
+              && r.result?["summary"] == nil, r.error ?? "")
+        check("get_meeting: aldrig adresserna",
+              invited.allSatisfy { $0["key"] == nil && $0["email"] == nil && !$0.keys.contains("address") }
+                && event?["organizer"] as? String == "Anna" && event?["your_answer"] as? String == "accepted")
+        let written = (try? JSONSerialization.data(withJSONObject: r.result ?? [:]))
+            .flatMap { String(data: $0, encoding: .utf8) } ?? ""
+        check("get_meeting: ingen e-postadress någonstans", !written.contains("example.com"), String(written.prefix(120)))
+        r = await call("mindtalk_get_meeting", ["meeting_id": m2])
+        check("get_meeting: möte utan kalender ger null", r.error == nil && r.result?["calendar"] is NSNull, r.error ?? "")
 
         // The text, in pages, and said as it was.
         r = await call("mindtalk_get_transcript", ["meeting_id": m1])
@@ -493,13 +512,26 @@ enum BridgeTest {
         r = await mindtalk("meeting", m1)
         check("meeting: rubrik, sammanfattning, beslut, uppgifter, anteckningar", r.status == 0 && r.out.contains("Budgetmöte") && r.out.contains(fixture.overview)
               && r.out.contains("Decisions") && r.out.contains("[ ] Kontakta leverantören (Anna) · 5:00") && r.out.contains("[x] Uppdatera budgeten (Erik)")
-              && r.out.contains("Notes") && r.out.contains("Marks"), "\(r.status) \(r.out) \(r.err)")
+              && r.out.contains("Notes") && r.out.contains("Marks")
+              && r.out.contains("Invited: Anna (organizer), Erik (accepted), Bob (declined)")
+              && !r.out.contains("example.com"), "\(r.status) \(r.out) \(r.err)")
         r = await mindtalk("meeting", m1, "--summary")
         check("meeting --summary: ingen uppgiftslista", r.status == 0 && r.out.contains(fixture.overview) && !r.out.contains("Tasks"), r.out)
         r = await mindtalk("meeting", m1, "--tasks", "--json")
         check("meeting --tasks --json: bara tasks", (json(r)?["tasks"] as? [[String: Any]])?.count == 2 && json(r)?["decisions"] == nil, r.out)
         r = await mindtalk("meeting", m1, "--notes")
         check("meeting --notes: anteckningar och markeringar", r.status == 0 && r.out.contains("Fråga om rabatten") && r.out.contains("decision: Vi kör på Klang"), r.out)
+        r = await mindtalk("meeting", m1, "--calendar")
+        check("meeting --calendar: evenemanget, tiden, de inbjudna — aldrig adressen",
+              r.status == 0 && r.out.contains("Calendar") && r.out.contains("Möte med Klang")
+                && r.out.contains("Jobb") && r.out.contains("2026-10-12 10:00") && r.out.contains("–11:00")
+                && r.out.contains("[Jobb, you: accepted]")
+                && r.out.contains("Where: Rum 3") && r.out.contains("Gå igenom offerten.") && !r.out.contains("example.com"),
+              "\(r.status) \(r.out) \(r.err)")
+        r = await mindtalk("meeting", m1, "--calendar", "--json")
+        check("meeting --calendar --json: bara kalendern, utan nyckel",
+              (json(r)?["calendar"] as? [String: Any])?["title"] as? String == "Möte med Klang"
+                && json(r)?["summary"] == nil && !r.out.contains("example.com"), String(r.out.prefix(200)))
         r = await mindtalk("meeting", m1, "--text")
         check("meeting --text: alla sidor, raderna [mm:ss] Talare", r.status == 0 && r.out.contains("[0:00] Anna: ") && r.out.contains(Fixture.injection)
               && r.out.count > ClaudeTools.transcriptPage, "\(r.status) \(r.out.count) tecken \(r.err)")
@@ -693,6 +725,16 @@ enum BridgeTest {
             long.notes = [.init(text: "Fråga om rabatten", at: 400), .init(text: "Klart till fredag", at: nil)]
             // A task marked with the words the summary took up: listed once.
             long.marks = [.init(at: 120, kind: .decision, text: "Vi kör på Klang"), .init(at: 300, kind: .task, text: "Kontakta leverantören")]
+            // The calendar event it started from — with the addresses that must never
+            // follow the meeting out to an app.
+            long.calendar = CalendarMeeting(eventID: "evt-1", calendar: "Jobb", title: "Möte med Klang",
+                                            start: day(2026, 10, 12, 10), end: day(2026, 10, 12, 11),
+                                            notes: "Gå igenom offerten. Ta med underlaget.",
+                                            location: "Rum 3, Klarabergsviadukten 60",
+                                            people: [.init(name: "Anna", answer: .organizer, key: "anna@example.com"),
+                                                     .init(name: "Erik", answer: .accepted, key: "erik@example.com"),
+                                                     .init(name: "Bob", answer: .declined, key: "bob@example.com")],
+                                            mine: .accepted, match: .running)
 
             var short = MeetingRecord(title: "Kort avstämning", date: day(2026, 10, 11, 9), language: .swedish)
             short.folder = f.folderA

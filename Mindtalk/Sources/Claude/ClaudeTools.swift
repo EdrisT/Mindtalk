@@ -458,10 +458,10 @@ enum ClaudeTools {
 
     private static func getMeeting(_ args: Args) throws -> ([String: Any], String, Int) {
         let m = try meeting(args)
-        let every = ["summary", "decisions", "tasks", "notes", "marks"]
+        let every = ["summary", "decisions", "tasks", "notes", "marks", "calendar"]
         let asked = try args.strings("include")
         for part in asked ?? [] where !every.contains(part) {
-            throw Failure(message: "Unknown include \"\(part)\": use summary, decisions, tasks, notes or marks.")
+            throw Failure(message: "Unknown include \"\(part)\": use summary, decisions, tasks, notes, marks or calendar.")
         }
         let include = Set(asked ?? every)
         let format = try args.string("response_format")?.lowercased() ?? "concise"
@@ -513,7 +513,29 @@ enum ClaudeTools {
                 return d.merging(moment(mark.at)) { a, _ in a }
             }
         }
+        if include.contains("calendar") {
+            if let event = m.calendar { result["calendar"] = calendar(event) }
+            else { result["calendar"] = NSNull() }
+        }
         return (result, title(of: m), 1)
+    }
+
+    /// What the calendar said when the meeting started, as a tool answer: the event's own
+    /// words — its name, which calendar it came from, when it runs, what the invitation
+    /// says, and who was invited and how they answered. The addresses are left out on
+    /// purpose: they are kept in the meeting's file only to recognise a person again, and
+    /// a name with an answer is all an app needs. And this is the *plan* for a meeting,
+    /// not what happened in it — an invited person may never have spoken.
+    private static func calendar(_ event: CalendarMeeting) -> [String: Any] {
+        var d: [String: Any] = ["title": event.title, "calendar": event.calendar, "match": event.match.rawValue]
+        if let start = event.start { d["start"] = iso.string(from: start) }
+        if let end = event.end { d["end"] = iso.string(from: end) }
+        if let notes = event.notes, !notes.isEmpty { d["notes"] = notes }
+        if let location = event.location, !location.isEmpty { d["location"] = location }
+        if let mine = event.mine { d["your_answer"] = mine.rawValue }
+        if !event.people.isEmpty { d["people"] = event.people.map { ["name": $0.name, "answer": $0.answer.rawValue] } }
+        if let organizer = event.organizer { d["organizer"] = organizer }
+        return d
     }
 
     // MARK: mindtalk_get_transcript

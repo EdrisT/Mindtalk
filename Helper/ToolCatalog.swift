@@ -77,11 +77,11 @@ enum ToolCatalog {
         Definition(
             name: "mindtalk_get_meeting",
             title: "Get a meeting’s summary",
-            description: "One meeting’s summary: overview, decisions, tasks (with owner and done), the user’s own notes and the moments they marked, each with its time and link where known. Never the transcript: use mindtalk_get_transcript for that. response_format detailed adds the summary’s points and a link per item.",
+            description: "One meeting’s summary: overview, decisions, tasks (with owner and done), the user’s own notes and the moments they marked, each with its time and link where known. Never the transcript: use mindtalk_get_transcript for that. response_format detailed adds the summary’s points and a link per item. When the meeting started from a calendar event, calendar says what the invitation said then: its name, which calendar, its time, where it was to be, and the people invited and how they answered — never their addresses. That is what the meeting was planned to be, not what happened in it: an invited person may never have spoken.",
             input: """
                 {"type": "object", "properties": {
                   "meeting_id": {"type": "string"},
-                  "include": {"type": "array", "items": {"type": "string", "enum": ["summary", "decisions", "tasks", "notes", "marks"]},
+                  "include": {"type": "array", "items": {"type": "string", "enum": ["summary", "decisions", "tasks", "notes", "marks", "calendar"]},
                     "description": "Which parts to return. Default: all of them."},
                   "response_format": {"type": "string", "enum": ["concise", "detailed"], "default": "concise"}},
                   "required": ["meeting_id"], "additionalProperties": false}
@@ -106,6 +106,14 @@ enum ToolCatalog {
                   "marks": {"type": "array", "items": {"type": "object", "properties": {
                     "kind": {"type": "string", "enum": ["decision", "task", "important"]}, "text": {"type": "string"},
                     "t_seconds": {"type": "integer"}, "time": {"type": "string"}, "link": {"type": "string"}}}},
+                  "calendar": {"type": ["object", "null"], "properties": {"title": {"type": "string"}, "calendar": {"type": "string"},
+                    "start": {"type": "string"}, "end": {"type": "string"}, "notes": {"type": "string"},
+                    "location": {"type": "string"},
+                    "match": {"type": "string", "enum": ["running", "soon", "chosen"]},
+                    "your_answer": {"type": "string", "enum": ["organizer", "accepted", "declined", "tentative", "pending"]},
+                    "organizer": {"type": "string"},
+                    "people": {"type": "array", "items": {"type": "object", "properties": {
+                      "name": {"type": "string"}, "answer": {"type": "string"}}}}}},
                   "note": {"type": "string"}}}
                 """),
         Definition(
