@@ -10245,6 +10245,694 @@
         }
       }
     },
+    "Högre → bara den tydligaste rösten får. Lägre → fler kan få.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → only the clearest voice gets it. Lower → more can."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → bara den tydligaste rösten får. Lägre → fler kan få."
+          }
+        }
+      }
+    },
+    "Högre → bara det tydligaste talet räknas. Lägre → mer räknas som tal.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → only the clearest speech counts. Lower → more counts as speech."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → bara det tydligaste talet räknas. Lägre → mer räknas som tal."
+          }
+        }
+      }
+    },
+    "Högre → bara högljutt tal räknas. Lägre → även brus kan räknas som tal.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → only loud speech counts. Lower → even noise can count as speech."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → bara högljutt tal räknas. Lägre → även brus kan räknas som tal."
+          }
+        }
+      }
+    },
+    "Högre → bara tydligt tal ger en talare. Lägre → även svaga röster får ord.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → only clear speech gives a speaker. Lower → even weak voices get words."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → bara tydligt tal ger en talare. Lägre → även svaga röster får ord."
+          }
+        }
+      }
+    },
+    "Högre → en fras håller ihop över längre pauser. Lägre → fler fraser.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → a phrase holds together over longer pauses. Lower → more phrases."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → en fras håller ihop över längre pauser. Lägre → fler fraser."
+          }
+        }
+      }
+    },
+    "Högre → en mening får bli längre innan den måste ha en talare. Lägre → den avgörs tidigare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → a sentence may grow longer before it needs a speaker. Lower → it is decided sooner."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → en mening får bli längre innan den måste ha en talare. Lägre → den avgörs tidigare."
+          }
+        }
+      }
+    },
+    "Högre → en röst får höras i fler turar. Lägre → bakgrunden sållas ut snabbare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → a voice may be heard in more turns. Lower → background is filtered out sooner."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → en röst får höras i fler turar. Lägre → bakgrunden sållas ut snabbare."
+          }
+        }
+      }
+    },
+    "Högre → etiketten på namnordet väger tyngre. Lägre → röstjämplingen avgör oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → the label on the name word weighs more. Lower → the voice comparison decides more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → etiketten på namnordet väger tyngre. Lägre → röstjämplingen avgör oftare."
+          }
+        }
+      }
+    },
+    "Högre → fler ord slås ihop till ett block. Lägre → varje talare får fler, kortare block.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more words are merged into one block. Lower → each speaker gets more, shorter blocks."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → fler ord slås ihop till ett block. Lägre → varje talare får fler, kortare block."
+          }
+        }
+      }
+    },
+    "Högre → fler prov räknas som korta och måste slå hårdare. Lägre → kravet gäller oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more samples count as short and must score higher. Lower → the higher bar applies less often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → fler prov räknas som korta och måste slå hårdare. Lägre → kravet gäller oftare."
+          }
+        }
+      }
+    },
+    "Högre → fler röster blir bakgrund till turen. Lägre → färre.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more voices become background to the turn. Lower → fewer."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → fler röster blir bakgrund till turen. Lägre → färre."
+          }
+        }
+      }
+    },
+    "Högre → fler sekunders tal används, långsammare. Lägre → snabbare men tunnare prov.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more seconds of speech are used, slower. Lower → quicker but thinner samples."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → fler sekunders tal används, långsammare. Lägre → snabbare men tunnare prov."
+          }
+        }
+      }
+    },
+    "Högre → fler talare får ingen röststämpling alls. Lägre → även korta tal räcker.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more speakers get no voiceprint at all. Lower → even short speech is enough."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → fler talare får ingen röststämpling alls. Lägre → även korta tal räcker."
+          }
+        }
+      }
+    },
+    "Högre → färre deltagare räknas ha hört namnet. Lägre → fler.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer participants are taken to have heard the name. Lower → more."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre deltagare räknas ha hört namnet. Lägre → fler."
+          }
+        }
+      }
+    },
+    "Högre → färre meningar får en talare utsagd. Lägre → talaren utsägs oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer sentences get a speaker assigned. Lower → the speaker is assigned more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre meningar får en talare utsagd. Lägre → talaren utsägs oftare."
+          }
+        }
+      }
+    },
+    "Högre → färre och längre stycken. Lägre → fler, kortare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer and longer paragraphs. Lower → more, shorter."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre och längre stycken. Lägre → fler, kortare."
+          }
+        }
+      }
+    },
+    "Högre → färre röster kvalificerar sig om namnet. Lägre → fler.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer voices qualify for the name. Lower → more."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre röster kvalificerar sig om namnet. Lägre → fler."
+          }
+        }
+      }
+    },
+    "Högre → färre röster slås ihop: fler personer. Lägre → oftare samma person — två kan bli en.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer voices are merged: more people. Lower → merged more often — two people can become one."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre röster slås ihop: fler personer. Lägre → oftare samma person — två kan bli en."
+          }
+        }
+      }
+    },
+    "Högre → färre talare får en röststämpling. Lägre → fler.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer speakers get a voiceprint. Lower → more."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre talare får en röststämpling. Lägre → fler."
+          }
+        }
+      }
+    },
+    "Högre → färre turar kan ge en röst namnet. Lägre → fler.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → fewer turns can give a voice the name. Lower → more."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → färre turar kan ge en röst namnet. Lägre → fler."
+          }
+        }
+      }
+    },
+    "Högre → golvet hänger kvar längre i ett bullrigt rum. Lägre → golvet följer rummet fortare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → the floor lingers longer in a noisy room. Lower → the floor follows the room sooner."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → golvet hänger kvar längre i ett bullrigt rum. Lägre → golvet följer rummet fortare."
+          }
+        }
+      }
+    },
+    "Högre → hostningar och skratten missas, men starten kommer senare. Lägre → snabbare, mer brus.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → coughs and clicks are missed, but the start comes later. Lower → quicker, with more noise."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → hostningar och skratten missas, men starten kommer senare. Lägre → snabbare, mer brus."
+          }
+        }
+      }
+    },
+    "Högre → korta prov nämner oftast ingen. Lägre → de nämner oftare någon.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → short samples usually name no one. Lower → they name someone more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → korta prov nämner oftast ingen. Lägre → de nämner oftare någon."
+          }
+        }
+      }
+    },
+    "Högre → längre fraser hör till samma röst. Lägre → fler fraser bryts — namnet blir oftare någon annans.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → longer phrases belong to the same voice. Lower → more phrases break — the name is more often someone else's."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → längre fraser hör till samma röst. Lägre → fler fraser bryts — namnet blir oftare någon annans."
+          }
+        }
+      }
+    },
+    "Högre → längre ord räknas fortfarande som tal. Lägre → talet klipps kortare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → longer words still count as speech. Lower → speech is cut shorter."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → längre ord räknas fortfarande som tal. Lägre → talet klipps kortare."
+          }
+        }
+      }
+    },
+    "Högre → längre turar innan avbrottet kommer. Lägre → avbrott oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → longer turns before the interruption comes. Lower → interrupted more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → längre turar innan avbrottet kommer. Lägre → avbrott oftare."
+          }
+        }
+      }
+    },
+    "Högre → mer av talet efter namnet väger med. Lägre → mindre.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more of the speech after the name counts in. Lower → less."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → mer av talet efter namnet väger med. Lägre → mindre."
+          }
+        }
+      }
+    },
+    "Högre → mer av talet före namnet väger med. Lägre → mindre.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more of the speech before the name counts in. Lower → less."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → mer av talet före namnet väger med. Lägre → mindre."
+          }
+        }
+      }
+    },
+    "Högre → mer räknas som tystnad. Lägre → bara riktigt tyst räknas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more counts as silence. Lower → only truly quiet counts."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → mer räknas som tystnad. Lägre → bara riktigt tyst räknas."
+          }
+        }
+      }
+    },
+    "Högre → mer tal krävs utanför turorna. Lägre → bakgrunden upptäcks snabbare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more speech outside the turns is required. Lower → background is spotted sooner."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → mer tal krävs utanför turorna. Lägre → bakgrunden upptäcks snabbare."
+          }
+        }
+      }
+    },
+    "Högre → namnet kommer senare i mötet. Lägre → snabbare men osäkrare svar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → the name comes later in the meeting. Lower → quicker but shakier answers."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → namnet kommer senare i mötet. Lägre → snabbare men osäkrare svar."
+          }
+        }
+      }
+    },
+    "Högre → oftare avgör inte namnordet någonting. Lägre → ett namn utses oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → the name word more often decides nothing. Lower → a name is chosen more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → oftare avgör inte namnordet någonting. Lägre → ett namn utses oftare."
+          }
+        }
+      }
+    },
+    "Högre → oftare en ny person i det fortsatta mötet. Lägre → oftare samma röst som förut.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → more often a new person in the continued meeting. Lower → more often the same voice as before."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → oftare en ny person i det fortsatta mötet. Lägre → oftare samma röst som förut."
+          }
+        }
+      }
+    },
+    "Högre → oftare nämns ingen. Lägre → ett namn utses oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → often no one is named. Lower → a name is chosen more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → oftare nämns ingen. Lägre → ett namn utses oftare."
+          }
+        }
+      }
+    },
+    "Högre → oftare osäkert: orden behåller sin talare. Lägre → byten godkänns oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → often unsure: the words keep their speaker. Lower → changes are accepted more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → oftare osäkert: orden behåller sin talare. Lägre → byten godkänns oftare."
+          }
+        }
+      }
+    },
+    "Högre → oftare tyst om att det är fel person. Lägre → det sägs oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → stays silent more often about it being the wrong person. Lower → it is said more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → oftare tyst om att det är fel person. Lägre → det sägs oftare."
+          }
+        }
+      }
+    },
+    "Högre → oftare uttalat att det är en annan. Lägre → krävs tydligare olikhet.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → it is more often said to be someone else. Lower → a clearer difference is needed."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → oftare uttalat att det är en annan. Lägre → krävs tydligare olikhet."
+          }
+        }
+      }
+    },
+    "Högre → ord utan röst hamnar oftare i blocket ovanför. Lägre → de får oftare en egen rad.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → words with no voice more often end up in the block above. Lower → they more often get their own line."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → ord utan röst hamnar oftare i blocket ovanför. Lägre → de får oftare en egen rad."
+          }
+        }
+      }
+    },
+    "Högre → ronden väntar längre innan nästa får svara. Lägre → snabbare vidare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → the round waits longer before the next may answer. Lower → moves on sooner."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → ronden väntar längre innan nästa får svara. Lägre → snabbare vidare."
+          }
+        }
+      }
+    },
+    "Högre → styckena växer längre innan punkten klipper. Lägre → punkterna delar oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → paragraphs grow longer before a full stop splits them. Lower → full stops split them more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → styckena växer längre innan punkten klipper. Lägre → punkterna delar oftare."
+          }
+        }
+      }
+    },
+    "Högre → svårare att dela en mening mellan två röster. Lägre → meningar delas oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → harder to split a sentence between two voices. Lower → sentences are split more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → svårare att dela en mening mellan två röster. Lägre → meningar delas oftare."
+          }
+        }
+      }
+    },
+    "Högre → talet slås ihop till färre, längre prov. Lägre → proverna klipps oftare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → speech is joined into fewer, longer samples. Lower → samples are cut more often."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → talet slås ihop till färre, längre prov. Lägre → proverna klipps oftare."
+          }
+        }
+      }
+    },
+    "Högre → turen behöver mer tal innan tystnaden får avsluta. Lägre → korta svar räcker.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Higher → the turn needs more speech before silence may end it. Lower → short answers are enough."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Högre → turen behöver mer tal innan tystnaden får avsluta. Lägre → korta svar räcker."
+          }
+        }
+      }
+    },
     "Högst under så här mycket av mätpunkterna anses ingen ha talat alls.": {
       "localizations": {
         "en": {
@@ -26939,6 +27627,22 @@
         }
       }
     },
+    "Vad betyder detta?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What does this mean?"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vad betyder detta?"
+          }
+        }
+      }
+    },
     "Vad heter du?": {
       "localizations": {
         "en": {
@@ -27020,18 +27724,18 @@
         }
       }
     },
-    "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter.": {
+    "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter. Klicka på ? för vad som ändras när du höjer eller sänker värdet.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "What counts as silence, how long a sentence is, and how similar a voice must be to be the same person. The defaults were measured on real recorded meetings; change one if it does not fit how your room sounds."
+            "value": "What counts as silence, how long a sentence is, and how similar a voice must be to be the same person. The defaults were measured on real recorded meetings; change one if it does not fit how your room sounds. Click the ? for what changes when you raise or lower a value."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter."
+            "value": "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter. Klicka på ? för vad som ändras när du höjer eller sänker värdet."
           }
         }
       }
