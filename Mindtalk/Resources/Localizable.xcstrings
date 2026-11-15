@@ -22219,6 +22219,22 @@
         }
       }
     },
+    "Sammanfatta av sig själva": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summarize on its own"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sammanfatta av sig själva"
+          }
+        }
+      }
+    },
     "Sammanfatta igen": {
       "localizations": {
         "en": {
@@ -29075,6 +29091,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vi hörs på"
+          }
+        }
+      }
+    },
+    "Vid mötets slut, när en röst markeras som bakgrund och när en inspelning läggs till. Av: knappen Sammanfatta skriver en åt gången, och en som redan finns lämnas ifred.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At the end of a meeting, when a voice is marked as background, and when a recording is added. Off: the Summarize button writes one when you ask, and one a meeting already has is left alone."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vid mötets slut, när en röst markeras som bakgrund och när en inspelning läggs till. Av: knappen Sammanfatta skriver en åt gången, och en som redan finns lämnas ifred."
           }
         }
       }
