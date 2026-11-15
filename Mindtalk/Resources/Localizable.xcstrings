@@ -6103,6 +6103,7 @@
       }
     },
     "Du flyttade ord hit": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8212,6 +8213,7 @@
       }
     },
     "Från mötena": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -13322,6 +13324,7 @@
       }
     },
     "Klippt av": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -17138,6 +17141,7 @@
       }
     },
     "Mest tal för ett prov": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -18393,6 +18397,7 @@
       }
     },
     "Minst tal för ett prov": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -19263,6 +19268,7 @@
       }
     },
     "Namn du sa nej till": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -19424,6 +19430,7 @@
       }
     },
     "Namnet kommer av": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -20186,6 +20193,7 @@
       }
     },
     "Någon annans \"Mm\" fält in": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -20494,6 +20502,7 @@
       }
     },
     "Ord av andra inuti": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -20831,6 +20840,7 @@
       }
     },
     "Poäng": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21624,6 +21634,7 @@
       }
     },
     "Röst": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21656,6 +21667,7 @@
       }
     },
     "Röstavtryck som sparas": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21736,6 +21748,7 @@
       }
     },
     "Röstblock inom stycket": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21747,6 +21760,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Röstblock inom stycket"
+          }
+        }
+      }
+    },
+    "Rösten i stycket": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The voice in the section"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rösten i stycket"
           }
         }
       }
@@ -27877,6 +27906,7 @@
       }
     },
     "Tyst mellan orden": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -27909,6 +27939,7 @@
       }
     },
     "Tyst som klipper": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -28655,6 +28686,7 @@
       }
     },
     "Varför blev det ett eget stycke?": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -28671,6 +28703,7 @@
       }
     },
     "Varför den gränsen": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -28687,6 +28720,7 @@
       }
     },
     "Varför är det den här rösten?": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {

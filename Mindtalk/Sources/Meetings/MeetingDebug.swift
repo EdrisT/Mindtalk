@@ -57,6 +57,91 @@ final class MeetingDebug: ObservableObject {
         return seconds
     }
     private static var speechSeconds: [String: Double] = [:]
+
+    // MARK: What cut a section — the pass's own reason, in words
+
+    /// The rule that ended a section, said the way the read-out says it. The card and
+    /// `--evidence-test` go through this one function, so the sentence cannot drift away
+    /// from the rule that fired.
+    static func reasonLabel(_ cut: Cut, _ t: MeetingTuning.Values) -> String {
+        switch cut.reason {
+        case .first: return String(localized: "mötets början")
+        case .carry: return String(localized: "där en röst fördes vidare")
+        case .pause: return String(localized: "paus \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.paragraphPause))")
+        case .pending: return String(localized: "paus \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.paragraphPause)) under ett ord under skrivande")
+        case .words: return String(localized: "\(cut.spoken) ord ≥ \(Tuned.words(Int(t.paragraphWords))) vid punkten")
+        case .unclaimed: return String(localized: "ord utan röst efter \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.unclaimedPause))")
+        case .speaker: return String(localized: "rösten bytte")
+        }
+    }
+
+    // MARK: `Mindtalk --evidence-test`
+
+    /// The read-out has to be what the grouping did, not a second guess afterwards. So the
+    /// test runs the real pass over words written to reach each rule, and asks of every
+    /// section: does the reason it names hold with the values in use, does its number appear
+    /// in the sentence shown, and do the same words give the same reasons twice.
+    @MainActor static func selfTest() -> Int32 {
+        var failed = 0
+        func check(_ ok: Bool, _ what: String) { if !ok { failed += 1; print("FEL  \(what)") } }
+        let t = MeetingTuning.chosen
+        func word(_ text: String, _ at: Double, _ who: Int? = 0) -> MeetingWord {
+            MeetingWord(text: text, start: at, end: at + 0.3, speaker: who)
+        }
+
+        // One meeting that reaches every rule that can start a section.
+        var words = [word("Först", 0), word("pratar.", 0.4)]
+        words.append(word("Paus", t.paragraphPause + 1.2))          // a pause over the paragraph's bar
+        words.append(word("här.", t.paragraphPause + 1.6))
+        words.append(word("Du.", t.paragraphPause + 2.0, 1))         // another voice, no pause at all
+        var at = (words.last?.end ?? 0) + 0.2
+        for n in 0..<Int(t.paragraphWords) {                         // long enough to cut on words
+            words.append(word("ord\(n).", at))
+            at = (words.last?.end ?? at) + 0.05
+        }
+        words.append(word("Slut.", at + 0.4))
+
+        let turns = MeetingText.turnsAllAnew(words, pending: [])
+        check(turns.count >= 4, "\(turns.count) stycken, förväntade minst 4")
+        for (n, turn) in turns.enumerated() {
+            let label = reasonLabel(turn.cut, t)
+            check(!label.isEmpty, "stycke \(n): anledningen är tom")
+            switch turn.cut.reason {
+            case .first: check(n == 0, "stycke \(n): mötets början mitt i mötet")
+            case .pause, .pending:
+                check(turn.cut.gap >= t.paragraphPause, "stycke \(n): paus \(turn.cut.gap) < \(t.paragraphPause)")
+                check(label.contains(Tuned.seconds(turn.cut.gap)), "stycke \(n): pausen nämns inte")
+            case .words:
+                check(turn.cut.spoken >= Int(t.paragraphWords), "stycke \(n): \(turn.cut.spoken) ord < \(Int(t.paragraphWords))")
+                check(turn.cut.sentenceEnd, "stycke \(n): klippt efter ett ord utan punkt")
+            case .speaker: check(turn.cut.from != turn.cut.to, "stycke \(n): samma röst före och efter")
+            case .unclaimed: check(turn.cut.gap >= t.unclaimedPause, "stycke \(n): \(turn.cut.gap) < \(t.unclaimedPause)")
+            case .carry: break   // only a live pass's second chunk seeds one; a single pass never does
+            }
+        }
+        check(turns.contains { $0.cut.reason == .pause }, "inget stycke klipptes av pausen")
+        check(turns.contains { $0.cut.reason == .speaker }, "inget stycke klipptes av att rösten bytte")
+        check(turns.contains { $0.cut.reason == .words }, "inget stycke klipptes av ordantalet")
+        check(MeetingText.turnsAllAnew(words, pending: []).map(\.cut) == turns.map(\.cut),
+              "samma ord gav andra anledningar andra gången")
+
+        // Words still being written, after a pause and with no voice yet: a row of their own.
+        let after = (words.last?.end ?? 0) + t.paragraphPause + 0.5
+        let live = MeetingText.turnsAllAnew(words, pending: [MeetingWord(text: "kvar", start: after, end: after + 0.4, speaker: nil)])
+        check(live.contains { $0.cut.reason == .pending || $0.cut.reason == .unclaimed },
+              "ord under skrivande gav ingen egen rad")
+
+        // The bar beside a name: a short print is held to its own bar, a long one to the usual.
+        check(RoundPlacement.sameVoiceBar(seconds: t.shortPrint - 1) == Float(t.shortSameVoice), "kort prov fick fel gräns")
+        check(RoundPlacement.sameVoiceBar(seconds: t.shortPrint + 6) == Float(t.sameVoice), "långt prov fick fel gräns")
+        // The numbers are said in the knobs' own words, not in words of their own.
+        check(Tuned.seconds(2.34) == MeetingTuning.Unit.seconds.label(2.34), "sekunder sägs inte som värdena på sidan")
+        check(Tuned.score(0.72) == MeetingTuning.Unit.score.label(0.72), "poäng sägs inte som värdena på sidan")
+        check(Tuned.words(60) == MeetingTuning.Unit.words.label(60), "ord sägs inte som värdena på sidan")
+
+        print(failed == 0 ? "OK – \(turns.count) stycken, anledningarna är passets egna" : "\(failed) fel")
+        return failed == 0 ? 0 : 1
+    }
 }
 
 /// A number in the words the Justering page uses for it: "2,3 s", "0,72", "60 ord".
@@ -117,6 +202,8 @@ struct EvidenceLine: View {
 /// Under a section: what cut it, with the numbers that were weighed when it did.
 struct SectionEvidenceLine: View {
     let turn: MeetingTurn
+    /// The meeting: which stretches you moved under this voice yourself (`moves`).
+    var record: MeetingRecord? = nil
     /// The turn's own words — empty while they are still being written, which is why the
     /// counts come only when there are words to count.
     var words: [MeetingWord] = []
@@ -146,18 +233,7 @@ struct SectionEvidenceLine: View {
     }
 
     /// The rule that ended the section before this one — the branch `MeetingText.raw` took.
-    private var reason: String {
-        let cut = turn.cut, t = tuning
-        switch cut.reason {
-        case .first: return String(localized: "mötets början")
-        case .carry: return String(localized: "där en röst fördes vidare")
-        case .pause: return String(localized: "paus \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.paragraphPause))")
-        case .pending: return String(localized: "paus \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.paragraphPause)) under ett ord under skrivande")
-        case .words: return String(localized: "\(cut.spoken) ord ≥ \(Tuned.words(Int(t.paragraphWords))) vid punkten")
-        case .unclaimed: return String(localized: "ord utan röst efter \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.unclaimedPause))")
-        case .speaker: return String(localized: "rösten bytte")
-        }
-    }
+    private var reason: String { MeetingDebug.reasonLabel(turn.cut, tuning) }
 
     @ViewBuilder private var card: some View {
         let cut = turn.cut, t = tuning
@@ -185,6 +261,17 @@ struct SectionEvidenceLine: View {
             }
             if !turn.foreign.isEmpty {
                 EvidenceLine(label: "Ord av andra inuti", value: "\(turn.foreign.count)")
+            }
+        }
+        // Whose voice the section carries — and whether you put the words there yourself.
+        if let speaker = turn.speaker {
+            EvidenceLine(label: "Rösten i stycket",
+                         value: cast.background.contains(speaker)
+                             ? String(localized: "bakgrund (en TV, radion)") : cast.name(of: speaker))
+            let last = words.last?.end ?? turn.start
+            let moved = record?.moves.filter { $0.speaker == speaker && $0.start < last && $0.end > turn.start }.count ?? 0
+            if moved > 0 {
+                EvidenceLine(label: "Du flyttade ord hit", value: "\(moved)")
             }
         }
         Text("Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas.")

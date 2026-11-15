@@ -1405,6 +1405,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
         if args.contains("--tuning-test") {
             exit(MeetingTuning.selfTest())
         }
+        // `Mindtalk --evidence-test`: the numbers a meeting shows are the ones the grouping
+        // used — the reason each section names holds against the values in use, says the
+        // number it weighed, and comes out the same when the words are grouped again
+        // (MeetingDebug, the read-out under a section and beside a name).
+        if args.contains("--evidence-test") {
+            exit(MeetingDebug.selfTest())
+        }
         // `Mindtalk --calendar-test`: which calendar event counts as the meeting that is
         // starting, what follows it into the meeting's file, and reading the section
         // back (CalendarEvents, Settings → Möten → Kalender). Never opens the calendar

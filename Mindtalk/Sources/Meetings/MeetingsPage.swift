@@ -2669,7 +2669,7 @@ private struct TurnRow: View {
             if showName { nameRow }
             line
             if debug {
-                SectionEvidenceLine(turn: turn, words: words, cast: cast)
+                SectionEvidenceLine(turn: turn, record: record, words: words, cast: cast)
                     .padding(.top, 3)
                     .transition(.opacity)
             }
