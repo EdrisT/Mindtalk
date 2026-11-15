@@ -18851,18 +18851,18 @@
         }
       }
     },
-    "Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens.": {
+    "Mötet avgjorde med de värden som gällde när det började; gränserna här är dagens. Poängen ovan är mötets egen.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The meeting decided with the values that applied when it started; they were not saved. The bars here are today's."
+            "value": "The meeting decided with the values in force when it began; the bars here are today's. The score above is the meeting's own."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens."
+            "value": "Mötet avgjorde med de värden som gällde när det började; gränserna här är dagens. Poängen ovan är mötets egen."
           }
         }
       }
@@ -21765,6 +21765,7 @@
       }
     },
     "Rösten i stycket": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21874,6 +21875,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Röstmodell"
+          }
+        }
+      }
+    },
+    "Röstmodell den gången": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voice model back then"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röstmodell den gången"
           }
         }
       }
@@ -25062,6 +25079,38 @@
         }
       }
     },
+    "Så här var det den gången": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It was like this back then"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så här var det den gången"
+          }
+        }
+      }
+    },
+    "Så här var värdena den gången": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The values were like this back then"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Så här var värdena den gången"
+          }
+        }
+      }
+    },
     "Så långt tal avslutar turen ändå, hur tyst det än varit.": {
       "localizations": {
         "en": {
@@ -26081,6 +26130,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tal som avslutar en tur"
+          }
+        }
+      }
+    },
+    "Tal som provet byggdes på": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech the sample was built from"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tal som provet byggdes på"
           }
         }
       }
@@ -28785,18 +28850,18 @@
         }
       }
     },
-    "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas.": {
+    "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet. Med knappen påslagen sparas för varje möte också vilka värden och vilken röstmodell det avgjorde med, och vem varje röst liknade — inget ljud och inga avtryck, bara tal.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Each meeting then gets its own button, Voice decisions, showing the scores and the bars behind the names and the sections. The numbers appear only in the meeting, never anywhere else, and nothing new is saved."
+            "value": "Every meeting then gets its own button, Voice decisions, showing the scores and the bars behind the names and the sections. The numbers show only in the meeting. With the button on, each meeting also saves which values and which voice model it decided with, and who each voice resembled — no audio and no prints, only numbers."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas."
+            "value": "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet. Med knappen påslagen sparas för varje möte också vilka värden och vilken röstmodell det avgjorde med, och vem varje röst liknade — inget ljud och inga avtryck, bara tal."
           }
         }
       }
@@ -30171,18 +30236,18 @@
         }
       }
     },
-    "Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas.": {
+    "Värdena här är de som står i Inställningar nu; styckena görs om varje gång mötet visas.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The values are the ones in Settings now; the sections are made again every time the meeting is shown."
+            "value": "The values here are the ones in Settings now; the sections are rebuilt every time the meeting is shown."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas."
+            "value": "Värdena här är de som står i Inställningar nu; styckena görs om varje gång mötet visas."
           }
         }
       }

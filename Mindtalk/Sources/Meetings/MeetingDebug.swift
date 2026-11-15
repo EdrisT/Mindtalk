@@ -75,6 +75,48 @@ final class MeetingDebug: ObservableObject {
         }
     }
 
+    // MARK: What the round answered with
+
+    /// The numbers the final pass used, and who each voice was weighed against. It changes
+    /// nothing: the same voices the round had in hand, scored against the people known then
+    /// with the same similarity the round used — so the meeting keeps what it answered, and
+    /// can be read against today's values afterwards. No prints, no audio.
+    static func trace(voices: [Int: RoundPlacement.Voice], people: [RoundPlacement.Known],
+                      tuning: MeetingTuning.Values) -> MeetingRecord.VoiceTrace {
+        var made = MeetingRecord.VoiceTrace(tuning: tuning, model: VoiceMemory.modelID)
+        for (speaker, voice) in voices {
+            var one = MeetingRecord.VoiceTrace.Voice(seconds: voice.seconds)
+            one.ranked = people.map { (person: RoundPlacement.Known) in
+                MeetingRecord.VoiceTrace.Voice.Match(person: person.name, score: RoundPlacement.similarity(voice.print, person.prints))
+            }
+            .sorted { $0.score > $1.score }
+            .prefix(3)
+            .map { $0 }
+            made.voices[speaker] = one
+        }
+        return made
+    }
+
+    /// What has moved since a meeting was listened to: the page's own names, then and now.
+    /// Empty when nothing was moved, and when the meeting kept no numbers (`trace` is nil).
+    static func moved(since trace: MeetingRecord.VoiceTrace) -> [String] {
+        moved(since: trace.tuning, to: MeetingTuning.chosen)
+    }
+
+    /// The same between two sets of numbers — the form the self-test can hold still.
+    static func moved(since then: MeetingTuning.Values, to now: MeetingTuning.Values) -> [String] {
+        MeetingTuning.allKnobs.compactMap { knob in
+            let was = then[keyPath: knob.key], is = now[keyPath: knob.key]
+            guard abs(was - is) > 0.0001 else { return nil }
+            return "\(knob.title): \(knob.unit.label(was)) → \(knob.unit.label(is))"
+        }
+    }
+
+    /// The model a meeting was listened to with, when it isn't the one in use now.
+    static func model(since trace: MeetingRecord.VoiceTrace) -> String? {
+        trace.model.isEmpty || trace.model == VoiceMemory.modelID ? nil : trace.model
+    }
+
     // MARK: `Mindtalk --evidence-test`
 
     /// The read-out has to be what the grouping did, not a second guess afterwards. So the
@@ -138,6 +180,31 @@ final class MeetingDebug: ObservableObject {
         check(Tuned.seconds(2.34) == MeetingTuning.Unit.seconds.label(2.34), "sekunder sägs inte som värdena på sidan")
         check(Tuned.score(0.72) == MeetingTuning.Unit.score.label(0.72), "poäng sägs inte som värdena på sidan")
         check(Tuned.words(60) == MeetingTuning.Unit.words.label(60), "ord sägs inte som värdena på sidan")
+
+        // The trace the read-out keeps: numbers only, and they come back as they went.
+        var made = MeetingRecord.VoiceTrace(tuning: t, model: "en modell förut")
+        made.voices[0] = MeetingRecord.VoiceTrace.Voice(
+            seconds: 14, ranked: [MeetingRecord.VoiceTrace.Voice.Match(person: "Elsa", score: 0.71)])
+        var readBack: MeetingRecord.VoiceTrace?
+        if let written = try? JSONEncoder().encode(made) {
+            readBack = try? JSONDecoder().decode(MeetingRecord.VoiceTrace.self, from: written)
+        }
+        check(readBack == made, "spåret lästes inte tillbaka som det skrevs")
+        // Who it weighed a voice against is the round's own ranking: the same voices, the
+        // same maths, so the meeting keeps what it saw without asking for the audio again.
+        let voice = RoundPlacement.Voice(print: [1, 0], seconds: 14)
+        let people = [RoundPlacement.Known(name: "Elsa", prints: [[1, 0]]),
+                      RoundPlacement.Known(name: "Anna", prints: [[0, 1]])]
+        let built = MeetingDebug.trace(voices: [3: voice], people: people, tuning: t)
+        check(built.voices[3]?.ranked.first?.person == "Elsa", "spåret namngav fel person först")
+        check(built.voices[3]?.ranked.first?.score == 1, "spåret fick inte helt samma röst")
+        check(built.voices[3]?.ranked.count == 2, "spåret listade inte dem det vägde mot")
+        check(built.model == VoiceMemory.modelID, "spåret glömde vilken modell som användes")
+        // Only what you actually moved is named as moved.
+        var later = t
+        later.paragraphPause += 0.5
+        check(MeetingDebug.moved(since: t, to: later).count == 1, "mer än den flyttade värden nämndes")
+        check(MeetingDebug.moved(since: t, to: t).isEmpty, "inget ändrat nämndes som ändrat")
 
         print(failed == 0 ? "OK – \(turns.count) stycken, anledningarna är passets egna" : "\(failed) fel")
         return failed == 0 ? 0 : 1
@@ -274,7 +341,21 @@ struct SectionEvidenceLine: View {
                 EvidenceLine(label: "Du flyttade ord hit", value: "\(moved)")
             }
         }
-        Text("Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas.")
+        // What the meeting answered with, if it kept that: the values you have moved since.
+        if let trace = record?.trace {
+            let moved = MeetingDebug.moved(since: trace)
+            if !moved.isEmpty {
+                Divider()
+                Text("Så här var värdena den gången").font(.system(size: 11.5)).foregroundStyle(DS.Colors.muted)
+                ForEach(moved, id: \.self) { line in
+                    Text(verbatim: line).font(.system(size: 12)).foregroundStyle(DS.Colors.ink)
+                }
+            }
+            if let other = MeetingDebug.model(since: trace) {
+                EvidenceLine(label: "Röstmodell den gången", value: other)
+            }
+        }
+        Text("Värdena här är de som står i Inställningar nu; styckena görs om varje gång mötet visas.")
             .font(.system(size: 11.5)).foregroundStyle(DS.Colors.muted)
     }
 }
@@ -346,6 +427,23 @@ struct SpeakerEvidenceChip: View {
         if let rejected = record.rejected[key], !rejected.isEmpty {
             EvidenceLine(label: "Namn du sa nej till", value: rejected.joined(separator: ", "))
         }
+        // What this meeting's own pass saw, kept when the read-out was on: who each voice
+        // resembled, best first, and how much speech the print was built from.
+        if let then = record.trace?.voices[speaker] {
+            Divider()
+            Text("Så här var det den gången").font(.system(size: 11.5)).foregroundStyle(DS.Colors.muted)
+            if then.ranked.isEmpty {
+                Text(verbatim: "—")
+            } else {
+                ForEach(then.ranked, id: \.person) { match in
+                    EvidenceLine(label: match.person, value: Tuned.score(Double(match.score)))
+                }
+            }
+            EvidenceLine(label: "Tal som provet byggdes på", value: Tuned.seconds(then.seconds))
+            if let trace = record.trace, let other = MeetingDebug.model(since: trace) {
+                EvidenceLine(label: "Röstmodell den gången", value: other)
+            }
+        }
         if let ranked {
             ForEach(ranked, id: \.self) { Text($0).font(.system(size: 12)).foregroundStyle(DS.Colors.ink) }
         } else if VoiceMemory.shared.known.isEmpty {
@@ -355,7 +453,7 @@ struct SpeakerEvidenceChip: View {
             Button(comparing ? String(localized: "Jämför…") : String(localized: "Jämför igen med dagens värden")) { compare() }
                 .buttonStyle(.soft).disabled(comparing)
         }
-        Text("Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens.")
+        Text("Mötet avgjorde med de värden som gällde när det började; gränserna här är dagens. Poängen ovan är mötets egen.")
             .font(.system(size: 11.5)).foregroundStyle(DS.Colors.muted)
     }
 

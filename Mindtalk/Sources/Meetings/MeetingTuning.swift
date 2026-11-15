@@ -402,7 +402,7 @@ struct MeetingTuningCard: View {
                 }
                 CardDivider()
                 CardRow(title: String(localized: "Visa röstbeslut i möten"),
-                        detail: String(localized: "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas.")) {
+                        detail: String(localized: "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet. Med knappen påslagen sparas för varje möte också vilka värden och vilken röstmodell det avgjorde med, och vem varje röst liknade — inget ljud och inga avtryck, bara tal.")) {
                     InkToggle(label: "Visa röstbeslut i möten", isOn: $debug.enabled)
                 }
             }

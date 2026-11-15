@@ -49,6 +49,12 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
     var finished = true
     /// What the final pass changed compared with the live text.
     var heal: Heal?
+    /// What the voices were chosen from, kept only while the read-out is switched on
+    /// (`MeetingDebug`, under Settings → Möten → Justering): the numbers and the model the
+    /// pass answered with, and who each voice resembled. Nothing here decides anything —
+    /// it is so a finished meeting can be read against the values of today, and against
+    /// what you have since moved. Only numbers: no print, nothing that can be played back.
+    var trace: VoiceTrace? = nil
     /// Stretches you gave to another speaker. Kept by their time, so they hold
     /// when the words are written again (the final pass, the voices catching up).
     var moves: [Move] = []
@@ -234,6 +240,29 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
         var changed: [Int]
     }
 
+    /// One meeting's own memory of how its voices were decided (`MeetingDebug.trace`). The
+    /// numbers are kept as they were then, not snapped to today's ladders: the whole point is
+    /// to say what has moved since. Only numbers — no print, no audio, nothing that could be
+    /// played back.
+    struct VoiceTrace: Codable, Equatable {
+        var at = Date()
+        var tuning = MeetingTuning.Values()
+        var model = ""
+        /// Per voice, in the meeting's own numbering: how much clean speech its print was
+        /// built from, and the people it resembled, best first (three at most).
+        var voices: [Int: Voice] = [:]
+
+        struct Voice: Codable, Equatable {
+            var seconds = 0.0
+            var ranked: [Match] = []
+
+            struct Match: Codable, Equatable {
+                var person: String
+                var score: Float
+            }
+        }
+    }
+
     init(title: String, date: Date, language: SpeechModel) {
         self.title = title
         self.date = date
@@ -264,6 +293,9 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
         if !userTitled, title == Self.defaultTitle(for: date), let given = summary?.title, !given.isEmpty { title = given }
         finished = try c.decodeIfPresent(Bool.self, forKey: .finished) ?? true
         heal = (try? c.decodeIfPresent(Heal.self, forKey: .heal)) ?? nil
+        // Read-out only: a meeting without it, or with a trace an older version wrote, opens
+        // exactly as before.
+        trace = (try? c.decodeIfPresent(VoiceTrace.self, forKey: .trace)) ?? nil
         moves = try c.decodeIfPresent([Move].self, forKey: .moves) ?? []
         notes = try c.decodeIfPresent([Note].self, forKey: .notes) ?? []
         marks = try c.decodeIfPresent([Mark].self, forKey: .marks) ?? []

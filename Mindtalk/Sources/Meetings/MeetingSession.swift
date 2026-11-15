@@ -2178,6 +2178,13 @@ final class MeetingSession: ObservableObject {
             if !aliases.isEmpty {
                 for i in words.indices { if let s = words[i].speaker, let to = aliases[s] { words[i].speaker = to } }
             }
+            // The read-out's memory of this pass: the numbers it answered with, and who each
+            // voice was weighed against. Only while the read-out is switched on, and only
+            // numbers — never a print, never anything that could be played back.
+            if MeetingDebug.shared.enabled {
+                updated.trace = MeetingDebug.trace(voices: prints, people: VoiceMemory.shared.known,
+                                                  tuning: MeetingTuning.running)
+            }
             updated.words = words
             updated.refined = true
             updated.language = language          // listened to in another language: it is that now
