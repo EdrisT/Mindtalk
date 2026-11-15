@@ -150,7 +150,7 @@ struct SectionEvidenceLine: View {
         let cut = turn.cut, t = tuning
         switch cut.reason {
         case .first: return String(localized: "mötets början")
-        case .carry: return String(localized: "där uppläsningen tog över")
+        case .carry: return String(localized: "där en röst fördes vidare")
         case .pause: return String(localized: "paus \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.paragraphPause))")
         case .pending: return String(localized: "paus \(Tuned.seconds(cut.gap)) ≥ \(Tuned.seconds(t.paragraphPause)) under ett ord under skrivande")
         case .words: return String(localized: "\(cut.spoken) ord ≥ \(Tuned.words(Int(t.paragraphWords))) vid punkten")
@@ -262,7 +262,7 @@ struct SpeakerEvidenceChip: View {
         if let ranked {
             ForEach(ranked, id: \.self) { Text($0).font(.system(size: 12)).foregroundStyle(DS.Colors.ink) }
         } else if VoiceMemory.shared.known.isEmpty {
-            Text("Röster kom ihågs inte, så det finns inget att jämföra med.")
+            Text("Röster kom inte ihåg, så det finns inget att jämföra med.")
                 .font(.system(size: 11.5)).foregroundStyle(DS.Colors.muted)
         } else if record.hasAudio {
             Button(comparing ? String(localized: "Jämför…") : String(localized: "Jämför igen med dagens värden")) { compare() }
@@ -302,8 +302,8 @@ struct SpeakerEvidenceChip: View {
         switch verdict {
         case .surely: return String(localized: "säker")
         case .plausible(let s): return String(localized: "möjlig (\(Tuned.score(Double(s))))")
-        case .notThem: return String(localized: "klart inte")
-        case .unknown: return String(localized: "för kort prov")
+        case .notThem: return String(localized: "klart annan röst")
+        case .unknown: return String(localized: "provet är för kort")
         }
     }
 }

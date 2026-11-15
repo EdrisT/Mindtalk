@@ -1573,6 +1573,22 @@
         }
       }
     },
+    "%lld ord ≥ %@ vid punkten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld words ≥ %@ at the full stop"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ord ≥ %@ vid punkten"
+          }
+        }
+      }
+    },
     "%lld procent": {
       "localizations": {
         "en": {
@@ -12850,6 +12866,38 @@
         }
       }
     },
+    "Jämför igen med dagens värden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compare again with today's values"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jämför igen med dagens värden"
+          }
+        }
+      }
+    },
+    "Jämför…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compare…"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jämför…"
+          }
+        }
+      }
+    },
     "Kalender": {
       "localizations": {
         "en": {
@@ -18231,6 +18279,22 @@
         }
       }
     },
+    "Mindtalk, från ett röstavtryck": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk, from a voice print"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk, från ett röstavtryck"
+          }
+        }
+      }
+    },
     "Minimera": {
       "extractionState": "stale",
       "localizations": {
@@ -18698,6 +18762,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mötet avbröts innan det blev klart. Inspelningen finns kvar."
+          }
+        }
+      }
+    },
+    "Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meeting decided with the values that applied when it started; they were not saved. The bars here are today's."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens."
           }
         }
       }
@@ -21447,6 +21527,22 @@
         }
       }
     },
+    "Röstbeslut": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voice decisions"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röstbeslut"
+          }
+        }
+      }
+    },
     "Rösten känns inte igen nästa gång. Namnet i gamla möten finns kvar.": {
       "localizations": {
         "en": {
@@ -21475,6 +21571,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Röster från olika möten som är lika mycket räknas som samma person. 0,60 valdes efter uppmätning: samma röst i ett nytt möte 0,64 och uppåt, två olika personer högst 0,54."
+          }
+        }
+      }
+    },
+    "Röster kom inte ihåg, så det finns inget att jämföra med.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voices were not remembered, so there is nothing to compare with."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Röster kom inte ihåg, så det finns inget att jämföra med."
           }
         }
       }
@@ -28351,6 +28463,22 @@
         }
       }
     },
+    "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each meeting then gets its own button, Voice decisions, showing the scores and the bars behind the names and the sections. The numbers appear only in the meeting, never anywhere else, and nothing new is saved."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas."
+          }
+        }
+      }
+    },
     "Vecka %lld": {
       "localizations": {
         "en": {
@@ -29112,6 +29240,38 @@
         }
       }
     },
+    "Visa poängen och gränserna som avgjorde röster och stycken i det här mötet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the scores and bars that decided the voices and sections in this meeting"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visa poängen och gränserna som avgjorde röster och stycken i det här mötet"
+          }
+        }
+      }
+    },
+    "Visa röstbeslut i möten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show voice decisions in meetings"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visa röstbeslut i möten"
+          }
+        }
+      }
+    },
     "Visa som panel": {
       "localizations": {
         "en": {
@@ -29689,6 +29849,22 @@
         }
       }
     },
+    "Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The values are the ones in Settings now; the sections are made again every time the meeting is shown."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas."
+          }
+        }
+      }
+    },
     "Värt att komma ihåg": {
       "extractionState": "manual",
       "localizations": {
@@ -29801,6 +29977,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "avbryter"
+          }
+        }
+      }
+    },
+    "bakgrund (en TV, radion)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "background (a TV, the radio)"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bakgrund (en TV, radion)"
           }
         }
       }
@@ -29962,6 +30154,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "dina tankar"
+          }
+        }
+      }
+    },
+    "du gav namnet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "you gave the name"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "du gav namnet"
+          }
+        }
+      }
+    },
+    "där en röst fördes vidare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "where a voice carried over"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "där en röst fördes vidare"
           }
         }
       }
@@ -30391,6 +30615,54 @@
         }
       }
     },
+    "ingen har gett den ett namn": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nobody has given it a name"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ingen har gett den ett namn"
+          }
+        }
+      }
+    },
+    "inget": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "none"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "inget"
+          }
+        }
+      }
+    },
+    "inget prov att mäta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no print to measure"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "inget prov att mäta"
+          }
+        }
+      }
+    },
     "inspelad %@": {
       "localizations": {
         "en": {
@@ -30468,6 +30740,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "klar"
+          }
+        }
+      }
+    },
+    "klart annan röst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "clearly another voice"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "klart annan röst"
           }
         }
       }
@@ -30713,6 +31001,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "mlx-swift-lm"
+          }
+        }
+      }
+    },
+    "möjlig (%@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "possible (%@)"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "möjlig (%@)"
+          }
+        }
+      }
+    },
+    "mötets början": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the start of the meeting"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mötets början"
           }
         }
       }
@@ -31124,6 +31444,54 @@
         }
       }
     },
+    "ord utan röst efter %@ ≥ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "words without a voice after %@ ≥ %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ord utan röst efter %@ ≥ %@"
+          }
+        }
+      }
+    },
+    "paus %@ ≥ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pause %@ ≥ %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "paus %@ ≥ %@"
+          }
+        }
+      }
+    },
+    "paus %@ ≥ %@ under ett ord under skrivande": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pause %@ ≥ %@ with a word still being written"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "paus %@ ≥ %@ under ett ord under skrivande"
+          }
+        }
+      }
+    },
     "pause|Fortsätt": {
       "localizations": {
         "en": {
@@ -31207,6 +31575,54 @@
         }
       }
     },
+    "provet är %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the print is %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "provet är %@"
+          }
+        }
+      }
+    },
+    "provet är för kort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the print is too short"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "provet är för kort"
+          }
+        }
+      }
+    },
+    "provet är kort: %@ < %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the print is short: %@ < %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "provet är kort: %@ < %@"
+          }
+        }
+      }
+    },
     "resume|Fortsätt": {
       "localizations": {
         "en": {
@@ -31268,6 +31684,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "rättat 1 gång"
+          }
+        }
+      }
+    },
+    "rösten bytte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the voice changed"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rösten bytte"
           }
         }
       }
@@ -31431,6 +31863,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "swift-transformers"
+          }
+        }
+      }
+    },
+    "säker": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sure"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "säker"
           }
         }
       }
