@@ -388,6 +388,8 @@ enum MeetingTuning {
 /// room uses them, with the way back to the numbers Mindtalk measured its way to.
 struct MeetingTuningCard: View {
     @State private var values = MeetingTuning.chosen
+    /// The read-out that goes with these numbers: off until you switch it on (`MeetingDebug`).
+    @ObservedObject private var debug = MeetingDebug.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -397,6 +399,11 @@ struct MeetingTuningCard: View {
                         detail: String(localized: "Vad som är tystnad, hur lång en mening är, och hur lika en röst måste vara för att vara samma person. Standardvärdena är uppmätta på riktigt upptalade möten; ändra om någon av dem inte stämmer med hur ditt rum låter. Klicka på ? för vad som ändras när du höjer eller sänker värdet.")) {
                     Button("Återställ") { values = MeetingTuning.reset() }.buttonStyle(.soft)
                         .disabled(MeetingTuning.chosen == MeetingTuning.standard)
+                }
+                CardDivider()
+                CardRow(title: String(localized: "Visa röstbeslut i möten"),
+                        detail: String(localized: "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas.")) {
+                    InkToggle(label: "Visa röstbeslut i möten", isOn: $debug.enabled)
                 }
             }
             .card()

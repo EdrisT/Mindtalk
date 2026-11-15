@@ -453,6 +453,39 @@ extension MeetingRecord {
     }
 }
 
+/// Why a turn begins where it does: the branch in `MeetingText.raw` that ended the one
+/// before, with the numbers that were weighed when it did. Only for the read-out on the
+/// meetings page (`MeetingDebug`, under Settings → Möten → Justering): nothing here is
+/// stored, since the grouping is redone every time a meeting is shown.
+struct Cut: Equatable {
+    enum Reason: Equatable {
+        /// The meeting's first words.
+        case first
+        /// This pass starts here: the words before were kept from an earlier one (`MeetingText.turns`).
+        case carry
+        /// A pause of `gap` between two words.
+        case pause
+        /// A full stop, once the turn had `spoken` words in it.
+        case words
+        /// Words still being written that no voice had claimed, after a pause.
+        case unclaimed
+        /// A new word came while the one before was still being written.
+        case pending
+        /// Another voice took over.
+        case speaker
+    }
+    var reason: Reason
+    /// Seconds of silence at the cut.
+    var gap: Double = 0
+    /// Words in the turn that ended — what `paragraphWords` was measured against.
+    var spoken: Int = 0
+    /// The word before the cut ended with . ? !
+    var sentenceEnd: Bool = false
+    /// The voice before and the voice after, when a change of voice cut the turn.
+    var from: Int?
+    var to: Int?
+}
+
 /// A run of words by one speaker — one bubble.
 struct MeetingTurn: Identifiable, Equatable {
     let id: Int              // index of its first word
@@ -467,6 +500,8 @@ struct MeetingTurn: Identifiable, Equatable {
     /// Words inside this turn's span that someone else said (an "Mm", an "eh") — left
     /// where they are when the turn is moved to another speaker.
     var foreign: [Range<Int>] = []
+    /// Why this turn begins where it does.
+    var cut: Cut = Cut(reason: .first)
 
     struct Aside: Equatable {
         let speaker: Int
@@ -554,11 +589,13 @@ enum MeetingText {
     }
     @MainActor private static var prefix: (key: PrefixKey, turns: [MeetingTurn])?
 
-    /// Groups words into turns (ids are indices in the whole meeting).
+    /// Groups words into turns (ids are indices in the whole meeting). Each turn carries
+    /// the reason it starts where it does (`Cut`), so the read-out can name the number
+    /// that was weighed — never a guess afterwards.
     @MainActor private static func raw(_ words: ArraySlice<MeetingWord>, pending: [MeetingWord],
                                        paragraphs: Bool, seed: Int? = nil) -> [MeetingTurn] {
         var turns: [MeetingTurn] = []
-        var current: (id: Int, speaker: Int?, start: Double, words: [String], pending: [String])?
+        var current: (id: Int, speaker: Int?, start: Double, words: [String], pending: [String], cut: Cut)?
         var previous: MeetingWord?
         // Once per pass, not per word.
         let tuning = MeetingTuning.chosen
@@ -566,7 +603,8 @@ enum MeetingText {
             guard let c = current else { return }
             turns.append(MeetingTurn(id: c.id, speaker: c.speaker, start: c.start,
                                      text: clean(c.words.joined(separator: " ")),
-                                     pending: c.pending.joined(separator: " ")))
+                                     pending: c.pending.joined(separator: " "),
+                                     cut: c.cut))
         }
         let all = words.map { ($0, false) } + pending.map { ($0, true) }
         for (n, (word, isPending)) in all.enumerated() {
@@ -578,19 +616,30 @@ enum MeetingText {
             let unclaimed = isPending && speaker == nil && previous.map { word.start - $0.end >= tuning.unclaimedPause } ?? false
             if unclaimed, current?.speaker != nil {
                 flush()
-                current = (i, nil, word.start, [], [word.text])
+                current = (i, nil, word.start, [], [word.text],
+                           Cut(reason: .unclaimed, gap: word.start - (previous?.end ?? word.start),
+                               spoken: current?.words.count ?? 0, from: current?.speaker))
                 previous = word
                 continue
             }
             if speaker == nil || speaker == MeetingWord.unknown { speaker = current?.speaker ?? speaker }
             defer { previous = word }
             var breaks = false
+            // Why the turn that ends here ends: the pause, or the full stop after enough words.
+            var cut = Cut(reason: .first)
             if paragraphs, let c = current, let previous {
                 let sentenceOver = previous.text.last.map { ".?!".contains($0) } ?? false
-                breaks = isPending || !c.pending.isEmpty
-                    ? word.start - previous.end >= tuning.paragraphPause
-                    : word.start - previous.end >= tuning.paragraphPause
-                        || (Double(c.words.count) >= tuning.paragraphWords && sentenceOver)
+                let gap = word.start - previous.end
+                let whilePending = isPending || !c.pending.isEmpty
+                breaks = whilePending ? gap >= tuning.paragraphPause
+                    : gap >= tuning.paragraphPause || (Double(c.words.count) >= tuning.paragraphWords && sentenceOver)
+                if breaks {
+                    cut = gap >= tuning.paragraphPause
+                        ? Cut(reason: whilePending ? .pending : .pause, gap: gap, spoken: c.words.count,
+                              sentenceEnd: sentenceOver, from: c.speaker, to: speaker)
+                        : Cut(reason: .words, gap: gap, spoken: c.words.count, sentenceEnd: true,
+                              from: c.speaker, to: speaker)
+                }
             }
             if !breaks, let c = current, c.speaker == speaker || speaker == nil || speaker == MeetingWord.unknown {
                 if isPending { current?.pending.append(word.text) } else if c.pending.isEmpty {
@@ -600,8 +649,15 @@ enum MeetingText {
                 }
                 continue
             }
+            // No pause and no full stop: another voice took over — or this is the pass's first word.
+            if !breaks {
+                cut = current == nil
+                    ? Cut(reason: seed == nil ? .first : .carry, from: seed)
+                    : Cut(reason: .speaker, gap: previous.map { word.start - $0.end } ?? 0,
+                          spoken: current?.words.count ?? 0, from: current?.speaker, to: speaker)
+            }
             flush()
-            current = (i, speaker, word.start, isPending ? [] : [word.text], isPending ? [word.text] : [])
+            current = (i, speaker, word.start, isPending ? [] : [word.text], isPending ? [word.text] : [], cut)
         }
         flush()
         return turns

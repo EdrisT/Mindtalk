@@ -1713,6 +1713,8 @@ struct MeetingView: View {
     @ObservedObject private var epoch = WindowEpoch.shared
     /// For "Fortsätt mötet" on a saved meeting: whether it can, and why not.
     @ObservedObject private var recorder = MeetingSession.shared
+    /// Whether this meeting shows its voice decisions (`MeetingDebug`).
+    @ObservedObject private var evidence = MeetingDebug.shared
     @State private var title = ""
     @State private var confirmDelete = false
     @State private var confirmRemoveAudio = false
@@ -1754,7 +1756,8 @@ struct MeetingView: View {
                     TranscriptView(record: record, turns: turns, cast: cast, session: session, pendingTimes: pending.map(\.start), width: width,
                                    edit: edit, focusTurn: $focusTurn, focusNote: $focusNote,
                                    changed: showChanges ? Set(record.heal?.changed ?? []) : [],
-                                   finding: finding ? findQuery : "", findHit: hit)
+                                   finding: finding ? findQuery : "", findHit: hit,
+                                   debug: evidence.isShown(record.id))
                         .transition(.opacity.combined(with: .offset(y: 6)))
                 } else {
                     SummaryView(record: record, turns: turns, cast: cast, notes: notes, width: width, edit: edit, showInText: { at in
@@ -1800,7 +1803,8 @@ struct MeetingView: View {
                     .padding(.bottom, hasNotice(session, cast) ? 14 : 0)
                 TranscriptView(record: record, turns: turns, cast: cast, session: session, pendingTimes: pending.map(\.start), width: column,
                                edit: edit, focusTurn: $focusTurn, focusNote: $focusNote,
-                               finding: finding ? findQuery : "", findHit: hit, inlineNotes: !wide)
+                               finding: finding ? findQuery : "", findHit: hit, inlineNotes: !wide,
+                               debug: evidence.isShown(record.id))
                     .id(epoch.value)   // see WindowEpoch
                     .frame(maxHeight: .infinity)
                 if !wide, session.isRecording, !session.stopping {
@@ -2323,6 +2327,9 @@ private struct TranscriptView: View {
     /// While it records in a narrow window (no margin): your notes under the turns they
     /// were written in, as after the meeting.
     var inlineNotes = false
+    /// This meeting shows how its voices and sections were decided (`MeetingDebug`, under
+    /// Settings → Möten → Justering); the meeting's own button in the bar below turns it on.
+    var debug = false
     /// Renders: the rows in a plain stack, no scroll view (ImageRenderer draws none).
     var flat = false
     @ObservedObject private var player = MeetingPlayer.shared
@@ -2380,6 +2387,8 @@ private struct TranscriptView: View {
                     notes: notes[turn.id] ?? [],
                     focusedNote: focusNote,
                     listen: record.hasAudio ? { at in player.play(record.id, from: max(0, at - 8)) } : nil,
+                    record: record,
+                    debug: debug,
                     recognized: turn.speaker.map { record.recognized[String($0)] != nil } ?? false,
                     rename: turn.speaker.flatMap { s in s >= 0 ? { edit.name(s, $0) } : nil },
                     merge: turn.speaker.flatMap { s in
@@ -2640,6 +2649,10 @@ private struct TurnRow: View {
     var merge: ((Int) -> Void)? = nil
     /// After the meeting: mark this voice as background (a TV), or back.
     var setBackground: ((Bool) -> Void)? = nil
+    /// The meeting, for the evidence read-out (nil while the numbers are off).
+    var record: MeetingRecord? = nil
+    /// "Röstbeslut": the numbers that decided this turn's speaker and this turn's bounds.
+    var debug = false
 
     private var speaker: Int? { turn.speaker.flatMap { $0 >= 0 ? $0 : nil } }
     /// A TV or a radio you marked: its words quieter, out of the way of the meeting's.
@@ -2655,6 +2668,11 @@ private struct TurnRow: View {
         VStack(alignment: .leading, spacing: 5) {
             if showName { nameRow }
             line
+            if debug {
+                SectionEvidenceLine(turn: turn, words: words, cast: cast)
+                    .padding(.top, 3)
+                    .transition(.opacity)
+            }
             if !marks.isEmpty {
                 markRow
                     .padding(.top, 3)
@@ -2727,6 +2745,10 @@ private struct TurnRow: View {
                 Text(MeetingView.duration(turn.start))
                     .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
                     .foregroundStyle(DS.Colors.faint)
+            }
+            // The score that gave this voice its name, and the bar it cleared.
+            if debug, let speaker, let record {
+                SpeakerEvidenceChip(record: record, speaker: speaker, cast: cast)
             }
         }
         // "Känner igen rösten…" giving way to the name: crossfaded, not switched.
@@ -3311,6 +3333,10 @@ private struct LiveBar: View {
                     .background(Capsule().fill(DS.Colors.paper.opacity(0.9)))
                     .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
+            if let id = session.record?.id {
+                MeetingEvidenceButton(id: id).frame(maxWidth: .infinity, alignment: .center)
+                    .transition(.opacity)
+            }
             pill
         }
         .padding(.top, 8)
@@ -3519,6 +3545,8 @@ private struct ReviewBar: View {
                 .onHover { overSuggestions = $0 }
                 .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
+            // The read-out of this meeting's voice decisions, for those who switched it on.
+            MeetingEvidenceButton(id: record.id).frame(maxWidth: .infinity, alignment: .trailing)
             // Nothing here can answer: the field stays, greyed, and says what it needs.
             field.disabled(!MeetingNotes.isAvailable).opacity(MeetingNotes.isAvailable ? 1 : 0.6)
         }
