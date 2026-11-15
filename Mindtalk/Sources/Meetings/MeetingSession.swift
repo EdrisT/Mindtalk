@@ -2358,10 +2358,13 @@ final class MeetingSession: ObservableObject {
         // Notes are written once; listening again keeps the ones you have (and your
         // ticked tasks) — "Sammanfatta igen" is there for a new summary.
         // Continued: written again for the whole meeting (as are notes that were being
-        // written when it went on).
+        // written when it went on). Off in Inställningar: nothing is written, and the
+        // button in the meeting does it when asked (SummaryWriting.auto).
         if let finished, MeetingNotes.shared.takeAfterMeeting(finished) || continued
             || MeetingStore.shared.meetings.first(where: { $0.id == finished })?.summary == nil {
-            MeetingNotes.shared.summarize(finished)
+            if SummaryWriting.shared.auto {
+                MeetingNotes.shared.summarize(finished)
+            }
         }
         if let finished {
             AccessibilityNotification.Announcement(Self.endedSentence(summarizing: MeetingNotes.shared.writing.contains(finished))).post()

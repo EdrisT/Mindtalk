@@ -397,12 +397,14 @@ final class MeetingImport: ObservableObject {
             }
             Self.log.info("import: done, \(Int(duration)) s, \(words.count) words, \(Set(words.compactMap(\.speaker)).count) voices")
 
-            // 4. The notes — written in the background, like a meeting's.
+            // 4. The notes — written in the background, like a meeting's. Switched off in
+            // Inställningar: the meeting sits without one until you ask (SummaryWriting.auto).
             #if DEBUG
-            if !CommandLine.arguments.contains("--no-summary") { MeetingNotes.shared.summarize(record.id) }   // tests of the voices only
+            let wanted = SummaryWriting.shared.auto && !CommandLine.arguments.contains("--no-summary")   // tests of the voices only
             #else
-            MeetingNotes.shared.summarize(record.id)
+            let wanted = SummaryWriting.shared.auto
             #endif
+            if wanted { MeetingNotes.shared.summarize(record.id) }
             AccessibilityNotification.Announcement(String(localized: "\(record.title): klart att läsa")).post()
             Self.notifyIfAway(record)
             scheduleTidy(id)

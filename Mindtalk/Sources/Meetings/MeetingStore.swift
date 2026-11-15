@@ -1014,13 +1014,16 @@ final class MeetingStore: ObservableObject {
     }
 
     /// A voice that isn't taking part (a TV, a radio), or is after all. The notes were
-    /// written with it, or without it: written again, as they should be now.
+    /// written with it, or without it: written again, as they should be now — unless
+    /// summarizing by itself is switched off, when the old ones stay as they are.
     func setBackground(_ speaker: Int, _ on: Bool, in id: UUID) {
         guard var record = meetings.first(where: { $0.id == id }) else { return }
         if on { if !record.background.contains(speaker) { record.background.append(speaker) } }
         else { record.background.removeAll { $0 == speaker } }
         save(record)
-        if record.summary != nil, !record.words.isEmpty { MeetingNotes.shared.summarize(id) }
+        if SummaryWriting.shared.auto, record.summary != nil, !record.words.isEmpty {
+            MeetingNotes.shared.summarize(id)
+        }
     }
 
     /// Two voices that are one person: `speaker`'s words become `into`'s.

@@ -245,6 +245,13 @@ struct SummaryWritersCard: View {
                     .onChange(of: summaryLanguage) { _, new in SummaryLanguage.chosen = new }
             }
             CardDivider()
+            // When one is written without being asked for. Off: the button in the meeting
+            // stays, and a summary a meeting already has is left alone.
+            CardRow(title: String(localized: "Sammanfatta av sig själva"),
+                    detail: String(localized: "Vid mötets slut, när en röst markeras som bakgrund och när en inspelning läggs till. Av: knappen Sammanfatta skriver en åt gången, och en som redan finns lämnas ifred.")) {
+                InkToggle(label: String(localized: "Sammanfatta av sig själva"), isOn: $notes.auto)
+            }
+            CardDivider()
             FoldRow(title: String(localized: "Fler alternativ"),
                     detail: String(localized: "En modell du redan kör i Ollama, LM Studio eller oMLX på den egna datorn."),
                     open: $more)
