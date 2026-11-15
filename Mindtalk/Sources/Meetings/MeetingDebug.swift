@@ -84,7 +84,7 @@ struct EvidenceSign: View {
 extension View {
     /// The evidence card: the same 260 pt popover the knobs open, a line of the label and the
     /// number it was weighed against.
-    func evidenceCard(_ isOn: Binding<Bool>, title: String, @ViewBuilder lines: () -> some View) -> some View {
+    func evidenceCard(_ isOn: Binding<Bool>, title: String, @ViewBuilder lines: @escaping () -> some View) -> some View {
         popover(isPresented: isOn, arrowEdge: .bottom) {
             VStack(alignment: .leading, spacing: 7) {
                 Text(title).font(.system(size: 13, weight: .semibold))

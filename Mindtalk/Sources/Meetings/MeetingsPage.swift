@@ -2387,8 +2387,6 @@ private struct TranscriptView: View {
                     notes: notes[turn.id] ?? [],
                     focusedNote: focusNote,
                     listen: record.hasAudio ? { at in player.play(record.id, from: max(0, at - 8)) } : nil,
-                    record: record,
-                    debug: debug,
                     recognized: turn.speaker.map { record.recognized[String($0)] != nil } ?? false,
                     rename: turn.speaker.flatMap { s in s >= 0 ? { edit.name(s, $0) } : nil },
                     merge: turn.speaker.flatMap { s in
@@ -2396,7 +2394,9 @@ private struct TranscriptView: View {
                     },
                     setBackground: live ? nil : turn.speaker.flatMap { s in
                         s >= 0 ? { on in withAnimation(.snappy) { edit.background(s, on) } } : nil
-                    })
+                    },
+                    record: record,
+                    debug: debug)
                 .padding(.top, i == 0 ? 0 : newSpeaker ? 26 : 12)
                 .id(turn.id)
                 // Live: a new turn (someone else talking) fades in and rises into place.
