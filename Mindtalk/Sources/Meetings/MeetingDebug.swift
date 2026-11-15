@@ -77,7 +77,7 @@ struct EvidenceSign: View {
                 .foregroundStyle(DS.Colors.faint).contentShape(Circle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(question)
+        .accessibilityLabel(LocalizedStringKey(question))
     }
 }
 
@@ -87,7 +87,7 @@ extension View {
     func evidenceCard(_ isOn: Binding<Bool>, title: String, @ViewBuilder lines: @escaping () -> some View) -> some View {
         popover(isPresented: isOn, arrowEdge: .bottom) {
             VStack(alignment: .leading, spacing: 7) {
-                Text(title).font(.system(size: 13, weight: .semibold))
+                Text(LocalizedStringKey(title)).font(.system(size: 13, weight: .semibold))
                 lines()
             }
             .font(.system(size: 12))
@@ -105,7 +105,7 @@ struct EvidenceLine: View {
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Text(label).foregroundStyle(DS.Colors.muted)
+            Text(LocalizedStringKey(label)).foregroundStyle(DS.Colors.muted)
             Spacer(minLength: 6)
             Text(value).fontWeight(.medium).monospacedDigit().foregroundStyle(DS.Colors.ink)
         }
@@ -137,7 +137,7 @@ struct SectionEvidenceLine: View {
 
     /// "klippt: paus 2,3 s ≥ 2,0 s · 12 ord · 7,4 s"
     private var clipped: String {
-        var parts = ["klippt: \(reason)"]
+        var parts = [String(localized: "klippt: \(reason)")]
         if !words.isEmpty {
             parts.append(Tuned.words(words.count))
             parts.append(Tuned.seconds(speech))
