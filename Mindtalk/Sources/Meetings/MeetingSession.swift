@@ -2178,6 +2178,13 @@ final class MeetingSession: ObservableObject {
             if !aliases.isEmpty {
                 for i in words.indices { if let s = words[i].speaker, let to = aliases[s] { words[i].speaker = to } }
             }
+            // The read-out's memory of this pass: the numbers it answered with, and who each
+            // voice was weighed against. Only while the read-out is switched on, and only
+            // numbers — never a print, never anything that could be played back.
+            if MeetingDebug.shared.enabled {
+                updated.trace = MeetingDebug.trace(voices: prints, people: VoiceMemory.shared.known,
+                                                  tuning: MeetingTuning.running)
+            }
             updated.words = words
             updated.refined = true
             updated.language = language          // listened to in another language: it is that now
@@ -2351,10 +2358,13 @@ final class MeetingSession: ObservableObject {
         // Notes are written once; listening again keeps the ones you have (and your
         // ticked tasks) — "Sammanfatta igen" is there for a new summary.
         // Continued: written again for the whole meeting (as are notes that were being
-        // written when it went on).
+        // written when it went on). Off in Inställningar: nothing is written, and the
+        // button in the meeting does it when asked (SummaryWriting.auto).
         if let finished, MeetingNotes.shared.takeAfterMeeting(finished) || continued
             || MeetingStore.shared.meetings.first(where: { $0.id == finished })?.summary == nil {
-            MeetingNotes.shared.summarize(finished)
+            if SummaryWriting.shared.auto {
+                MeetingNotes.shared.summarize(finished)
+            }
         }
         if let finished {
             AccessibilityNotification.Announcement(Self.endedSentence(summarizing: MeetingNotes.shared.writing.contains(finished))).post()

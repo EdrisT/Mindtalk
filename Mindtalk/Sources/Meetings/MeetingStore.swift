@@ -49,6 +49,12 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
     var finished = true
     /// What the final pass changed compared with the live text.
     var heal: Heal?
+    /// What the voices were chosen from, kept only while the read-out is switched on
+    /// (`MeetingDebug`, under Settings → Möten → Justering): the numbers and the model the
+    /// pass answered with, and who each voice resembled. Nothing here decides anything —
+    /// it is so a finished meeting can be read against the values of today, and against
+    /// what you have since moved. Only numbers: no print, nothing that can be played back.
+    var trace: VoiceTrace? = nil
     /// Stretches you gave to another speaker. Kept by their time, so they hold
     /// when the words are written again (the final pass, the voices catching up).
     var moves: [Move] = []
@@ -234,6 +240,29 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
         var changed: [Int]
     }
 
+    /// One meeting's own memory of how its voices were decided (`MeetingDebug.trace`). The
+    /// numbers are kept as they were then, not snapped to today's ladders: the whole point is
+    /// to say what has moved since. Only numbers — no print, no audio, nothing that could be
+    /// played back.
+    struct VoiceTrace: Codable, Equatable {
+        var at = Date()
+        var tuning = MeetingTuning.Values()
+        var model = ""
+        /// Per voice, in the meeting's own numbering: how much clean speech its print was
+        /// built from, and the people it resembled, best first (three at most).
+        var voices: [Int: Voice] = [:]
+
+        struct Voice: Codable, Equatable {
+            var seconds = 0.0
+            var ranked: [Match] = []
+
+            struct Match: Codable, Equatable {
+                var person: String
+                var score: Float
+            }
+        }
+    }
+
     init(title: String, date: Date, language: SpeechModel) {
         self.title = title
         self.date = date
@@ -264,6 +293,9 @@ struct MeetingRecord: Codable, Identifiable, Equatable {
         if !userTitled, title == Self.defaultTitle(for: date), let given = summary?.title, !given.isEmpty { title = given }
         finished = try c.decodeIfPresent(Bool.self, forKey: .finished) ?? true
         heal = (try? c.decodeIfPresent(Heal.self, forKey: .heal)) ?? nil
+        // Read-out only: a meeting without it, or with a trace an older version wrote, opens
+        // exactly as before.
+        trace = (try? c.decodeIfPresent(VoiceTrace.self, forKey: .trace)) ?? nil
         moves = try c.decodeIfPresent([Move].self, forKey: .moves) ?? []
         notes = try c.decodeIfPresent([Note].self, forKey: .notes) ?? []
         marks = try c.decodeIfPresent([Mark].self, forKey: .marks) ?? []
@@ -453,6 +485,39 @@ extension MeetingRecord {
     }
 }
 
+/// Why a turn begins where it does: the branch in `MeetingText.raw` that ended the one
+/// before, with the numbers that were weighed when it did. Only for the read-out on the
+/// meetings page (`MeetingDebug`, under Settings → Möten → Justering): nothing here is
+/// stored, since the grouping is redone every time a meeting is shown.
+struct Cut: Equatable {
+    enum Reason: Equatable {
+        /// The meeting's first words.
+        case first
+        /// This pass starts here: the words before were kept from an earlier one (`MeetingText.turns`).
+        case carry
+        /// A pause of `gap` between two words.
+        case pause
+        /// A full stop, once the turn had `spoken` words in it.
+        case words
+        /// Words still being written that no voice had claimed, after a pause.
+        case unclaimed
+        /// A new word came while the one before was still being written.
+        case pending
+        /// Another voice took over.
+        case speaker
+    }
+    var reason: Reason
+    /// Seconds of silence at the cut.
+    var gap: Double = 0
+    /// Words in the turn that ended — what `paragraphWords` was measured against.
+    var spoken: Int = 0
+    /// The word before the cut ended with . ? !
+    var sentenceEnd: Bool = false
+    /// The voice before and the voice after, when a change of voice cut the turn.
+    var from: Int?
+    var to: Int?
+}
+
 /// A run of words by one speaker — one bubble.
 struct MeetingTurn: Identifiable, Equatable {
     let id: Int              // index of its first word
@@ -467,6 +532,8 @@ struct MeetingTurn: Identifiable, Equatable {
     /// Words inside this turn's span that someone else said (an "Mm", an "eh") — left
     /// where they are when the turn is moved to another speaker.
     var foreign: [Range<Int>] = []
+    /// Why this turn begins where it does.
+    var cut: Cut = Cut(reason: .first)
 
     struct Aside: Equatable {
         let speaker: Int
@@ -554,11 +621,13 @@ enum MeetingText {
     }
     @MainActor private static var prefix: (key: PrefixKey, turns: [MeetingTurn])?
 
-    /// Groups words into turns (ids are indices in the whole meeting).
+    /// Groups words into turns (ids are indices in the whole meeting). Each turn carries
+    /// the reason it starts where it does (`Cut`), so the read-out can name the number
+    /// that was weighed — never a guess afterwards.
     @MainActor private static func raw(_ words: ArraySlice<MeetingWord>, pending: [MeetingWord],
                                        paragraphs: Bool, seed: Int? = nil) -> [MeetingTurn] {
         var turns: [MeetingTurn] = []
-        var current: (id: Int, speaker: Int?, start: Double, words: [String], pending: [String])?
+        var current: (id: Int, speaker: Int?, start: Double, words: [String], pending: [String], cut: Cut)?
         var previous: MeetingWord?
         // Once per pass, not per word.
         let tuning = MeetingTuning.chosen
@@ -566,7 +635,8 @@ enum MeetingText {
             guard let c = current else { return }
             turns.append(MeetingTurn(id: c.id, speaker: c.speaker, start: c.start,
                                      text: clean(c.words.joined(separator: " ")),
-                                     pending: c.pending.joined(separator: " ")))
+                                     pending: c.pending.joined(separator: " "),
+                                     cut: c.cut))
         }
         let all = words.map { ($0, false) } + pending.map { ($0, true) }
         for (n, (word, isPending)) in all.enumerated() {
@@ -578,19 +648,30 @@ enum MeetingText {
             let unclaimed = isPending && speaker == nil && previous.map { word.start - $0.end >= tuning.unclaimedPause } ?? false
             if unclaimed, current?.speaker != nil {
                 flush()
-                current = (i, nil, word.start, [], [word.text])
+                current = (i, nil, word.start, [], [word.text],
+                           Cut(reason: .unclaimed, gap: word.start - (previous?.end ?? word.start),
+                               spoken: current?.words.count ?? 0, from: current?.speaker))
                 previous = word
                 continue
             }
             if speaker == nil || speaker == MeetingWord.unknown { speaker = current?.speaker ?? speaker }
             defer { previous = word }
             var breaks = false
+            // Why the turn that ends here ends: the pause, or the full stop after enough words.
+            var cut = Cut(reason: .first)
             if paragraphs, let c = current, let previous {
                 let sentenceOver = previous.text.last.map { ".?!".contains($0) } ?? false
-                breaks = isPending || !c.pending.isEmpty
-                    ? word.start - previous.end >= tuning.paragraphPause
-                    : word.start - previous.end >= tuning.paragraphPause
-                        || (Double(c.words.count) >= tuning.paragraphWords && sentenceOver)
+                let gap = word.start - previous.end
+                let whilePending = isPending || !c.pending.isEmpty
+                breaks = whilePending ? gap >= tuning.paragraphPause
+                    : gap >= tuning.paragraphPause || (Double(c.words.count) >= tuning.paragraphWords && sentenceOver)
+                if breaks {
+                    cut = gap >= tuning.paragraphPause
+                        ? Cut(reason: whilePending ? .pending : .pause, gap: gap, spoken: c.words.count,
+                              sentenceEnd: sentenceOver, from: c.speaker, to: speaker)
+                        : Cut(reason: .words, gap: gap, spoken: c.words.count, sentenceEnd: true,
+                              from: c.speaker, to: speaker)
+                }
             }
             if !breaks, let c = current, c.speaker == speaker || speaker == nil || speaker == MeetingWord.unknown {
                 if isPending { current?.pending.append(word.text) } else if c.pending.isEmpty {
@@ -600,8 +681,15 @@ enum MeetingText {
                 }
                 continue
             }
+            // No pause and no full stop: another voice took over — or this is the pass's first word.
+            if !breaks {
+                cut = current == nil
+                    ? Cut(reason: seed == nil ? .first : .carry, from: seed)
+                    : Cut(reason: .speaker, gap: previous.map { word.start - $0.end } ?? 0,
+                          spoken: current?.words.count ?? 0, from: current?.speaker, to: speaker)
+            }
             flush()
-            current = (i, speaker, word.start, isPending ? [] : [word.text], isPending ? [word.text] : [])
+            current = (i, speaker, word.start, isPending ? [] : [word.text], isPending ? [word.text] : [], cut)
         }
         flush()
         return turns
@@ -926,13 +1014,16 @@ final class MeetingStore: ObservableObject {
     }
 
     /// A voice that isn't taking part (a TV, a radio), or is after all. The notes were
-    /// written with it, or without it: written again, as they should be now.
+    /// written with it, or without it: written again, as they should be now — unless
+    /// summarizing by itself is switched off, when the old ones stay as they are.
     func setBackground(_ speaker: Int, _ on: Bool, in id: UUID) {
         guard var record = meetings.first(where: { $0.id == id }) else { return }
         if on { if !record.background.contains(speaker) { record.background.append(speaker) } }
         else { record.background.removeAll { $0 == speaker } }
         save(record)
-        if record.summary != nil, !record.words.isEmpty { MeetingNotes.shared.summarize(id) }
+        if SummaryWriting.shared.auto, record.summary != nil, !record.words.isEmpty {
+            MeetingNotes.shared.summarize(id)
+        }
     }
 
     /// Two voices that are one person: `speaker`'s words become `into`'s.

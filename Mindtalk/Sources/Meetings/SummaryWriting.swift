@@ -45,6 +45,18 @@ final class SummaryWriting: ObservableObject {
             UserDefaults.standard.set(thinking, forKey: "serverThinking")
         }
     }
+    /// Whether a meeting gets a summary without being asked for one: at the end of a
+    /// meeting, when a voice is marked as not taking part, and when a recording is
+    /// imported. Off: the "Sammanfatta" button writes one when you press it, and a
+    /// summary a meeting already has is left as it is.
+    @Published var auto: Bool = true {
+        didSet {
+            // A render or a self-test: this run only, never written down.
+            guard !Settings.previewing else { return }
+            UserDefaults.standard.set(auto, forKey: "summaryAuto")
+            Self.log.notice("summarizing by itself: \(self.auto)")
+        }
+    }
     /// Who writes the next notes, unless it's Apple Intelligence (nil). The one chosen,
     /// whether it can write right now or not: a server that isn't running says so when
     /// asked to write. Never another writer instead.
@@ -74,6 +86,9 @@ final class SummaryWriting: ObservableObject {
 
     private init() {
         let defaults = UserDefaults.standard
+        // On unless someone switched it off: `bool(forKey:)` says false for a key that
+        // was never written, which would switch it off for everyone arriving new.
+        auto = defaults.object(forKey: "summaryAuto") as? Bool ?? true
         thinking = defaults.bool(forKey: "serverThinking")
         if let saved = defaults.string(forKey: "summaryWriter") {
             if let c = SummaryWriterChoice(stored: saved) {
