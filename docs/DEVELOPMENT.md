@@ -102,6 +102,12 @@ $BIN --speaker-name-test
 # change between, and reading them back (Debug only; writes nothing)
 $BIN --tuning-test
 
+# The read-out under a meeting (`Röstbeslut`): that each section names the reason the
+# grouping itself took, that the reason holds against the values in use, that grouping the
+# same words again gives the same reasons, and that a meeting's trace of what it answered
+# with survives being written and read back (Debug only; writes nothing)
+$BIN --evidence-test
+
 # The calendar: which event counts as the meeting that is starting, what follows it
 # into the meeting's file, and reading the section back (Debug only; never opens the
 # calendar and never asks for leave)
@@ -198,6 +204,56 @@ python3 scripts/strings.py
 ```
 
 It pulls in new strings, fills in the Swedish values (required — otherwise a Swedish Mac falls back to English) and lists anything still missing an English translation.
+
+**A renamed or deleted string can come back.** `xcstringstool` writes one compiled table *per source file* under `build/Build/Intermediates.noindex/Mindtalk.build/Debug/Mindtalk.build/Objects-normal/*/*.stringsdata`, and `scripts/strings.py:19` syncs over every one of them. A build that fails part-way leaves the earlier tables lying around, and the run afterwards reports keys the code no longer contains as "Saknar engelsk översättning". Check the tables rather than the catalogue, and if they still hold the old wording, clear them (`make clean`, or just that `Objects-normal`) before believing the list:
+
+```bash
+grep -l "a string you removed" build/Build/Intermediates.noindex/Mindtalk.build/Debug/Mindtalk.build/Objects-normal/*/*.stringsdata
+```
+
+## Röstbeslut — the voice read-out
+
+Off by default. **Settings → Möten → Justering → Visa röstbeslut i möten** switches it on
+(`MeetingDebug.enabled`, defaults key `meetingDebug`); each meeting then gets its own
+**Röstbeslut** button in its bottom bar, and only the meetings you open it for show anything
+(`MeetingDebug.shown`). `Meetings/MeetingDebug.swift` is the whole read-out: the switch,
+what a meeting keeps, the cards, and `--evidence-test`. The read-out ships in Release like
+everything else; only the self-test is Debug-only.
+
+On screen it is two discreet lines: `‣ klippt: paus 2,3 s ≥ 2,0 s · 12 ord · 7,4 s` under a
+section, and `· 0,72▸0,60` beside a name — the score that named them and the bar it cleared.
+Each has a `?` that opens a card, in the same 260 pt popover the Justering knobs use.
+
+What a meeting *keeps* is small and is numbers only — no print, no audio, nothing that could
+be played back: `MeetingRecord.VoiceTrace` (`Meetings/MeetingStore.swift:247`) with `at`,
+`tuning` (as the values were then, deliberately not snapped back to today's ladders),
+`model`, and per voice how much clean speech the print was built from and the three people it
+resembled with their scores. It is written by the final pass (`MeetingSession.refine`, just
+before `MeetingStore.shared.save`) and only while the switch is on; with the switch off the
+whole feature costs one bool, and nothing on the decision path changes — the trace scores the
+same voices the round already had in hand, with the same `RoundPlacement.similarity`.
+
+If a number looks wrong, in this order:
+
+1. Is the switch on, and did you press the meeting's own button? Nothing shows otherwise.
+2. Does the meeting have a trace at all? Only the final pass writes one, so a meeting that was
+   refined before the switch existed has `trace == nil` and the cards skip the then/now part
+   entirely. `Gör klart` and continued meetings re-run the pass and get one; nothing backfills
+   the rest (see the Roadmap).
+3. Sections are cut again every time the meeting is shown, from the stored words with
+   **today's** `MeetingTuning.chosen` — they can look different from last month and be correct.
+   The score beside a name is the meeting's own, kept in `record.recognized`.
+4. The bar after `▸` is `RoundPlacement.sameVoiceBar` over `MeetingDebug.printSeconds` — that
+   is today's bar for a print of that length; the length itself comes from the clean stretches
+   in `VoicePrints.stretches`, so a wrong length means the stretches, not the score.
+5. The three names in the card are the people known *then*, so someone you have deleted since
+   still shows up. That is the point of the card, not a bug.
+6. A name you typed yourself has no score, and the card says so: `record.recognized` is cleared
+   the moment you name a voice by hand (`Meetings/MeetingStore.swift:70`).
+7. Anything still inconsistent: run `--evidence-test`. It groups made-up words through the real
+   pass and checks that each section's reason holds against the values in use, that it names the
+   number that was weighed, that the same words give the same reasons twice, and that a trace
+   comes back from JSON as it was written.
 
 ## Design
 
