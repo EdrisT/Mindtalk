@@ -18851,7 +18851,18 @@
         }
       }
     },
+    "Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mötet avgjorde med de värden som gällde när det började; de sparades inte. Gränserna här är dagens."
+          }
+        }
+      }
+    },
     "Mötet avgjorde med de värden som gällde när det började; gränserna här är dagens. Poängen ovan är mötets egen.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -21880,6 +21891,7 @@
       }
     },
     "Röstmodell den gången": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -25080,6 +25092,7 @@
       }
     },
     "Så här var det den gången": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -25096,6 +25109,7 @@
       }
     },
     "Så här var värdena den gången": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -26135,6 +26149,7 @@
       }
     },
     "Tal som provet byggdes på": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -28850,7 +28865,18 @@
         }
       }
     },
+    "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet, aldrig någon annanstans, och inget nytt sparas."
+          }
+        }
+      }
+    },
     "Varje möte får då en egen knapp, Röstbeslut, som visar poängen och gränserna bakom namnen och styckena. Siffrorna visas bara i mötet. Med knappen påslagen sparas för varje möte också vilka värden och vilken röstmodell det avgjorde med, och vem varje röst liknade — inget ljud och inga avtryck, bara tal.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -30237,6 +30263,7 @@
       }
     },
     "Värdena här är de som står i Inställningar nu; styckena görs om varje gång mötet visas.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -30248,6 +30275,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Värdena här är de som står i Inställningar nu; styckena görs om varje gång mötet visas."
+          }
+        }
+      }
+    },
+    "Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Värdena är de som står i Inställningar nu; styckena görs om varje gång mötet visas."
           }
         }
       }

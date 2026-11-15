@@ -106,9 +106,9 @@ final class MeetingDebug: ObservableObject {
     /// The same between two sets of numbers — the form the self-test can hold still.
     static func moved(since then: MeetingTuning.Values, to now: MeetingTuning.Values) -> [String] {
         MeetingTuning.allKnobs.compactMap { knob in
-            let was = then[keyPath: knob.key], is = now[keyPath: knob.key]
-            guard abs(was - is) > 0.0001 else { return nil }
-            return "\(knob.title): \(knob.unit.label(was)) → \(knob.unit.label(is))"
+            let was = then[keyPath: knob.key], current = now[keyPath: knob.key]
+            guard abs(was - current) > 0.0001 else { return nil }
+            return "\(knob.title): \(knob.unit.label(was)) → \(knob.unit.label(current))"
         }
     }
 
