@@ -14,6 +14,13 @@ make install   # Release build into /Applications (your own signing identity)
 make open      # Generate the project and open it in Xcode
 ```
 
+`make run` and `make install` quit the running app first and then check that a process is
+actually there — `scripts/relaunch.sh quit`, and `… launch` after the bundle is in place.
+Without them `make run` could report OK while showing you the build from before, because
+`open` answers before the app is up and refuses one that is still quitting. `make build`
+pipes nothing, so xcodebuild's own exit status reaches make and its whole output survives
+in the log of whatever runs it.
+
 ## Editor diagnostics
 
 SourceKit-LSP has no build description for this project: there is no `Package.swift`, and
