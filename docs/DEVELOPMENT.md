@@ -246,7 +246,7 @@ If a number looks wrong, in this order:
 2. Does the meeting have a trace at all? Only the final pass writes one, so a meeting that was
    refined before the switch existed has `trace == nil` and the cards skip the then/now part
    entirely. `Gör klart` and continued meetings re-run the pass and get one; nothing backfills
-   the rest (see the Roadmap).
+   the rest (deliberately: a backfill means running the model over every old meeting's audio again).
 3. Sections are cut again every time the meeting is shown, from the stored words with
    **today's** `MeetingTuning.chosen` — they can look different from last month and be correct.
    The score beside a name is the meeting's own, kept in `record.recognized`.
