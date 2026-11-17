@@ -10,6 +10,7 @@ import Foundation
 //   mindtalk://settings/mcp                   Inställningar, on AI-appar (MCP)
 //                                             (settings/ai-apps, and the old names settings/claude
 //                                             and settings/integrations, still work)
+//   mindtalk://settings/obsidian              Inställningar, on Integrationer (Obsidian)
 //   mindtalk://settings/<section>             Inställningar on general, language, dictation or meetings
 //   mindtalk://settings/meetings#summaries    … scrolled to the Sammanfattningar card
 //
@@ -45,6 +46,7 @@ enum MindtalkLink: Equatable {
         case "settings":
             switch rest.first?.lowercased() {
             case "mcp", "claude", "integrations", "ai-apps": return .mcpSettings
+            case "obsidian": return .settings(.integrations)
             case let name?:
                 let anchor = url.fragment.flatMap { SettingsAnchor(rawValue: $0.lowercased()) }
                 return SettingsSection(rawValue: name).map { .settings($0, anchor) }
