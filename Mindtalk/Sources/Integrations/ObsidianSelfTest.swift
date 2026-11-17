@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 // MARK: - Mindtalk --obsidian-test
@@ -54,9 +55,7 @@ enum ObsidianSelfTest {
         check(!cleaned.contains(where: { "/#[]|\n\u{0}".contains($0) }), "a name Obsidian takes: \"\(cleaned)\"")
 
         let store = MeetingStore.shared
-        #if DEBUG
         store.loadNow()
-        #endif
         let meeting = store.meetings.first { $0.refined && $0.finished && !$0.words.isEmpty }
         if let meeting {
             // Nothing goes into the vault before you ask for it: the card only offers.
@@ -152,3 +151,4 @@ enum ObsidianSelfTest {
         return arguments[index + 1]
     }
 }
+#endif
