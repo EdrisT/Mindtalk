@@ -105,6 +105,13 @@ $BIN --shortcut-field-test
 # Speaker picker: native completion, selection, editing and keyboard actions (Debug only)
 $BIN --speaker-name-test
 
+# Obsidian: its folders made in a throwaway vault and written in, nothing written before
+# it is asked for, a meeting's text and json as the command line prints them, two meetings
+# wanting the same name, a meeting renamed, the mark that says a meeting has changed, a
+# thought as a note, and a vault Mindtalk is not let into (Debug only; writes only in a
+# folder of its own, which is thrown away again unless --vault names where)
+$BIN --obsidian-test
+
 # The numbers VAD and diarization work with: their defaults, the ladders they may
 # change between, and reading them back (Debug only; writes nothing)
 $BIN --tuning-test
@@ -296,3 +303,4 @@ If a number looks wrong, in this order:
 | `FocusedField.swift` | Is there a text field to paste into? If clearly not, the text goes to the clipboard |
 | `AppMover.swift` | Offers to move itself into Applications when run from the DMG or Downloads |
 | `Demo.swift` | Demo mode for screenshots (Debug builds only) |
+| `Integrations/Obsidian.swift`, `Integrations/ObsidianSettingsCard.swift` | Obsidian: a meeting you ask for becomes a folder in your vault — its text as `<name> · transcript.md` and its json, leaving `<name>.md`, the folder's own note, free for a summary of your own — Tankar's thoughts as notes, and the card under Inställningar → Integrationer |

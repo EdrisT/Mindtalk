@@ -2726,6 +2726,22 @@
         }
       }
     },
+    "Anteckningarna skrivs hit.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notes are written here."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anteckningarna skrivs hit."
+          }
+        }
+      }
+    },
     "Anteckningen är sparad": {
       "localizations": {
         "en": {
@@ -5940,6 +5956,22 @@
         }
       }
     },
+    "Dina tankar från Tankar läggs här. Mappen skapas om den inte finns.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where your thoughts from Thoughts go. The folder is made if it is missing."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dina tankar från Tankar läggs här. Mappen skapas om den inte finns."
+          }
+        }
+      }
+    },
     "Dina uppgifter i sammanfattningen visas som Du.": {
       "extractionState": "stale",
       "localizations": {
@@ -6308,6 +6340,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dubbeltryck"
+          }
+        }
+      }
+    },
+    "Där mötena läggs, under valvet. Mappen skapas om den inte finns.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where meetings go, under the vault. The folder is made if it is missing."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Där mötena läggs, under valvet. Mappen skapas om den inte finns."
           }
         }
       }
@@ -12707,6 +12755,22 @@
         }
       }
     },
+    "Integrationer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Integrations"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Integrationer"
+          }
+        }
+      }
+    },
     "Internetanslutningen bröts. Kontrollera nätverket och försök igen.": {
       "localizations": {
         "en": {
@@ -12992,6 +13056,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kalendrar som kan läsas: %lld."
+          }
+        }
+      }
+    },
+    "Kan skriva": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can write"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kan skriva"
           }
         }
       }
@@ -16542,6 +16622,38 @@
         }
       }
     },
+    "Mapp för möten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meetings folder"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapp för möten"
+          }
+        }
+      }
+    },
+    "Mapp för tankar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thoughts folder"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapp för tankar"
+          }
+        }
+      }
+    },
     "Mappar": {
       "extractionState": "stale",
       "localizations": {
@@ -16587,6 +16699,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mapparna kunde inte sparas. Är disken full?"
+          }
+        }
+      }
+    },
+    "Mappen där Obsidian har dina anteckningar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The folder where Obsidian keeps your notes."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mappen där Obsidian har dina anteckningar."
           }
         }
       }
@@ -17774,6 +17902,22 @@
         }
       }
     },
+    "Mindtalk får inte skriva i „%@”. Tillåt det under Systeminställningar → Sekretess → Filer och mappar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk is not allowed to write in “%@”. Allow it under System Settings → Privacy & Security → Files and Folders."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk får inte skriva i „%@”. Tillåt det under Systeminställningar → Sekretess → Filer och mappar."
+          }
+        }
+      }
+    },
     "Mindtalk gör klart mötet innan programmet avslutas, så att texten blir färdig.": {
       "localizations": {
         "en": {
@@ -17984,6 +18128,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mindtalk kunde inte flyttas"
+          }
+        }
+      }
+    },
+    "Mindtalk kunde inte skriva i „%@”: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk could not write in “%@”: %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindtalk kunde inte skriva i „%@”: %@"
           }
         }
       }
@@ -23546,6 +23706,22 @@
         }
       }
     },
+    "Spara i Obsidian": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save to Obsidian"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spara i Obsidian"
+          }
+        }
+      }
+    },
     "Spara och starta om ChatGPT.": {
       "localizations": {
         "en": {
@@ -23622,6 +23798,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sparad i Nyckelringen"
+          }
+        }
+      }
+    },
+    "Sparad i Obsidian": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved in Obsidian"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sparad i Obsidian"
           }
         }
       }
@@ -28391,6 +28583,22 @@
         }
       }
     },
+    "Uppdatera i Obsidian": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update in Obsidian"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uppdatera i Obsidian"
+          }
+        }
+      }
+    },
     "Uppdateringar": {
       "extractionState": "stale",
       "localizations": {
@@ -28768,6 +28976,38 @@
         }
       }
     },
+    "Vald valut": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose vault"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vald valut"
+          }
+        }
+      }
+    },
+    "Valv": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vault"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valv"
+          }
+        }
+      }
+    },
     "Varför blev det ett eget stycke?": {
       "extractionState": "stale",
       "localizations": {
@@ -28864,6 +29104,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Varje mätpunkt på 10 ms räknas som tal från så här hög poäng. Används när ett mötes röster jämförs med varandra."
+          }
+        }
+      }
+    },
+    "Varje möte du sparar blir en mapp i ditt Obsidian-valv med texten och mötets uppgifter. Tankar blir egna anteckningar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every meeting you save becomes a folder in your Obsidian vault, with its text and the meeting's details. Thoughts become notes of their own."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varje möte du sparar blir en mapp i ditt Obsidian-valv med texten och mötets uppgifter. Tankar blir egna anteckningar."
           }
         }
       }
@@ -29854,6 +30110,22 @@
         }
       }
     },
+    "Välj den mapp där Obsidian har dina anteckningar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the folder where Obsidian keeps your notes."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Välj den mapp där Obsidian har dina anteckningar."
+          }
+        }
+      }
+    },
     "Välj en annan genväg": {
       "localizations": {
         "en": {
@@ -30014,6 +30286,22 @@
         }
       }
     },
+    "Välj mapp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose folder"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Välj mapp"
+          }
+        }
+      }
+    },
     "Välj modell": {
       "localizations": {
         "en": {
@@ -30058,6 +30346,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Välj vad Mindtalk lyssnar med. Prata för att testa."
+          }
+        }
+      }
+    },
+    "Välj valvet först — den mapp där Obsidian har sina anteckningar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the vault first — the folder where Obsidian keeps its notes."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Välj valvet först — den mapp där Obsidian har sina anteckningar."
           }
         }
       }

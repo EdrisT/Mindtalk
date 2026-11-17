@@ -44,7 +44,7 @@ enum Page: String, CaseIterable, Identifiable {
 
 /// Inställningar, one section at a time: the sections in the tab bar, the section as the page.
 enum SettingsSection: String, CaseIterable, Identifiable {
-    case general, language, dictation, meetings, integrations
+    case general, language, dictation, meetings, aiApps, integrations
 
     /// Where the section last shown is kept (SettingsPage and the tab bar).
     static let storageKey = "settings.section"
@@ -70,7 +70,8 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .language: return String(localized: "Språk")
         case .dictation: return String(localized: "Diktering")
         case .meetings: return String(localized: "Möten")
-        case .integrations: return String(localized: "AI-appar")
+        case .aiApps: return String(localized: "AI-appar")
+        case .integrations: return String(localized: "Integrationer")
         }
     }
 
@@ -80,7 +81,8 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .language: return "globe"
         case .dictation: return "text.cursor"
         case .meetings: return "person.2.wave.2"
-        case .integrations: return "point.3.connected.trianglepath.dotted"
+        case .aiApps: return "point.3.connected.trianglepath.dotted"
+        case .integrations: return "square.stack.on.square"
         }
     }
 }
@@ -404,7 +406,7 @@ struct SettingsPage: View {
     }
 
     /// Settings → AI-appar, where MCP is (mindtalk://settings/mcp).
-    static func openMCP() { open(.integrations) }
+    static func openMCP() { open(.aiApps) }
 
     /// Om Mindtalk: the popover from the version line in the tab bar.
     static func showAbout() {
@@ -456,7 +458,8 @@ struct SettingsPage: View {
             case .language: languageSection
             case .dictation: dictationSection
             case .meetings: meetingsSection
-            case .integrations: ClaudeSettingsCard(sharing: .shared)
+            case .aiApps: ClaudeSettingsCard(sharing: .shared)
+            case .integrations: ObsidianSettingsCard()
             }
         }
     }

@@ -234,6 +234,9 @@ final class Thoughts: ObservableObject {
                 NSLog("Mindtalk: could not save thoughts: \(error.localizedDescription)")
             }
         }
+        // Obsidian: each thought becomes a note in the vault, and again when it changes
+        // (Integrations/Obsidian.swift). Says nothing when the integration is off.
+        Obsidian.shared.syncThoughts(snapshot)
     }
     nonisolated private static let writer = DispatchQueue(label: "ai.mindact.mindtalk.thoughts", qos: .utility)
 
