@@ -211,6 +211,7 @@ private struct MeetingList: View {
                                : nil)
                     .staggered(0)
                 SaveProblemLine()
+                ObsidianProblemLine()
                 StartCard(session: session, voices: voices, dictation: dictation, offscreen: cardAway)
                     .staggered(1)
                     .id(Self.cardID)
@@ -552,6 +553,22 @@ private struct SaveProblemLine: View {
 
     var body: some View {
         if let problem = store.saveProblem {
+            Label(problem, systemImage: "exclamationmark.triangle.fill")
+                .font(.system(size: 12.5, weight: .medium))
+                .foregroundStyle(DS.Colors.warning)
+                .fixedSize(horizontal: false, vertical: true)
+                .transition(.opacity)
+        }
+    }
+}
+
+/// Obsidian refused to take a meeting — the vault gone, or Mindtalk not let into it. Said
+/// here, where the press was, as well as on the Integrationer card where the vault is set.
+private struct ObsidianProblemLine: View {
+    @ObservedObject private var obsidian = Obsidian.shared
+
+    var body: some View {
+        if let problem = obsidian.trouble {
             Label(problem, systemImage: "exclamationmark.triangle.fill")
                 .font(.system(size: 12.5, weight: .medium))
                 .foregroundStyle(DS.Colors.warning)
@@ -1310,6 +1327,7 @@ struct MeetingRow: View {
     var now = Date()
     let open: () -> Void
     @State private var hovering = false
+    @ObservedObject private var obsidian = Obsidian.shared
 
     var body: some View {
         let cast = record.cast
@@ -1329,6 +1347,7 @@ struct MeetingRow: View {
                     .font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.Colors.muted)
             }
             Text(record.title).font(.system(size: 13.5, weight: .medium)).lineLimit(1)
+            vaultMark
             if !record.finished {
                 Text("Inte klart").font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.Colors.warning)
             }
@@ -1418,7 +1437,12 @@ struct MeetingRow: View {
                 }
                 .accessibilityHidden(true)
                 if let people { Text(verbatim: people).font(.system(size: 12)).foregroundStyle(DS.Colors.muted).lineLimit(1) }
-                Text(verbatim: Stats.duration(record.duration)).font(.system(size: 12)).foregroundStyle(DS.Colors.faint).monospacedDigit()
+                // The length, and beside it whether the meeting is in the Obsidian vault —
+                // the one press that writes it there again when it isn't as it was.
+                HStack(spacing: 8) {
+                    vaultMark
+                    Text(verbatim: Stats.duration(record.duration)).font(.system(size: 12)).foregroundStyle(DS.Colors.faint).monospacedDigit()
+                }
             }
             .frame(minWidth: 120, alignment: .trailing)
         }
@@ -1467,6 +1491,41 @@ struct MeetingRow: View {
         guard !named.isEmpty else { return nil }
         let shown = named.prefix(2).joined(separator: ", ")
         return named.count > 2 ? shown + " +\(named.count - 2)" : shown
+    }
+
+    /// Obsidian, in the corner of the card: a mark, and one press. Written and untouched
+    /// since: quiet, greyed, and nothing happens when pressed. Not written yet, or changed
+    /// since it was: it asks, and a press writes the meeting's folder in the vault.
+    @ViewBuilder private var vaultMark: some View {
+        let state = obsidian.state(record)
+        if state != .off {
+            Button { obsidian.export(record) } label: {
+                // The word, not a glyph: an arrow in a circle reads as "do this meeting
+                // again", and only Obsidian knows which of the two this is.
+                HStack(spacing: 3) {
+                    Text(verbatim: "Obsidian")
+                    if state == .current {
+                        Image(systemName: "checkmark").font(.system(size: 8.5, weight: .semibold))
+                    }
+                }
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(state == .current ? DS.Colors.faint : hovering ? DS.Colors.ink : DS.Colors.muted)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .disabled(state == .current)
+            .help(vaultWords(state))
+            .accessibilityLabel(Text(verbatim: vaultWords(state)))
+        }
+    }
+
+    private func vaultWords(_ state: Obsidian.State) -> String {
+        switch state {
+        case .fresh: return String(localized: "Spara i Obsidian")
+        case .current: return String(localized: "Sparad i Obsidian")
+        case .changed: return String(localized: "Uppdatera i Obsidian")
+        case .off: return ""
+        }
     }
 }
 
@@ -1971,6 +2030,7 @@ struct MeetingView: View {
             healLine
             banner
             SaveProblemLine()
+            ObsidianProblemLine()
             if !live { FolderSuggestion(record: record) }
             // "Fortsätt mötet" couldn't: why, here where you pressed it.
             if !live, let error = recorder.lastError {
@@ -2056,6 +2116,7 @@ struct MeetingView: View {
                 liveMore(session)
             }
             SaveProblemLine()
+            ObsidianProblemLine()
         }
         .padding(.top, DS.Layout.pageTop)
         .padding(.bottom, 16)
