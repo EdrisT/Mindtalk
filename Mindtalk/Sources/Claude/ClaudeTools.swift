@@ -463,10 +463,17 @@ enum ClaudeTools {
         for part in asked ?? [] where !every.contains(part) {
             throw Failure(message: "Unknown include \"\(part)\": use summary, decisions, tasks, notes, marks or calendar.")
         }
-        let include = Set(asked ?? every)
         let format = try args.string("response_format")?.lowercased() ?? "concise"
         guard ["concise", "detailed"].contains(format) else { throw Failure(message: "response_format must be concise or detailed.") }
-        let detailed = format == "detailed"
+        let result = detail(m, include: Set(asked ?? every), detailed: format == "detailed")
+        return (result, title(of: m), 1)
+    }
+
+    /// The meeting as the tool answers with it — every part, or the ones asked for.
+    /// Obsidian writes this object as a meeting's json file, so the vault and
+    /// `mindtalk meeting <id> --json` say the same thing.
+    static func detail(_ m: MeetingRecord, include: Set<String> = ["summary", "decisions", "tasks", "notes", "marks", "calendar"],
+                       detailed: Bool = true) -> [String: Any] {
         var result = item(m)
         result["date"] = iso.string(from: m.date)
         func moment(_ at: Double?) -> [String: Any] {
@@ -517,7 +524,7 @@ enum ClaudeTools {
             if let event = m.calendar { result["calendar"] = calendar(event) }
             else { result["calendar"] = NSNull() }
         }
-        return (result, title(of: m), 1)
+        return result
     }
 
     /// What the calendar said when the meeting started, as a tool answer: the event's own
@@ -540,11 +547,11 @@ enum ClaudeTools {
 
     // MARK: mindtalk_get_transcript
 
-    private struct Line { let at: Double; let speaker: String?; let text: String }
+    struct Line { let at: Double; let speaker: String?; let text: String }
 
     /// The meeting as turns, grouped anew: the live view keeps a prefix of the meeting
     /// it shows, and a whole transcript read here must not replace it.
-    private static func lines(of m: MeetingRecord) -> [Line] {
+    static func lines(of m: MeetingRecord) -> [Line] {
         let cast = m.cast
         return MeetingText.turnsAllAnew(m.words, pending: []).compactMap { turn in
             guard !turn.text.isEmpty else { return nil }
@@ -552,7 +559,7 @@ enum ClaudeTools {
             return Line(at: turn.start, speaker: who, text: turn.text)
         }
     }
-    private static func render(_ line: Line) -> String {
+    static func render(_ line: Line) -> String {
         "[\(stamp(line.at))] " + (line.speaker.map { "\($0): " } ?? "") + line.text
     }
 

@@ -981,6 +981,10 @@ final class MeetingStore: ObservableObject {
             // In its place by date — an imported recording may be from long ago.
             meetings.insert(record, at: meetings.firstIndex { $0.date < record.date } ?? meetings.count)
         }
+        // Obsidian hears about it too: nothing is written on its own, but a meeting you
+        // have written to the vault once lights up its card under Möten until you write it
+        // again (Integrations/Obsidian.swift).
+        if failure == nil { Obsidian.shared.observe(record) }
         return failure == nil
     }
 
