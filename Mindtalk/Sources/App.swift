@@ -55,6 +55,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
             NSApplication.shared.run()
             return
         }
+        // `Mindtalk --obsidian-test [--vault <path>]`: the Obsidian integration against a
+        // vault in a throwaway folder (Integrations/ObsidianSelfTest.swift).
+        if args.contains("--obsidian-test") {
+            NSApplication.shared.setActivationPolicy(.accessory)
+            Task { @MainActor in exit(await ObsidianSelfTest.run(arguments: args)) }
+            NSApplication.shared.run()
+            return
+        }
         // `Mindtalk --render-perf <meeting id>`: a long meeting opened, scrolled and its tabs
         // switched, timed (WindowRender.swift, WindowPerf).
         if let i = args.firstIndex(of: "--render-perf"), i + 1 < args.count {
