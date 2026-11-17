@@ -941,41 +941,55 @@ struct StartCard: View {
     }
 
     /// The event the calendar thinks this meeting is, before you press: its name and the
-    /// time the invitation says. One is shown as a fact; two are asked about, and the one
-    /// you tap is what follows the meeting. "Inte det här" lets it go: then nothing about
-    /// the calendar is written, which is what a wrong guess should end as.
+    /// time the invitation says. One is shown as a fact; so is the one, out of several,
+    /// that you organise or have said yes to — the calendar knows which of them you are
+    /// going to. Several you are expected at are asked about, and the one you tap is what
+    /// follows the meeting. "Inte det här" lets it go: then nothing about the calendar is
+    /// written, which is what a wrong guess should end as.
     @ViewBuilder private var calendarLine: some View {
         let here = calendar.found.filter { !calendar.skipped.contains($0.eventID) }
-        if here.count == 1, let one = here.first {
-            HStack(spacing: 8) {
-                Label {
-                    Text(verbatim: "\(one.title)  \(Self.range(one))")
-                } icon: {
-                    Image(systemName: "calendar")
-                }
+        if here.count > 1, calendar.picked == nil, let one = calendar.upcoming() {
+            certain(one)
+        } else if here.count > 1 {
+            asked(here)
+        } else if let one = here.first {
+            certain(one)
+        }
+    }
+
+    /// An event, and nothing to choose between: said as a fact, with the way out of it.
+    @ViewBuilder private func certain(_ one: CalendarMeeting) -> some View {
+        HStack(spacing: 8) {
+            Label {
+                Text(verbatim: "\(one.title)  \(Self.range(one))")
+            } icon: {
+                Image(systemName: "calendar")
+            }
+            .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
+            .fixedSize(horizontal: false, vertical: true)
+            Button("Inte det här") { calendar.skipped.insert(one.eventID) }
+                .buttonStyle(.plain).fontWeight(.semibold).foregroundStyle(.primary)
+                .fixedSize()
+                .help("Skriver inget om kalendern till det här mötet.")
+        }
+    }
+
+    /// Several, and which of them is in the room is not the calendar's to know: you say.
+    @ViewBuilder private func asked(_ here: [CalendarMeeting]) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Vilket möte?")
                 .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
                 .fixedSize(horizontal: false, vertical: true)
-                Button("Inte det här") { calendar.skipped.insert(one.eventID) }
-                    .buttonStyle(.plain).fontWeight(.semibold).foregroundStyle(.primary)
-                    .fixedSize()
-                    .help("Skriver inget om kalendern till det här mötet.")
-            }
-        } else if here.count > 1 {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Vilket möte?")
-                    .font(.system(size: 12.5)).foregroundStyle(DS.Colors.muted)
-                    .fixedSize(horizontal: false, vertical: true)
-                ForEach(here.prefix(3)) { event in
-                    Button { calendar.picked = event.eventID } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: calendar.picked == event.eventID ? "checkmark.circle.fill" : "circle")
-                            Text(verbatim: "\(event.title)  \(Self.range(event))")
-                                .lineLimit(1)
-                        }
+            ForEach(here.prefix(3)) { event in
+                Button { calendar.picked = event.eventID } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: calendar.picked == event.eventID ? "checkmark.circle.fill" : "circle")
+                        Text(verbatim: "\(event.title)  \(Self.range(event))")
+                            .lineLimit(1)
                     }
-                    .buttonStyle(.soft)
-                    .accessibilityLabel(String(localized: "Det här mötet") + ": " + event.title)
                 }
+                .buttonStyle(.soft)
+                .accessibilityLabel(String(localized: "Det här mötet") + ": " + event.title)
             }
         }
     }

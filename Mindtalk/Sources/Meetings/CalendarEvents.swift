@@ -78,6 +78,10 @@ struct CalendarMeeting: Identifiable, Codable, Equatable {
     var mine: CalendarPerson.Answer? = nil
     var match: Match
 
+    /// Whether the calendar can say you are at this one: you organise it, or you said
+    /// yes. "Maybe" and no answer at all are not a nej — they just settle nothing.
+    nonisolated var going: Bool { mine == .organizer || mine == .accepted }
+
     /// Names worth offering as speakers. Nobody who said they won't come.
     nonisolated var names: [String] {
         var seen = Set<String>()
@@ -314,9 +318,10 @@ final class CalendarEvents: ObservableObject {
         fields.kept(event)
     }
 
-    /// The event this meeting is about, at `now`: the one you chose, or the only one
-    /// that fits. Nothing when you said it isn't about this, and nothing when two fit
-    /// and none was chosen — guessing which meeting is in the room is not this feature's
+    /// The event this meeting is about, at `now`: the one you chose, the only one that
+    /// fits, or — when several fit — the one the calendar knows you are at. Nothing when
+    /// you said it isn't about this, and nothing when several fit and you are expected at
+    /// more than one of them: guessing which meeting is in the room is not this feature's
     /// job, and a wrong name in the file is worse than no name.
     func upcoming(now: Date = Date()) -> CalendarMeeting? {
         Self.choose(found.filter { !skipped.contains($0.eventID) }, picked: picked)
@@ -330,7 +335,12 @@ final class CalendarEvents: ObservableObject {
     }
 
     nonisolated static func choose(_ here: [CalendarMeeting], picked: String?) -> CalendarMeeting? {
-        guard let one = here.first(where: { $0.eventID == picked }) ?? (here.count == 1 ? here.first : nil) else {
+        // Several fit, but the calendar knows which of them you are at: the one you
+        // organise, or the one you said yes to while the others sit unanswered. Being
+        // asked about those is the annoyance; two you are expected at is the case where
+        // only you know which meeting is in the room.
+        let sure = here.count > 1 ? here.filter(\.going) : here
+        guard let one = here.first(where: { $0.eventID == picked }) ?? (sure.count == 1 ? sure.first : nil) else {
             return nil
         }
         // Several fitted and you said which: the meeting's file says so too.
@@ -682,6 +692,22 @@ extension CalendarEvents {
         check(choose([many[1]], picked: nil)?.match == many[1].match, "ett enda möte märktes som valt")
         check(choose(many, picked: "borta") == nil, "ett val som inte finns skulle inte gissa")
         check(choose([], picked: many[0].eventID) == nil, "ingen träff gav ändå ett möte")
+
+        // Several fit, and the calendar knows which one you are at: the one you accepterat
+        // (or organiserar) follows the meeting, and is not labelled as one you chose.
+        let mixed = matching([event("Jag sa ja", starts: -120, ends: 1800, mine: .accepted),
+                              event("Tveksam", starts: -60, ends: 1800, mine: .tentative)], now: now)
+        check(choose(mixed, picked: nil)?.eventID == "Jag sa ja", "det evenemang du accepterat bland flera följer inte med")
+        check(choose(mixed, picked: nil)?.match == .running, "det självklara mötet märktes som valt")
+        check(choose(matching([event("Jag bjuder", starts: -120, ends: 1800, mine: .organizer),
+                               event("Obekräftad", starts: -60, ends: 1800, mine: .pending)], now: now),
+                     picked: nil)?.eventID == "Jag bjuder", "det evenemang du organiserar bland flera följer inte med")
+        // Two you are expected at, or several without your answer: the calendar must ask.
+        check(choose(matching([event("Ja ett", starts: -120, ends: 1800), event("Ja två", starts: -60, ends: 1800)], now: now),
+                     picked: nil) == nil, "två accepterade evenemang skulle inte gissa åt sig")
+        check(choose(matching([event("Utan svar ett", starts: -120, ends: 1800, mine: nil),
+                               event("Utan svar två", starts: -60, ends: 1800, mine: .pending)], now: now),
+                     picked: nil) == nil, "flera evenemang utan ditt svar skulle inte gissa åt sig")
 
         // Who is worth suggesting as a speaker: everyone but the ones who said nej.
         let crowd = event("Möte", starts: 0, ends: 600, people: [person("Anna", .organizer), person("Erik", .accepted),
