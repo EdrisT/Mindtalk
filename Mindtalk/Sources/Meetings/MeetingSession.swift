@@ -598,6 +598,9 @@ final class MeetingSession: ObservableObject {
         // the recording started. Its name is the meeting's name only while the meeting
         // has none of its own — a title you typed is never overwritten.
         let events = CalendarEvents.shared
+        // Look again at this moment: the list a refresh made was weighed against that
+        // refresh's now, so an event that began while the page sat open is not in it.
+        events.refresh(now: date)
         if let event = events.upcoming(now: date) {
             let found = events.stored(event)
             new.calendar = found

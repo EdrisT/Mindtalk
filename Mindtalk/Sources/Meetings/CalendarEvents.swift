@@ -306,6 +306,9 @@ final class CalendarEvents: ObservableObject {
                                                  calendars: watched)
         found = Self.matching(store.events(matching: predicate).compactMap { CalendarMeeting($0, fields: fields) },
                               now: now)
+        // How the search went, written down: a no that leaves no line cannot be told apart
+        // from an event that sits in a calendar Mindtalk was never let into.
+        Self.log.notice("hittade \(self.found.count, privacy: .public) evenemang i \(watched.count, privacy: .public) kalendrar")
         // An event that is no longer there can't be chosen or let go any more.
         let here = Set(found.map(\.eventID))
         if let picked, !here.contains(picked) { self.picked = nil }
