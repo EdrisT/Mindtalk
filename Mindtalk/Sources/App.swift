@@ -1812,10 +1812,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
             Task {
                 do {
                     let t0 = Date()
-                    var last = -1
+                    // The percent last printed, kept in a lock's state rather than a captured
+                    // var: the progress callback is @Sendable and runs off this task.
+                    let shown = OSAllocatedUnfairLock(initialState: -1)
                     try await model.install { p in
                         let pct = Int(p * 100)
-                        if pct / 10 != last / 10 { last = pct; print("\(pct) %") }
+                        shown.withLock { if pct / 10 != $0 / 10 { $0 = pct; print("\(pct) %") } }
                     }
                     print(String(format: "Installerad i %@ (%.0f s)", model.ownDirectory.path, Date().timeIntervalSince(t0)))
                     exit(0)
@@ -2431,7 +2433,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
 
     private static func printCleanup(of raw: String) async {
         let rules = TextCleanup.apply(raw, fillers: true, commands: true)
-        let cleaned = await Vocabulary.shared.reapply(rules)       // your list, nothing counted
+        let cleaned = Vocabulary.shared.reapply(rules)            // your list, nothing counted
         print("Regler: \(rules.debugDescription)")
         if cleaned != rules { print("Ordlista: \(cleaned.debugDescription)") }
         let t0 = Date()
@@ -2617,7 +2619,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUs
 
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
                                             withCompletionHandler completionHandler: @escaping () -> Void) {
-        let info = response.notification.request.content.userInfo
+        // The notification's payload, handed to the main queue: a dictionary Apple hands out
+        // and nobody writes to, which is what the unchecked promise below rests on.
+        nonisolated(unsafe) let info = response.notification.request.content.userInfo
         let call = response.notification.request.content.categoryIdentifier == CallDetector.category
         let action = response.actionIdentifier
         DispatchQueue.main.async {

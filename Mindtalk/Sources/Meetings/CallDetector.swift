@@ -22,7 +22,7 @@ final class CallDetector {
     static let shared = CallDetector()
     private static let log = Logger(subsystem: "ai.mindact.mindtalk", category: "Calls")
     /// Notifications from earlier versions of the question, still in Notification Center.
-    static let category = "call"
+    nonisolated static let category = "call"
 
     enum Answer { case startDirect, startRound, openCard, notForApp, notNow }
 
